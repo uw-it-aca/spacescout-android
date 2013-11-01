@@ -9,5 +9,13 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
+    <string-array name="items">
+        <item>Search Spaces</item>
+        <item>Space List</item>
+        <item>My Favorite Spaces</item>
+        <item>Suggest New Space</item>
+        <item>Settings</item>
+        <item>About SpaceScout</item>
+    </string-array>
 
 </resources>
