@@ -9,7 +9,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
-    <string-array name="items">
+    <string-array name="drawer_list_items">
         <item>Search Spaces</item>
         <item>Space List</item>
         <item>My Favorite Spaces</item>
