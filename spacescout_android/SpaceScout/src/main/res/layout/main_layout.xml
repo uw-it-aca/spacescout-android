@@ -17,12 +17,12 @@
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
-        android:background="#333"
+        android:background="#434D7A"
         android:paddingTop="16dp"/>
 
 </android.support.v4.widget.DrawerLayout>

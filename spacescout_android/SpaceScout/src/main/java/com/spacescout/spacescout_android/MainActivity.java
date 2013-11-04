@@ -19,12 +19,10 @@ package com.spacescout.spacescout_android;
 
 import android.app.Activity;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,7 +30,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -45,33 +42,48 @@ public class MainActivity extends Activity {
     private CharSequence mTitle;
     private String[] mNavItems;
 
+    NavMenuListAdapter mNavMenuAdapter;
+    String[] navItemTitle;
+    int[] navItemIcon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //set content to main_layout
         setContentView(R.layout.main_layout);
 
+        //get the titlw
         mTitle = mDrawerTitle = getTitle();
-        mNavItems = getResources().getStringArray(R.array.drawer_list_items);
+
+        //Generate nav menu item title
+        navItemTitle = new String[]{"Search Space", "Space List", "My Favorite Spaces", "Suggest New Space"};
+
+        navItemIcon = new int[]{R.drawable.nav_search, R.drawable.nav_slist, R.drawable.nav_fav_spaces, R.drawable.nav_fav_spaces};
+
+// old implementation of getting nav items
+// mNavItems = getResources().getStringArray(R.array.drawer_list_items);
+
+        //Locate drawer_layout and drawer ListView in main_layout.xml
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
         // set up the drawer's list view with items and click listener
+        // old implementation of nav item list
+//        mDrawerList.setAdapter(new ArrayAdapter<String>(
+//                this,
+//                R.layout.drawer_list_item,
+//                mNavItems));
 
-//        //get textview for nav item
-//        TextView txtNavItem = (TextView) findViewById(R.id.itemText);
-//
-//        //load font face
-//        Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/Maven Pro Regular.otf");
-//
-//        //apply font
-//        txtNavItem.setTypeface(typeFace);
+        //pass string arrays to NavMenuListAdapter
+        mNavMenuAdapter = new NavMenuListAdapter(MainActivity.this, navItemTitle, navItemIcon);
 
-        mDrawerList.setAdapter(new ArrayAdapter<String>(
-                this,
-                R.layout.drawer_list_item,
-                mNavItems));
+        //set the NavMenuListAdapter to the ListView
+        mDrawerList.setAdapter(mNavMenuAdapter);
+
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
