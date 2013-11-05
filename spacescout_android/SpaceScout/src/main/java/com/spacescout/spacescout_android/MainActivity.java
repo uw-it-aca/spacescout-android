@@ -18,6 +18,7 @@ package com.spacescout.spacescout_android;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -28,7 +29,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,7 +40,6 @@ public class MainActivity extends Activity {
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mNavItems;
 
     NavMenuListAdapter mNavMenuAdapter;
     String[] navItemTitle;
@@ -61,22 +60,12 @@ public class MainActivity extends Activity {
 
         navItemIcon = new int[]{R.drawable.nav_search, R.drawable.nav_slist, R.drawable.nav_fav_spaces, R.drawable.nav_fav_spaces};
 
-// old implementation of getting nav items
-// mNavItems = getResources().getStringArray(R.array.drawer_list_items);
-
         //Locate drawer_layout and drawer ListView in main_layout.xml
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
-        // set up the drawer's list view with items and click listener
-        // old implementation of nav item list
-//        mDrawerList.setAdapter(new ArrayAdapter<String>(
-//                this,
-//                R.layout.drawer_list_item,
-//                mNavItems));
 
         //pass string arrays to NavMenuListAdapter
         mNavMenuAdapter = new NavMenuListAdapter(MainActivity.this, navItemTitle, navItemIcon);
@@ -166,7 +155,9 @@ public class MainActivity extends Activity {
                 Toast.makeText(getApplicationContext(), "Search Spaces", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
-                Toast.makeText(getApplicationContext(), "Space List", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(this, SpaceListActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(i);
                 break;
             case 2:
                 Toast.makeText(getApplicationContext(), "My Favorite Spaces", Toast.LENGTH_SHORT).show();
