@@ -1,0 +1,125 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="120dip"
+    android:paddingLeft="6dip"
+    android:paddingRight="6dip"
+    android:paddingTop="15dip"
+    android:paddingBottom="12dip"
+    android:background="@color/white" >
+
+
+    <ImageView
+        android:id="@+id/spaceThumb"
+        android:layout_width="105dip"
+        android:layout_height="88dip"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="6dip"
+        android:contentDescription="yay"
+        android:layout_centerVertical="true"
+        android:background="#f1f1f1"
+        android:padding="3dip"
+        android:src="@drawable/ic_launcher"/>
+
+    <LinearLayout
+        android:id="@+id/space_titles"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="3dip"
+        android:layout_toRightOf="@+id/spaceThumb">
+
+        <TextView
+            android:id="@+id/spaceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Example application"
+            android:textColor="#434588"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:paddingBottom="2dip" />
+
+        <TextView
+            android:id="@+id/spaceDesc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="Description"
+            android:textColor="#57588D"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/spaceThumb"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="4dip"
+        android:layout_below="@id/space_titles">
+
+        <ImageView
+            android:id="@+id/mapPinIcon"
+            android:layout_width="18dip"
+            android:layout_height="19dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginBottom="2dip"
+            android:contentDescription="yay"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="-1dip"
+            android:src="@drawable/map_pin_blue" />
+
+        <TextView
+            android:id="@+id/spaceLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="2nd Floor, North Side"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
+            android:textColor="#6699CC"
+            android:textSize="14sp" />
+
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="right"
+            android:layout_marginRight="2dip">
+
+            <TextView
+                android:id="@+id/spaceSeatCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:layout_gravity="bottom"
+                android:text="40"
+                android:layout_marginBottom="-1dip"
+                android:textColor="#6699CC"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/seatIcon"
+                android:layout_width="16dip"
+                android:layout_height="16dip"
+                android:contentDescription="yay"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="2dip"
+                android:layout_marginBottom="3dip"
+                android:src="@drawable/seat_icon" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

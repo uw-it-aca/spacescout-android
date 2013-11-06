@@ -49,8 +49,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //set content to main_layout
-        setContentView(R.layout.main_layout);
+        //set content to layout_main
+        setContentView(R.layout.layout_main);
 
         //get the titlw
         mTitle = mDrawerTitle = getTitle();
@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 
         navItemIcon = new int[]{R.drawable.nav_search, R.drawable.nav_slist, R.drawable.nav_fav_spaces, R.drawable.nav_fav_spaces};
 
-        //Locate drawer_layout and drawer ListView in main_layout.xml
+        //Locate drawer_layout and drawer ListView in layout_main.xml
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
