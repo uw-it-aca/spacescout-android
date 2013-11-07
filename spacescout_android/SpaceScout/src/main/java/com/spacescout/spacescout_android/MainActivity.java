@@ -60,9 +60,9 @@ public class MainActivity extends FragmentActivity {
         mTitle = mDrawerTitle = getTitle();
 
         //Generate nav menu item title
-        navItemTitle = new String[]{"Search Space", "Space List", "My Favorite Spaces", "Suggest New Space"};
+        navItemTitle = new String[]{"Filter Spaces", "Space List", "My Favorite Spaces"};
 
-        navItemIcon = new int[]{R.drawable.nav_search, R.drawable.nav_slist, R.drawable.nav_fav_spaces, R.drawable.nav_fav_spaces};
+        navItemIcon = new int[]{R.drawable.nav_search, R.drawable.nav_slist, R.drawable.nav_fav_spaces};
 
         //Locate drawer_layout and drawer ListView in layout_main.xml
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

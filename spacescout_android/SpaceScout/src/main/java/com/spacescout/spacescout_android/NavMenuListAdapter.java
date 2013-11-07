@@ -1,6 +1,7 @@
 package com.spacescout.spacescout_android;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,12 @@ public class NavMenuListAdapter extends BaseAdapter{
 
         //locate the TextView in drawer_list_item.xml
         navItemText = (TextView) itemView.findViewById(R.id.itemText);
+
+        //this is where the custom font for the nav items is initialized
+        //this isn't working for now
+//        String fontPath = "font/MavenPro-Regular.ttf";
+//        Typeface typeface = Typefaces.get(context, fontPath);
+//        navItemText.setTypeface(typeface);
 
         //locate ImageView in drawer_list_item.xml
         imgIcon = (ImageView) itemView.findViewById(R.id.icon);
