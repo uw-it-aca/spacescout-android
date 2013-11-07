@@ -1,11 +1,17 @@
 package com.spacescout.spacescout_android;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -16,7 +22,7 @@ import org.json.JSONObject;
  *
  * Created by ajay alfred on 11/5/13.
  */
-public class SpaceListActivity extends ListActivity {
+public class SpaceListActivity extends Fragment {
 
     //URL to get JSON Array
     private static String url = "http://students.washington.edu/ajalfred/space_scout/space_76.json";
@@ -28,11 +34,9 @@ public class SpaceListActivity extends ListActivity {
     JSONArray info = null;
 
     @Override
-    public void onCreate(Bundle bundle) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R.layout.layout_space_list);
-
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
 //        new JSONParse().execute();
 
@@ -40,9 +44,13 @@ public class SpaceListActivity extends ListActivity {
                 "Commons Room 108", "Commons Room 107",
                 "Commons Room 110", "Commons Room 111", "Commons Room 122",};
 
-        SpaceListArrayAdapter spaceListArrayAdapter = new SpaceListArrayAdapter(this, spaceTitles);
-        setListAdapter(spaceListArrayAdapter);
+        View view = inflater.inflate(R.layout.fragment_space_list, container, false);
+        ListView listView = (ListView) view.findViewById(R.id.lvSpaceList);
 
+        SpaceListArrayAdapter spaceListArrayAdapter = new SpaceListArrayAdapter(getActivity(), spaceTitles);
+        listView.setAdapter(spaceListArrayAdapter);
+
+        return view;
     }
 
 //    private class JSONParse extends AsyncTask<String, String, JSONObject> {

@@ -18,10 +18,14 @@ package com.spacescout.spacescout_android;
 
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.ListFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -33,7 +37,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -52,7 +56,7 @@ public class MainActivity extends Activity {
         //set content to layout_main
         setContentView(R.layout.layout_main);
 
-        //get the titlw
+        //get the title
         mTitle = mDrawerTitle = getTitle();
 
         //Generate nav menu item title
@@ -149,18 +153,35 @@ public class MainActivity extends Activity {
     }
 
     private void selectItem(int position) {
+
+        FragmentManager fragmentManager;
+        Fragment fragment;
+
         // Locate Position
         switch (position) {
             case 0:
-                Toast.makeText(getApplicationContext(), "Search Spaces", Toast.LENGTH_SHORT).show();
+                fragment = new SearchSpacesActivity();
+
+                fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+
+                mDrawerList.setItemChecked(position, true);
                 break;
             case 1:
-                Intent i = new Intent(this, SpaceListActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(i);
+                fragment = new SpaceListActivity();
+
+                fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+
+                mDrawerList.setItemChecked(position, true);
                 break;
             case 2:
-                Toast.makeText(getApplicationContext(), "My Favorite Spaces", Toast.LENGTH_SHORT).show();
+                fragment = new FavSpacesActivity();
+
+                fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+
+                mDrawerList.setItemChecked(position, true);
                 break;
             case 3:
                 Toast.makeText(getApplicationContext(), "Suggest New Space", Toast.LENGTH_SHORT).show();
