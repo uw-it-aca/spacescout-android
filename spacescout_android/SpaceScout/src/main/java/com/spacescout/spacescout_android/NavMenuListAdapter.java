@@ -57,9 +57,9 @@ public class NavMenuListAdapter extends BaseAdapter{
 
         //this is where the custom font for the nav items is initialized
         //this isn't working for now
-//        String fontPath = "font/MavenPro-Regular.ttf";
-//        Typeface typeface = Typefaces.get(context, fontPath);
-//        navItemText.setTypeface(typeface);
+        String fontPath = "fonts/MavenPro-Bold.ttf";
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), fontPath);
+        navItemText.setTypeface(typeface);
 
         //locate ImageView in drawer_list_item.xml
         imgIcon = (ImageView) itemView.findViewById(R.id.icon);
