@@ -1,8 +1,12 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- Base application theme.
     <style name="AppTheme" parent="android:Theme.Holo.Light">
-        <!-- Customize your theme here. -->
+    </style>  -->
+
+    <!-- Custom application theme. -->
+    <style name="CustomAppTheme" parent="android:Theme.Holo.Light">
+        <item name="android:activatedBackgroundIndicator">@drawable/activated_background</item>
     </style>
 
 </resources>

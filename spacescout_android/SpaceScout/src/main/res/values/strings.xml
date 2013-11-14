@@ -2,12 +2,13 @@
 <resources>
 
     <string name="app_name">SpaceScout</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="space_list">Space List</string>
+    <string name="space_filter">Filter Spaces</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
+    <string name="action_search">Search Spaces</string>
+    <string name="action_space_list">Space List</string>
+    <string name="action_space_map">Map View</string>
     <string name="action_settings">Settings</string>
     <string-array name="drawer_list_items">
         <item>Search Spaces</item>
