@@ -50,9 +50,9 @@ public class NavMenuListAdapter extends BaseAdapter{
         ImageView imgIcon;
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView = inflater.inflate(R.layout.drawer_list_item, parent, false);
+        View itemView = inflater.inflate(R.layout.navdrawer_item, parent, false);
 
-        //locate the TextView in drawer_list_item.xml
+        //locate the TextView in navdrawer_item
         navItemText = (TextView) itemView.findViewById(R.id.itemText);
 
         //this is where the custom font for the nav items is initialized
@@ -61,7 +61,7 @@ public class NavMenuListAdapter extends BaseAdapter{
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), fontPath);
         navItemText.setTypeface(typeface);
 
-        //locate ImageView in drawer_list_item.xml
+        //locate ImageView in navdrawer_item.xml
         imgIcon = (ImageView) itemView.findViewById(R.id.icon);
 
         //set the result into textView

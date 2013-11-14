@@ -12,17 +12,19 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+    </FrameLayout>
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/left_drawer"
-        android:layout_width="285dp"
+        android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:divider="@android:color/transparent"
+        android:choiceMode="singleChoice"
         android:dividerHeight="0dp"
         android:background="#434D7A"
-        android:paddingTop="20dp"/>
+        android:paddingTop="0dp"/>
 
 </android.support.v4.widget.DrawerLayout>

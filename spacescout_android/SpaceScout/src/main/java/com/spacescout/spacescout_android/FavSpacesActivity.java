@@ -12,12 +12,15 @@ import android.view.ViewGroup;
  */
 public class FavSpacesActivity extends Fragment {
 
+    private View view;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle bundle) {
         super.onCreate(bundle);
 
-        View view = inflater.inflate(R.layout.fragment_space_favs, container, false);
+        if(view == null)
+            view = inflater.inflate(R.layout.fragment_space_favs, container, false);
 
         return view;
     }

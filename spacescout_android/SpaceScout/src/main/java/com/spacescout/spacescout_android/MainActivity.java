@@ -17,15 +17,12 @@ package com.spacescout.spacescout_android;
  */
 
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -45,6 +42,12 @@ public class MainActivity extends FragmentActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
 
+    private FragmentManager fragmentManager;
+    private Fragment fragSpaceList = new SpaceListActivity();
+    private Fragment fragFilterSpaces = new FilterSpacesActivity();
+    private Fragment fragFavSpaces = new FavSpacesActivity();
+    private Fragment fragSpaceMap = new SpaceMapActivity();
+
     NavMenuListAdapter mNavMenuAdapter;
     String[] navItemTitle;
     int[] navItemIcon;
@@ -60,9 +63,9 @@ public class MainActivity extends FragmentActivity {
         mTitle = mDrawerTitle = getTitle();
 
         //Generate nav menu item title
-        navItemTitle = new String[]{"Filter Spaces", "Space List", "My Favorite Spaces"};
+        navItemTitle = new String[]{"Map View", "Space List", "Filter Spaces", "My Favorite Spaces"};
 
-        navItemIcon = new int[]{R.drawable.nav_search, R.drawable.nav_slist, R.drawable.nav_fav_spaces};
+        navItemIcon = new int[]{R.drawable.nav_map_view, R.drawable.nav_slist, R.drawable.nav_search, R.drawable.nav_fav_spaces};
 
         //Locate drawer_layout and drawer ListView in layout_main.xml
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -72,7 +75,7 @@ public class MainActivity extends FragmentActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         //pass string arrays to NavMenuListAdapter
-        mNavMenuAdapter = new NavMenuListAdapter(MainActivity.this, navItemTitle, navItemIcon);
+        mNavMenuAdapter = new NavMenuListAdapter(this.getBaseContext(), navItemTitle, navItemIcon);
 
         //set the NavMenuListAdapter to the ListView
         mDrawerList.setAdapter(mNavMenuAdapter);
@@ -122,8 +125,25 @@ public class MainActivity extends FragmentActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_example).setVisible(!drawerOpen);
+        menu.findItem(R.id.action_search).setVisible(!drawerOpen);
+        menu.findItem(R.id.action_space_list).setVisible(!drawerOpen);
+        menu.findItem(R.id.action_space_map).setVisible(!drawerOpen);
         menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+
+        if(!drawerOpen)
+        {
+            if(fragSpaceList != null && fragSpaceList.isVisible())
+            {
+                menu.findItem(R.id.action_space_map).setEnabled(true).setVisible(true);
+                menu.findItem(R.id.action_space_list).setEnabled(false).setVisible(false);
+            }
+            else
+            {
+                menu.findItem(R.id.action_space_map).setEnabled(false).setVisible(false);
+                menu.findItem(R.id.action_space_list).setEnabled(true).setVisible(true);
+            }
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -136,9 +156,20 @@ public class MainActivity extends FragmentActivity {
         }
         // Handle action buttons
         switch(item.getItemId()) {
-            case R.id.action_example:
-                // create intent to perform web search for this planet
+
+            //on click of space list action item
+            case R.id.action_space_list:
+                fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.container, fragSpaceList).commit();
+                invalidateOptionsMenu();
                 return super.onOptionsItemSelected(item);
+
+            case R.id.action_space_map:
+                fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.container, fragFilterSpaces).commit();
+                invalidateOptionsMenu();
+                return super.onOptionsItemSelected(item);
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -154,37 +185,31 @@ public class MainActivity extends FragmentActivity {
 
     private void selectItem(int position) {
 
-        FragmentManager fragmentManager;
-        Fragment fragment;
-
         // Locate Position
         switch (position) {
             case 0:
-                fragment = new SearchSpacesActivity();
-
                 fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.container, fragSpaceMap, "SPACE_MAP").commit();
 
-                mDrawerList.setItemChecked(position, true);
+                invalidateOptionsMenu();
                 break;
             case 1:
-                fragment = new SpaceListActivity();
-
                 fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.container, fragSpaceList, "SPACE_LIST").commit();
 
-                mDrawerList.setItemChecked(position, true);
+                invalidateOptionsMenu();
                 break;
             case 2:
-                fragment = new FavSpacesActivity();
-
                 fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.container, fragFilterSpaces, "FILTER_SPACES").commit();
 
-                mDrawerList.setItemChecked(position, true);
+                invalidateOptionsMenu();
                 break;
             case 3:
-                Toast.makeText(getApplicationContext(), "Suggest New Space", Toast.LENGTH_SHORT).show();
+                fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.container, fragFavSpaces, "FAV_SPACES").commit();
+
+                invalidateOptionsMenu();
                 break;
             case 4:
                 Toast.makeText(getApplicationContext(), "Settings", Toast.LENGTH_SHORT).show();
@@ -193,6 +218,7 @@ public class MainActivity extends FragmentActivity {
                 Toast.makeText(getApplicationContext(), "About SpaceScout", Toast.LENGTH_SHORT).show();
                 break;
         }
+        mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 

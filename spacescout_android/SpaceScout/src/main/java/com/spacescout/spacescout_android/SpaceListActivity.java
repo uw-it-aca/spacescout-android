@@ -1,13 +1,7 @@
 package com.spacescout.spacescout_android;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +9,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  *
@@ -28,10 +20,11 @@ public class SpaceListActivity extends Fragment {
     private static String url = "http://students.washington.edu/ajalfred/space_scout/space_76.json";
 
     //Setting variables
-    TextView jsonText = null;
+    private TextView jsonText = null;
+    private View view;
 
     //JSON Array
-    JSONArray info = null;
+    private JSONArray info = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +37,8 @@ public class SpaceListActivity extends Fragment {
                 "Commons Room 108", "Commons Room 107",
                 "Commons Room 110", "Commons Room 111", "Commons Room 122",};
 
-        View view = inflater.inflate(R.layout.fragment_space_list, container, false);
+        if(view == null)
+            view = inflater.inflate(R.layout.fragment_space_list, container, false);
         ListView listView = (ListView) view.findViewById(R.id.lvSpaceList);
 
         SpaceListArrayAdapter spaceListArrayAdapter = new SpaceListArrayAdapter(getActivity(), spaceTitles);

@@ -3,7 +3,7 @@
     android:id="@+id/spaceTitle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Search Spaces"
+    android:text="@string/space_filter"
     android:textColor="#434588"
     android:textStyle="bold"
     android:textSize="17sp"
