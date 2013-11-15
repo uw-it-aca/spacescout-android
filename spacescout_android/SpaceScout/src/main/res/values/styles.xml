@@ -7,6 +7,13 @@
     <!-- Custom application theme. -->
     <style name="CustomAppTheme" parent="android:Theme.Holo.Light">
         <item name="android:activatedBackgroundIndicator">@drawable/activated_background</item>
+        <item name="android:actionBarStyle">@style/SpaceScoutActionBar</item>
+    </style>
+
+    <!-- SpaceScout Action Bar style -->
+    <style name="SpaceScoutActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid">
+        <item name="android:background">@drawable/actionbar_bg</item>
+        <item name="android:height">58dp</item>
     </style>
 
 </resources>

@@ -17,21 +17,30 @@ package com.spacescout.spacescout_android;
  */
 
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.internal.fa;
 
 
 public class MainActivity extends FragmentActivity {
@@ -55,6 +64,9 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getActionBar().setDisplayShowCustomEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(false);
 
         //set content to layout_main
         setContentView(R.layout.layout_main);
@@ -108,6 +120,18 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
+        LayoutInflater inflator = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflator.inflate(R.layout.title_actionbar, null);
+
+        Typeface typeface = Typeface.createFromAsset(this.getAssets(), "fonts/Manteka.ttf");
+
+        TextView titleSpace = (TextView) v.findViewById(R.id.titleSpace);
+        TextView titleScout = (TextView) v.findViewById(R.id.titleScout);
+        titleSpace.setTypeface(typeface);
+        titleScout.setTypeface(typeface);
+
+        getActionBar().setCustomView(v);
+
         if (savedInstanceState == null) {
             selectItem(0);
         }
@@ -126,23 +150,7 @@ public class MainActivity extends FragmentActivity {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         menu.findItem(R.id.action_search).setVisible(!drawerOpen);
-        menu.findItem(R.id.action_space_list).setVisible(!drawerOpen);
-        menu.findItem(R.id.action_space_map).setVisible(!drawerOpen);
         menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
-
-        if(!drawerOpen)
-        {
-            if(fragSpaceList != null && fragSpaceList.isVisible())
-            {
-                menu.findItem(R.id.action_space_map).setEnabled(true).setVisible(true);
-                menu.findItem(R.id.action_space_list).setEnabled(false).setVisible(false);
-            }
-            else
-            {
-                menu.findItem(R.id.action_space_map).setEnabled(false).setVisible(false);
-                menu.findItem(R.id.action_space_list).setEnabled(true).setVisible(true);
-            }
-        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -159,14 +167,10 @@ public class MainActivity extends FragmentActivity {
 
             //on click of space list action item
             case R.id.action_space_list:
-                fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.container, fragSpaceList).commit();
                 invalidateOptionsMenu();
                 return super.onOptionsItemSelected(item);
 
             case R.id.action_space_map:
-                fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.container, fragFilterSpaces).commit();
                 invalidateOptionsMenu();
                 return super.onOptionsItemSelected(item);
 
