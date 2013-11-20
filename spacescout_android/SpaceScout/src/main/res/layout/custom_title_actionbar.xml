@@ -12,8 +12,8 @@
         android:layout_centerVertical="true"
         android:text="SPACE"
         android:textColor="@color/Space"
-        android:textSize="21sp"
-        android:paddingLeft="4dip" />
+        android:textSize="20sp"
+        android:paddingLeft="3dip" />
 
     <TextView
         android:id="@+id/titleScout"
@@ -23,6 +23,6 @@
         android:layout_toRightOf="@id/titleSpace"
         android:text="SCOUT"
         android:textColor="@color/Scout"
-        android:textSize="21sp" />
+        android:textSize="20sp" />
 
 </RelativeLayout>

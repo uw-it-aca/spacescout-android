@@ -13,7 +13,7 @@
     <!-- SpaceScout Action Bar style -->
     <style name="SpaceScoutActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid">
         <item name="android:background">@drawable/actionbar_bg</item>
-        <item name="android:height">58dp</item>
+        <item name="android:height">54dp</item>
     </style>
 
 </resources>

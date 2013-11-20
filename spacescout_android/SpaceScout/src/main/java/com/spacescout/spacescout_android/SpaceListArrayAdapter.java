@@ -18,7 +18,7 @@ public class SpaceListArrayAdapter extends ArrayAdapter{
     private final String[] values;
 
     public SpaceListArrayAdapter(Context context, String[] values) {
-        super(context, R.layout.space_list_row, values);
+        super(context, R.layout.custom_space_list_row, values);
         this.context = context;
         this.values = values;
     }
@@ -31,7 +31,7 @@ public class SpaceListArrayAdapter extends ArrayAdapter{
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //get space list row view group
-        View rowView = inflater.inflate(R.layout.space_list_row, parent, false);
+        View rowView = inflater.inflate(R.layout.custom_space_list_row, parent, false);
 
         //get the different views inside the view group
         //spaceThumb

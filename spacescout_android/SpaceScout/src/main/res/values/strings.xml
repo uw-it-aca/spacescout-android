@@ -7,9 +7,24 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_search">Search Spaces</string>
-    <string name="action_space_list">Space List</string>
+    <string name="action_space_list">List View</string>
     <string name="action_space_map">Map View</string>
     <string name="action_settings">Settings</string>
+    <string name="filter_title">FILTER SPACES</string>
+    <string name="spaceType_title">Type of space</string>
+    <string name="spaceLoc_title">Location</string>
+    <string name="spaceCap_title">Capacity</string>
+    <string name="spaceTimings_title">Show spaces open</string>
+    <string name="spaceReserve_title">Show reservable spaces only?</string>
+    <string name="spaceEnviron_title">ENVIRONMENT</string>
+    <string name="spaceNoise_title">Noise Level</string>
+    <string name="spaceLight_title">Lighting</string>
+    <string name="spaceResources_title">Resources</string>
+    <string name="spaceFood_title">Food/Coffee</string>
+
+
+
+
     <string-array name="drawer_list_items">
         <item>Search Spaces</item>
         <item>Space List</item>
@@ -17,6 +32,70 @@
         <item>Suggest New Space</item>
         <item>Settings</item>
         <item>About SpaceScout</item>
+    </string-array>
+
+    <string-array name="space_type_list">
+        <item>Study Room</item>
+        <item>Open Space</item>
+        <item>Study Area</item>
+        <item>Lounge</item>
+        <item>Computer Lab</item>
+        <item>Cafe</item>
+        <item>Production Studio</item>
+        <item>Outdoor Area</item>
+        <item>Conference/classroom</item>
+    </string-array>
+
+    <string-array name="space_loc_list">
+        <item>Entire Campus</item>
+        <item>Alder Hall</item>
+        <item>Allen Library(ALB)</item>
+        <item>Allen Library (ALB) North</item>
+        <item>Allen Library (ALB) South</item>
+        <item>Architecture Hall (ARC)</item>
+        <item>Art Building (ART)</item>
+        <item>Burke Memorial-Washington State Museum (BMM)</item>
+        <item>Computer Science and Engineering Building (CSE)</item>
+        <item>Electrical Engineering Building (EEB)</item>
+        <item>Engineering Library (ELB)</item>
+        <item>Fishery Sciences (FSH)</item>
+        <item>Gould Hall (GLD)</item>
+        <item>Gowen Hall (GWN)</item>
+    </string-array>
+
+    <string-array name="space_timings_list">
+        <item>MON</item>
+        <item>TUE</item>
+        <item>WED</item>
+        <item>THU</item>
+        <item>FRI</item>
+        <item>SAT</item>
+        <item>SUN</item>
+    </string-array>
+
+    <string-array name="space_noise_list">
+        <item>No Preference</item>
+        <item>Silent</item>
+        <item>Low hum</item>
+        <item>Chatter</item>
+    </string-array>
+
+    <string-array name="space_resources_list">
+        <item>No Preference</item>
+        <item>Whiteboard</item>
+        <item>Large Display (for laptop)</item>
+        <item>Outlets</item>
+        <item>Projector</item>
+        <item>Computer</item>
+        <item>Printing</item>
+        <item>Scanning</item>
+    </string-array>
+
+    <string-array name="space_food_list">
+        <item>No Preference</item>
+        <item>In space</item>
+        <item>In building</item>
+        <item>In neighboring building</item>
     </string-array>
 
 </resources>

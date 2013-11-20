@@ -18,11 +18,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
-        android:textSize="19sp"
+        android:textSize="18sp"
         android:gravity="center_vertical"
-        android:paddingTop="23dp"
-        android:paddingBottom="22dp"
-        android:paddingLeft="5dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="23dp"
+        android:paddingLeft="6dp"
         android:scaleX="0.92"
         />
 

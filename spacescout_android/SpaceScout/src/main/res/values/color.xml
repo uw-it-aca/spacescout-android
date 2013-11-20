@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="LightSlateBlue">#ff525783</color>
-    <color name="white">#FFFFFF</color>
-    <color name="NavSelectedItem">#ff314168</color>
+    <color name="DividerColor">#ff7a7fb1</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="NavDrawerBg">#434D7A</color>
+    <color name="NavSelectedItem">#25000000</color>
     <color name="NavPressedItem">#39436B</color>
-    <color name="ActionBarBorder">#ffc0c0c0</color>
+    <color name="ActionBarBorder">#ffc5c5c5</color>
     <color name="ActionBarBg">#F9F9F9</color>
-    <color name="Space">#555555</color>
-    <color name="Scout">#777676</color>
+    <color name="Space">#ff4b4b4b</color>
+    <color name="Scout">#ff6d6c6c</color>
+    <color name="SpinnerBlue">#ff5d8faf</color>
+    <color name="SpinnerTitle">#525783</color>
 
 
     <color name="yellow">#FFFF00</color>

@@ -24,7 +24,7 @@
         android:divider="@android:color/transparent"
         android:choiceMode="singleChoice"
         android:dividerHeight="0dp"
-        android:background="#434D7A"
+        android:background="@color/NavDrawerBg"
         android:paddingTop="0dp"/>
 
 </android.support.v4.widget.DrawerLayout>

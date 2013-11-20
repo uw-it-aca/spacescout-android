@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/spinnerRow"
+    android:layout_width="match_parent"
+    android:textColor="@color/SpinnerBlue"
+    android:textSize="18sp"
+    android:text="Something here"
+    android:padding="10dip"
+    android:fontFamily="sans-serif-light"
+    android:layout_height="wrap_content"
+    android:gravity="left" />

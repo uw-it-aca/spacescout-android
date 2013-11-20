@@ -1,10 +1,362 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/spaceTitle"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/space_filter"
-    android:textColor="#434588"
-    android:textStyle="bold"
-    android:textSize="17sp"
-    android:padding="20dip" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/filterHeader"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginTop="14dip"
+        android:layout_marginBottom="12dip">
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/filterTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_title"
+            android:textColor="@color/SpinnerTitle"
+            android:textStyle="bold"
+            android:layout_gravity="bottom"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-condensed"
+            android:paddingLeft="18dip" />
+
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:gravity="right"
+            android:layout_marginRight="18dp">
+
+            <ImageButton
+                android:layout_height="40dip"
+                android:layout_width="120dip"
+                android:src="@drawable/btn_filter_white"
+                android:background="@drawable/filter_btn_bg"
+                android:contentDescription="filter button"
+                android:cropToPadding="false" />
+
+            </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/divider1"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dip"
+        android:layout_below="@id/filterHeader">
+
+        <View android:id="@+id/divider_line"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/DividerColor"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:layout_marginBottom="10dip"
+        android:layout_below="@id/divider1" >
+
+        <LinearLayout
+            android:id="@+id/filterCritBody"
+            android:padding="20dip"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/filterSpaceType"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/titleSpaceType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/spaceType_title"
+                    android:textColor="@color/SpinnerTitle"
+                    android:textStyle="normal"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSpaceType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:prompt="@string/spaceType_title" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/filterLocation"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="18dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/titleSpaceLoc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/spaceLoc_title"
+                    android:textColor="@color/SpinnerTitle"
+                    android:textStyle="normal"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSpaceType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:entries="@array/space_loc_list"
+                    android:prompt="@string/spaceLoc_title" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/filterCapacity"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="18dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/titleSpaceCap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/spaceCap_title"
+                    android:textColor="@color/SpinnerTitle"
+                    android:textStyle="normal"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSpaceCap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:entries="@array/space_loc_list"
+                    android:prompt="@string/spaceCap_title" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/filterTimings"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="18dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/titleSpaceTimings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/spaceTimings_title"
+                    android:textColor="@color/SpinnerTitle"
+                    android:textStyle="normal"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FROM"
+                    android:textColor="@color/SpinnerTitle"
+                    android:textStyle="normal"
+                    android:layout_marginTop="8dip"
+                    android:layout_marginLeft="10dip"
+                    android:textSize="13sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSpaceTimings1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:entries="@array/space_timings_list"
+                    android:prompt="@string/spaceTimings_title" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TO"
+                    android:textColor="@color/SpinnerTitle"
+                    android:textStyle="normal"
+                    android:layout_marginTop="8dip"
+                    android:layout_marginLeft="10dip"
+                    android:textSize="13sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSpaceTimings2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:entries="@array/space_timings_list"
+                    android:prompt="@string/spaceTimings_title" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/filterReserve"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="18dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/titleSpaceReserve"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/spaceReserve_title"
+                    android:textColor="@color/SpinnerTitle"
+                    android:textStyle="normal"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSpaceReserve"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:entries="@array/space_loc_list"
+                    android:prompt="@string/spaceReserve_title" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ENVIRONMENT"
+                android:textColor="@color/SpinnerTitle"
+                android:textStyle="bold"
+                android:layout_marginTop="40dip"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:id="@+id/divider1"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="12dip" >
+
+                <View android:id="@+id/divider_line"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/DividerColor"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/filterNoise"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="18dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/titleSpaceNoise"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/spaceNoise_title"
+                    android:textColor="@color/SpinnerTitle"
+                    android:textStyle="normal"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSpaceNoise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:entries="@array/space_noise_list"
+                    android:prompt="@string/spaceNoise_title" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/filterLight"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="18dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/titleSpaceLight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/spaceLight_title"
+                    android:textColor="@color/SpinnerTitle"
+                    android:textStyle="normal"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSpaceLight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:entries="@array/space_noise_list"
+                    android:prompt="@string/spaceLight_title" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/filterResources"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="18dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/titleSpaceResources"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/spaceResources_title"
+                    android:textColor="@color/SpinnerTitle"
+                    android:textStyle="normal"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSpaceResources"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:entries="@array/space_resources_list"
+                    android:prompt="@string/spaceResources_title" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/filterFood"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="18dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/titleSpaceFood"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/spaceFood_title"
+                    android:textColor="@color/SpinnerTitle"
+                    android:textStyle="normal"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSpaceResources"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:entries="@array/space_food_list"
+                    android:prompt="@string/spaceFood_title" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
