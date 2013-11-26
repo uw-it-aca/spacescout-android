@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/filter_title"
-            android:textColor="@color/SpinnerTitle"
+            android:textColor="@color/SpinnerMainTitle"
             android:textStyle="bold"
             android:layout_gravity="bottom"
             android:textSize="18sp"
@@ -86,12 +86,25 @@
                     android:textStyle="normal"
                     android:textSize="16sp" />
 
-                <Spinner
+                <TextView
                     android:id="@+id/spinnerSpaceType"
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dip"
-                    android:prompt="@string/spaceType_title" />
+                    android:text="@string/no_pref"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:textSize="17sp"
+                    android:textStyle="normal"
+                    android:padding="10dip"
+                    android:layout_marginTop="2dip"
+                    android:background="@drawable/custom_spinner"
+                    android:textColor="@color/SpinnerBlue" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2px"
+                    android:layout_marginTop="-4dip"
+                    android:background="@color/SpinnerBlue"/>
 
             </LinearLayout>
 
@@ -99,7 +112,7 @@
                 android:id="@+id/filterLocation"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:layout_marginTop="18dip"
+                android:layout_marginTop="20dip"
                 android:orientation="vertical" >
 
                 <TextView
@@ -111,13 +124,25 @@
                     android:textStyle="normal"
                     android:textSize="16sp" />
 
-                <Spinner
-                    android:id="@+id/spinnerSpaceType"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/spinnerSpaceLoc"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dip"
-                    android:entries="@array/space_loc_list"
-                    android:prompt="@string/spaceLoc_title" />
+                    android:text="Entire Campus"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:textSize="17sp"
+                    android:textStyle="normal"
+                    android:padding="10dip"
+                    android:layout_marginTop="2dip"
+                    android:background="@drawable/custom_spinner"
+                    android:textColor="@color/SpinnerBlue" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2px"
+                    android:layout_marginTop="-4dip"
+                    android:background="@color/SpinnerBlue"/>
 
             </LinearLayout>
 
@@ -125,7 +150,7 @@
                 android:id="@+id/filterCapacity"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:layout_marginTop="18dip"
+                android:layout_marginTop="20dip"
                 android:orientation="vertical" >
 
                 <TextView
@@ -151,7 +176,7 @@
                 android:id="@+id/filterTimings"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:layout_marginTop="18dip"
+                android:layout_marginTop="20dip"
                 android:orientation="vertical" >
 
                 <TextView
@@ -161,6 +186,7 @@
                     android:text="@string/spaceTimings_title"
                     android:textColor="@color/SpinnerTitle"
                     android:textStyle="normal"
+                    android:layout_marginBottom="5dip"
                     android:textSize="16sp" />
 
                 <TextView
@@ -173,13 +199,30 @@
                     android:layout_marginLeft="10dip"
                     android:textSize="13sp" />
 
-                <Spinner
-                    android:id="@+id/spinnerSpaceTimings1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dip"
-                    android:entries="@array/space_timings_list"
-                    android:prompt="@string/spaceTimings_title" />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/spinnerSpaceFromDay"
+                        android:layout_width="130dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dip"
+                        android:layout_marginRight="10dip"
+                        android:entries="@array/space_timings_list"
+                        android:prompt="@string/spaceTimings_title" />
+
+                    <Spinner
+                        android:id="@+id/spinnerSpaceFromTime"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dip"
+                        android:entries="@array/space_timings_list"
+                        android:prompt="@string/spaceTimings_title" />
+
+                </LinearLayout>
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -191,13 +234,29 @@
                     android:layout_marginLeft="10dip"
                     android:textSize="13sp" />
 
-                <Spinner
-                    android:id="@+id/spinnerSpaceTimings2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dip"
-                    android:entries="@array/space_timings_list"
-                    android:prompt="@string/spaceTimings_title" />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/spinnerSpaceToDay"
+                        android:layout_width="130dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dip"
+                        android:layout_marginRight="10dip"
+                        android:entries="@array/space_timings_list"
+                        android:prompt="@string/spaceTimings_title" />
+
+                    <Spinner
+                        android:id="@+id/spinnerSpaceToTime"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dip"
+                        android:entries="@array/space_timings_list"
+                        android:prompt="@string/spaceTimings_title" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -205,7 +264,7 @@
                 android:id="@+id/filterReserve"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:layout_marginTop="18dip"
+                android:layout_marginTop="25dip"
                 android:orientation="vertical" >
 
                 <TextView
@@ -217,13 +276,35 @@
                     android:textStyle="normal"
                     android:textSize="16sp" />
 
-                <Spinner
-                    android:id="@+id/spinnerSpaceReserve"
-                    android:layout_width="match_parent"
+                <RadioGroup
+                    android:id="@+id/radioSpaceReserve"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dip"
-                    android:entries="@array/space_loc_list"
-                    android:prompt="@string/spaceReserve_title" />
+                    android:layout_marginTop="7dip"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioYes"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/SpinnerBlue"
+                        android:layout_width="150dip"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/custom_radio"
+                        android:text="@string/yes" />
+
+                    <RadioButton
+                        android:id="@+id/radioNoPref"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/SpinnerBlue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_pref"
+                        android:button="@drawable/custom_radio"
+                        android:checked="true" />
+
+                </RadioGroup>
 
             </LinearLayout>
 
@@ -231,7 +312,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ENVIRONMENT"
-                android:textColor="@color/SpinnerTitle"
+                android:textColor="@color/SpinnerMainTitle"
                 android:textStyle="bold"
                 android:layout_marginTop="40dip"
                 android:fontFamily="sans-serif-condensed"
@@ -267,13 +348,25 @@
                     android:textStyle="normal"
                     android:textSize="16sp" />
 
-                <Spinner
+                <TextView
                     android:id="@+id/spinnerSpaceNoise"
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dip"
-                    android:entries="@array/space_noise_list"
-                    android:prompt="@string/spaceNoise_title" />
+                    android:text="@string/no_pref"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:textSize="17sp"
+                    android:textStyle="normal"
+                    android:padding="10dip"
+                    android:layout_marginTop="2dip"
+                    android:background="@drawable/custom_spinner"
+                    android:textColor="@color/SpinnerBlue" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2px"
+                    android:layout_marginTop="-4dip"
+                    android:background="@color/SpinnerBlue"/>
 
             </LinearLayout>
 
@@ -281,7 +374,7 @@
                 android:id="@+id/filterLight"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:layout_marginTop="18dip"
+                android:layout_marginTop="20dip"
                 android:orientation="vertical" >
 
                 <TextView
@@ -293,13 +386,35 @@
                     android:textStyle="normal"
                     android:textSize="16sp" />
 
-                <Spinner
-                    android:id="@+id/spinnerSpaceLight"
-                    android:layout_width="match_parent"
+                <RadioGroup
+                    android:id="@+id/radioSpaceLight"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dip"
-                    android:entries="@array/space_noise_list"
-                    android:prompt="@string/spaceLight_title" />
+                    android:layout_marginTop="7dip"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioLightNatural"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/SpinnerBlue"
+                        android:layout_width="150dip"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/custom_radio"
+                        android:text="Natural Light" />
+
+                    <RadioButton
+                        android:id="@+id/radioLightNoPref"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/SpinnerBlue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_pref"
+                        android:button="@drawable/custom_radio"
+                        android:checked="true" />
+
+                </RadioGroup>
 
             </LinearLayout>
 
@@ -307,7 +422,7 @@
                 android:id="@+id/filterResources"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:layout_marginTop="18dip"
+                android:layout_marginTop="20dip"
                 android:orientation="vertical" >
 
                 <TextView
@@ -333,7 +448,7 @@
                 android:id="@+id/filterFood"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:layout_marginTop="18dip"
+                android:layout_marginTop="20dip"
                 android:orientation="vertical" >
 
                 <TextView
@@ -346,7 +461,7 @@
                     android:textSize="16sp" />
 
                 <Spinner
-                    android:id="@+id/spinnerSpaceResources"
+                    android:id="@+id/spinnerSpaceFood"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dip"

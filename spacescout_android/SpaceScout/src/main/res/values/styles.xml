@@ -16,4 +16,16 @@
         <item name="android:height">54dp</item>
     </style>
 
+    <!-- SpaceScout custom dialog style -->
+    <style name="popupStyle" parent="android:Theme.Holo.Light.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:windowBackground">@color/DialogWindowBg</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
+
 </resources>

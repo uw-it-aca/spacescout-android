@@ -21,8 +21,9 @@
     <string name="spaceLight_title">Lighting</string>
     <string name="spaceResources_title">Resources</string>
     <string name="spaceFood_title">Food/Coffee</string>
-
-
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="no_pref">No preference</string>
 
 
     <string-array name="drawer_list_items">
@@ -61,6 +62,32 @@
         <item>Fishery Sciences (FSH)</item>
         <item>Gould Hall (GLD)</item>
         <item>Gowen Hall (GWN)</item>
+        <item>Haggett Hall (HGT)</item>
+        <item>Hitchcock Hall (HCK)</item>
+        <item>Hutchinson Hall (HUT)</item>
+        <item>Intramural Activities Building (IMA)</item>
+        <item>Magnuson Health Sciences Center A (HSA)</item>
+        <item>Magnuson Health Sciences Center C (HSC)</item>
+        <item>Magnuson Health Sciences Center D (HSD)</item>
+        <item>Magnuson Health Sciences Center E (HSE)</item>
+        <item>Magnuson Health Sciences Center I (HSI)</item>
+        <item>Magnuson Health Sciences Center T (HST)</item>
+        <item>Mary Gates Hall (MGH)</item>
+        <item>McCarty Hall (MCC)</item>
+        <item>McMohan Hall (MCM)</item>
+        <item>Miller Hall (MLR)</item>
+        <item>Music Building (MUS)</item>
+        <item>Odegaard Undergraduate Library (OUGL)</item>
+        <item>Paccar Hall (PCAR)</item>
+        <item>Padelford Hall (PDL)</item>
+        <item>Physics/Astronomy Building (PAB) Tower</item>
+        <item>Poplar Hall (UTO)</item>
+        <item>Social Work/Speech &amp; Hearing Sciences Building (SWS)</item>
+        <item>South Campus Center (SOCC)</item>
+        <item>Suzzallo Library (SUZ)</item>
+        <item>William H. Foege Genome Sciences (GNOM)</item>
+        <item>William H. Gates Hall (LAW)</item>
+
     </string-array>
 
     <string-array name="space_timings_list">
@@ -74,7 +101,6 @@
     </string-array>
 
     <string-array name="space_noise_list">
-        <item>No Preference</item>
         <item>Silent</item>
         <item>Low hum</item>
         <item>Chatter</item>
