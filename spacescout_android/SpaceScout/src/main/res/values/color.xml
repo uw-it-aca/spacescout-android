@@ -16,7 +16,7 @@
     <color name="SpinnerHighlight">#306699b9</color>
     <color name="DialogBg">#434D7A</color>
     <color name="DialogButtonPressBg">#9533b5e5</color>
-    <color name="DialogWindowBg">#95ffffff</color>
+    <color name="DialogWindowBg">#90ffffff</color>
 
     <color name="yellow">#FFFF00</color>
     <color name="fuchsia">#FF00FF</color>

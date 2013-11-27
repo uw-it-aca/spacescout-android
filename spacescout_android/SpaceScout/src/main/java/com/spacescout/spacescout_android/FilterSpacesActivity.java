@@ -21,14 +21,9 @@ import java.util.List;
 public class FilterSpacesActivity extends Fragment {
 
     private View view;
-    private View dialogView;
-    private AlertDialog.Builder alertDialogBuilder;
-    private Dialog dialog;
     private CustomDialogFragment customDialog = new CustomDialogFragment();
 
     public String[] arrToDisplay;
-    public String dialogType;
-    public String dialogSelect;
     public int singleSelect;
 
     public FilterSpacesActivity() {
@@ -42,8 +37,6 @@ public class FilterSpacesActivity extends Fragment {
 
         if(view == null)
             view = inflater.inflate(R.layout.fragment_space_filter, container, false);
-
-        dialogView = inflater.inflate(R.layout.dialog_custom_title, container, false);
 
         TextView spaceType = (TextView) view.findViewById(R.id.spinnerSpaceType);
         spaceType.setOnClickListener(new View.OnClickListener() {

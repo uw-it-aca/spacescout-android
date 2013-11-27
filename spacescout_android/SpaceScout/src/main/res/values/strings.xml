@@ -107,7 +107,6 @@
     </string-array>
 
     <string-array name="space_resources_list">
-        <item>No Preference</item>
         <item>Whiteboard</item>
         <item>Large Display (for laptop)</item>
         <item>Outlets</item>

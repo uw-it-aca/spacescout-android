@@ -74,15 +74,11 @@ public class CustomDialogFragment extends DialogFragment {
             })
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    // if this button is clicked, close
-                    // current activity
                     dialog.dismiss();
                 }
             })
             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    // if this button is clicked, just close
-                    // the dialog box and do nothing
                     dialog.cancel();
                 }
             });
@@ -93,6 +89,10 @@ public class CustomDialogFragment extends DialogFragment {
                 public void onClick(DialogInterface dialog, int item) {
                     Log.i("INFO", "selected -> " + item);
                     dialog.dismiss();
+                }
+            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
                 }
             });
         }
