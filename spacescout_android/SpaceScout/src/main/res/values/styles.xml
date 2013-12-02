@@ -5,7 +5,7 @@
     </style>  -->
 
     <!-- Custom application theme. -->
-    <style name="CustomAppTheme" parent="android:Theme.Holo.Light">
+    <style name="CustomAppTheme" parent="android:Theme.Holo">
         <item name="android:activatedBackgroundIndicator">@drawable/activated_background</item>
         <item name="android:actionBarStyle">@style/SpaceScoutActionBar</item>
     </style>

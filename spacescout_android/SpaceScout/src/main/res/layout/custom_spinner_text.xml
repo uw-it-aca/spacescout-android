@@ -7,5 +7,5 @@
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:textSize="17sp"
-    android:textStyle="normal"
+    android:textStyle="bold"
     android:textColor="@color/SpinnerBlue"/>
