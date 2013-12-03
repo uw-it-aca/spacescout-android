@@ -88,6 +88,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/spaceType_title"
                         android:textColor="@color/SpinnerTitle"
+                        android:fontFamily="sans-serif-condensed"
                         android:textStyle="normal"
                         android:textSize="16sp" />
 
@@ -158,22 +159,72 @@
                 android:layout_marginTop="22dip"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:id="@+id/titleSpaceCap"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/spaceCap_title"
-                    android:textColor="@color/SpinnerTitle"
-                    android:textStyle="normal"
-                    android:textSize="16sp" />
+                    android:orientation="horizontal" >
 
-                <Spinner
-                    android:id="@+id/spinnerSpaceCap"
-                    android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/titleSpaceCap"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/spaceCap_title"
+                        android:textColor="@color/SpinnerTitle"
+                        android:textStyle="normal"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/seekerCapacityValue"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Seats: 1"
+                        android:textColor="@color/SpinnerBlue"
+                        android:textStyle="bold"
+                        android:gravity="right"
+                        android:layout_marginRight="10dip"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/seekerCapacity"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dip"
-                    android:entries="@array/space_loc_list"
-                    android:prompt="@string/spaceCap_title" />
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:progress="0"
+                    android:max="100"
+                    android:secondaryProgress="0" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-10dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:textColor="@color/SpinnerBlue"
+                        android:textStyle="normal"
+                        android:layout_marginLeft="10dip"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="20"
+                        android:textColor="@color/SpinnerBlue"
+                        android:textStyle="normal"
+                        android:gravity="right"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="10dip"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+
 
             </LinearLayout>
 

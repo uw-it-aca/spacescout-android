@@ -8,8 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.List;
@@ -101,6 +104,29 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
+        SeekBar spaceCapacity = (SeekBar) view.findViewById(R.id.seekerCapacity);
+        spaceCapacity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            TextView spaceCapValue = (TextView) view.findViewById(R.id.seekerCapacityValue);
+            int progChanged = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                int val = progress / 5;
+                spaceCapValue.setText("Seats: "+val);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         return view;
     }
 
@@ -116,12 +142,6 @@ public class FilterSpacesActivity extends Fragment {
         Spinner spinner;
         List<String> list;
         ArrayAdapter<String> adapter;
-
-        spinner = (Spinner) view.findViewById(R.id.spinnerSpaceCap);
-        list =  Arrays.asList(getResources().getStringArray(R.array.space_loc_list));
-        adapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.custom_spinner_text, list);
-        adapter.setDropDownViewResource(R.layout.custom_spinner_row);
-        spinner.setAdapter(adapter);
 
         spinner = (Spinner) view.findViewById(R.id.spinnerSpaceFromDay);
         list =  Arrays.asList(getResources().getStringArray(R.array.space_timings_list));
