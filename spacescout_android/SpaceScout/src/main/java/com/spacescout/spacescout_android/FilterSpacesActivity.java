@@ -2,6 +2,7 @@ package com.spacescout.spacescout_android;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -127,6 +128,63 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
+        TextView spaceFromDay = (TextView) view.findViewById(R.id.spinnerSpaceFromDay);
+        spaceFromDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                arrToDisplay = getResources().getStringArray(R.array.space_timings_daylist);
+                boolean[] arrFromDayBool = new boolean[arrToDisplay.length];
+                for (int i = 0; i < arrFromDayBool.length; i++) {
+                    arrFromDayBool[i] = false;
+                }
+                Bundle dialogBundle = new Bundle();
+                dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
+                dialogBundle.putBooleanArray("arrFromDayBool", arrFromDayBool);
+                dialogBundle.putString("dialogType", "SpaceTimeFromDay");
+                dialogBundle.putString("dialogSelect", "single");
+                dialogBundle.putString("dialogTitle", "Select a day");
+                customDialog.setArguments(dialogBundle);
+                customDialog.show(getFragmentManager(),"from day dialog");
+            }
+        });
+
+        TextView spaceFromTime = (TextView) view.findViewById(R.id.spinnerSpaceFromTime);
+        spaceFromTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                arrToDisplay = getResources().getStringArray(R.array.space_timings_daylist);
+                Bundle dialogBundle = new Bundle();
+                dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
+                dialogBundle.putString("dialogType", "none");
+                dialogBundle.putString("dialogSelect", "time");
+                dialogBundle.putString("dialogTitle", "Select time");
+                customDialog.setArguments(dialogBundle);
+                customDialog.show(getFragmentManager(),"from time dialog");
+            }
+        });
+
+        TextView timeToDay = (TextView) view.findViewById(R.id.spinnerSpaceToDay);
+        timeToDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                arrToDisplay = getResources().getStringArray(R.array.space_timings_daylist);
+                boolean[] arrToDayBool = new boolean[arrToDisplay.length];
+                for (int i = 0; i < arrToDayBool.length; i++) {
+                    arrToDayBool[i] = false;
+                }
+                Bundle dialogBundle = new Bundle();
+                dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
+                dialogBundle.putBooleanArray("arrToDayBool", arrToDayBool);
+                dialogBundle.putString("dialogType", "SpaceTimeToDay");
+                dialogBundle.putString("dialogSelect", "single");
+                dialogBundle.putString("dialogTitle", "Select a day");
+                customDialog.setArguments(dialogBundle);
+                customDialog.show(getFragmentManager(),"to day dialog");
+            }
+        });
+
         return view;
     }
 
@@ -139,33 +197,6 @@ public class FilterSpacesActivity extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Spinner spinner;
-        List<String> list;
-        ArrayAdapter<String> adapter;
-
-        spinner = (Spinner) view.findViewById(R.id.spinnerSpaceFromDay);
-        list =  Arrays.asList(getResources().getStringArray(R.array.space_timings_list));
-        adapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.custom_spinner_text, list);
-        adapter.setDropDownViewResource(R.layout.custom_spinner_row);
-        spinner.setAdapter(adapter);
-
-        spinner = (Spinner) view.findViewById(R.id.spinnerSpaceFromTime);
-        list =  Arrays.asList(getResources().getStringArray(R.array.space_timings_list));
-        adapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.custom_spinner_text, list);
-        adapter.setDropDownViewResource(R.layout.custom_spinner_row);
-        spinner.setAdapter(adapter);
-
-        spinner = (Spinner) view.findViewById(R.id.spinnerSpaceResources);
-        list =  Arrays.asList(getResources().getStringArray(R.array.space_noise_list));
-        adapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.custom_spinner_text, list);
-        adapter.setDropDownViewResource(R.layout.custom_spinner_row);
-        spinner.setAdapter(adapter);
-
-        spinner = (Spinner) view.findViewById(R.id.spinnerSpaceFood);
-        list =  Arrays.asList(getResources().getStringArray(R.array.space_noise_list));
-        adapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.custom_spinner_text, list);
-        adapter.setDropDownViewResource(R.layout.custom_spinner_row);
-        spinner.setAdapter(adapter);
 
     }
 

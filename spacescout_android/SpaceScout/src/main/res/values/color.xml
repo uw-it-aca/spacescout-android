@@ -13,9 +13,11 @@
     <color name="Space">#ffffff</color>
     <color name="Scout_bkup">#ff6d6c6c</color>
     <color name="Scout">#ffffff</color>
-    <color name="SpinnerBlue">#ff6699b9</color>
+    <color name="SpinnerBlue">#ff6699C9</color>
     <color name="SpinnerMainTitle">#525783</color>
     <color name="SpinnerTitle">#686d9b</color>
+    <color name="SpinnerTxtBg">#126699b9</color>
+    <color name="SpinnerTxtStroke">#206699b9</color>
     <color name="SpinnerHighlight">#306699b9</color>
     <color name="DialogBg">#434D7A</color>
     <color name="DialogButtonPressBg">#9533b5e5</color>

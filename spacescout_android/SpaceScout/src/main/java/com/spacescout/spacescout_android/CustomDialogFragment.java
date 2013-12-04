@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 /**
  *
@@ -34,6 +35,8 @@ public class CustomDialogFragment extends DialogFragment {
         TextView title = (TextView) titleView.findViewById(R.id.dialogTitle);
         title.setText(getArguments().getString("dialogTitle"));
 
+        View timeView = inflater.inflate(R.layout.custom_time_picker, null);
+
         //get array and bool to display
         arrToDisplay = getArguments().getStringArray("arrayToDisplay");
 
@@ -46,6 +49,10 @@ public class CustomDialogFragment extends DialogFragment {
             singleSelect = getArguments().getInt("singleSelect");
         } else if (dialogType.equalsIgnoreCase("SpaceNoise")) {
             arrSelectBool = getArguments().getBooleanArray("arrSpaceNoiseBool");
+        } else if (dialogType.equalsIgnoreCase("SpaceTimeFromDay")) {
+            arrSelectBool = getArguments().getBooleanArray("arrFromDayBool");
+        } else if (dialogType.equalsIgnoreCase("SpaceTimeToDay")) {
+            arrSelectBool = getArguments().getBooleanArray("arrToDayBool");
         }
 
         //get dialog select type
@@ -83,6 +90,21 @@ public class CustomDialogFragment extends DialogFragment {
                 }
             });
         }
+
+        else if (dialogSelect.equalsIgnoreCase("time")) {
+            alertDialogBuilder.setView(timeView)
+            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            })
+            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+        }
+
         else
         {
             alertDialogBuilder.setSingleChoiceItems(arrToDisplay, singleSelect, new DialogInterface.OnClickListener() {
