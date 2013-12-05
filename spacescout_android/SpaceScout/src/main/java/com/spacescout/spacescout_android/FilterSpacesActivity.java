@@ -164,8 +164,8 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
-        TextView timeToDay = (TextView) view.findViewById(R.id.spinnerSpaceToDay);
-        timeToDay.setOnClickListener(new View.OnClickListener() {
+        TextView spaceToDay = (TextView) view.findViewById(R.id.spinnerSpaceToDay);
+        spaceToDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -182,6 +182,63 @@ public class FilterSpacesActivity extends Fragment {
                 dialogBundle.putString("dialogTitle", "Select a day");
                 customDialog.setArguments(dialogBundle);
                 customDialog.show(getFragmentManager(),"to day dialog");
+            }
+        });
+
+        TextView spaceToTime = (TextView) view.findViewById(R.id.spinnerSpaceToTime);
+        spaceToTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                arrToDisplay = getResources().getStringArray(R.array.space_timings_daylist);
+                Bundle dialogBundle = new Bundle();
+                dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
+                dialogBundle.putString("dialogType", "none");
+                dialogBundle.putString("dialogSelect", "time");
+                dialogBundle.putString("dialogTitle", "Select time");
+                customDialog.setArguments(dialogBundle);
+                customDialog.show(getFragmentManager(),"to time dialog");
+            }
+        });
+
+        TextView spaceResources = (TextView) view.findViewById(R.id.spinnerSpaceResources);
+        spaceResources.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                arrToDisplay = getResources().getStringArray(R.array.space_resources_list);
+                boolean[] arrSpaceResourcesBool = new boolean[arrToDisplay.length];
+                for (int i = 0; i < arrSpaceResourcesBool.length; i++) {
+                    arrSpaceResourcesBool[i] = false;
+                }
+                Bundle dialogBundle = new Bundle();
+                dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
+                dialogBundle.putBooleanArray("arrSpaceResourcesBool", arrSpaceResourcesBool);
+                dialogBundle.putString("dialogType", "SpaceResources");
+                dialogBundle.putString("dialogSelect", "multi");
+                dialogBundle.putString("dialogTitle", "Resources");
+                customDialog.setArguments(dialogBundle);
+                customDialog.show(getFragmentManager(),"space resources dialog");
+            }
+        });
+
+        TextView spaceFood = (TextView) view.findViewById(R.id.spinnerSpaceFood);
+        spaceFood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                arrToDisplay = getResources().getStringArray(R.array.space_food_list);
+                boolean[] arrSpaceFoodBool = new boolean[arrToDisplay.length];
+                for (int i = 0; i < arrSpaceFoodBool.length; i++) {
+                    arrSpaceFoodBool[i] = false;
+                }
+                Bundle dialogBundle = new Bundle();
+                dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
+                dialogBundle.putBooleanArray("arrSpaceFoodBool", arrSpaceFoodBool);
+                dialogBundle.putString("dialogType", "SpaceFood");
+                dialogBundle.putString("dialogSelect", "multi");
+                dialogBundle.putString("dialogTitle", "Food/Coffee");
+                customDialog.setArguments(dialogBundle);
+                customDialog.show(getFragmentManager(),"space food dialog");
             }
         });
 

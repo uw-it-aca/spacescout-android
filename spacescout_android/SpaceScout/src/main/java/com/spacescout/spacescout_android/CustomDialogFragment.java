@@ -53,6 +53,10 @@ public class CustomDialogFragment extends DialogFragment {
             arrSelectBool = getArguments().getBooleanArray("arrFromDayBool");
         } else if (dialogType.equalsIgnoreCase("SpaceTimeToDay")) {
             arrSelectBool = getArguments().getBooleanArray("arrToDayBool");
+        } else if (dialogType.equalsIgnoreCase("SpaceResources")) {
+            arrSelectBool = getArguments().getBooleanArray("arrSpaceResourcesBool");
+        } else if (dialogType.equalsIgnoreCase("SpaceFood")) {
+            arrSelectBool = getArguments().getBooleanArray("arrSpaceFoodBool");
         }
 
         //get dialog select type
@@ -93,16 +97,12 @@ public class CustomDialogFragment extends DialogFragment {
 
         else if (dialogSelect.equalsIgnoreCase("time")) {
             alertDialogBuilder.setView(timeView)
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            .setPositiveButton("Done", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
                 }
             })
-            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                }
-            });
+            .setCustomTitle(null);
         }
 
         else

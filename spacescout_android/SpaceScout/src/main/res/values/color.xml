@@ -2,10 +2,11 @@
 <resources>
     <color name="LightSlateBlue">#ff525783</color>
     <color name="DividerColor">#ff7a7fb1</color>
+    <color name="DividerColorBlue">#9984bbdc</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="NavDrawerBg">#444444</color>
+    <color name="NavDrawerBg">#6699B9</color>
     <color name="NavSelectedItem">#25000000</color>
-    <color name="NavPressedItem">#25000000</color>
+    <color name="NavPressedItem">#ff5886a5</color>
     <color name="ActionBarBorder">#6699B9</color>
     <color name="ActionBarBg">#ff65a6ca</color>
     <color name="ActionBarBg_bkup">#6699B9</color>
@@ -17,11 +18,13 @@
     <color name="SpinnerMainTitle">#525783</color>
     <color name="SpinnerTitle">#686d9b</color>
     <color name="SpinnerTxtBg">#126699b9</color>
-    <color name="SpinnerTxtStroke">#206699b9</color>
+    <color name="SpinnerTxtStroke">#126699b9</color>
     <color name="SpinnerHighlight">#306699b9</color>
     <color name="DialogBg">#434D7A</color>
-    <color name="DialogButtonPressBg">#9533b5e5</color>
+    <color name="DialogButtonPressBg">#951e95cc</color>
     <color name="DialogWindowBg">#90ffffff</color>
+    <color name="FilterResetBtnBg">#ff84bbdc</color>
+    <color name="FilterResetBtnStroke">#ff6db0d4</color>
 
     <color name="yellow">#FFFF00</color>
     <color name="fuchsia">#FF00FF</color>

@@ -117,7 +117,6 @@
     </string-array>
 
     <string-array name="space_food_list">
-        <item>No Preference</item>
         <item>In space</item>
         <item>In building</item>
         <item>In neighboring building</item>
