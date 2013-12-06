@@ -59,6 +59,7 @@
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/scrollerFilterPage"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:layout_below="@id/divider1" >
@@ -233,7 +234,7 @@
                     android:textColor="@color/SpinnerTitle"
                     android:textStyle="normal"
                     android:layout_marginTop="8dip"
-                    android:layout_marginLeft="10dip"
+                    android:layout_marginLeft="15dip"
                     android:layout_marginBottom="7dip"
                     android:textSize="13sp" />
 
@@ -249,14 +250,14 @@
 
                         <TextView
                             android:id="@+id/spinnerSpaceFromDay"
-                            android:layout_width="120dip"
+                            android:layout_width="130dip"
                             android:layout_height="wrap_content"
                             android:text="MON"
                             android:singleLine="true"
                             android:ellipsize="marquee"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:paddingLeft="10dip"
+                            android:paddingLeft="15dip"
                             android:background="@drawable/custom_spinner"
                             android:textColor="@color/SpinnerBlue" />
 
@@ -265,7 +266,7 @@
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dip"
+                        android:layout_marginLeft="20dip"
                         android:orientation="vertical" >
 
                         <TextView
@@ -277,7 +278,7 @@
                             android:ellipsize="marquee"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:paddingLeft="10dip"
+                            android:paddingLeft="15dip"
                             android:background="@drawable/custom_spinner"
                             android:textColor="@color/SpinnerBlue" />
 
@@ -293,7 +294,7 @@
                     android:textColor="@color/SpinnerTitle"
                     android:textStyle="normal"
                     android:layout_marginTop="8dip"
-                    android:layout_marginLeft="10dip"
+                    android:layout_marginLeft="15dip"
                     android:layout_marginBottom="7dip"
                     android:textSize="13sp" />
 
@@ -309,14 +310,14 @@
 
                         <TextView
                             android:id="@+id/spinnerSpaceToDay"
-                            android:layout_width="120dip"
+                            android:layout_width="130dip"
                             android:layout_height="wrap_content"
-                            android:text="MON"
+                            android:text="--"
                             android:singleLine="true"
                             android:ellipsize="marquee"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:paddingLeft="10dip"
+                            android:paddingLeft="15dip"
                             android:background="@drawable/custom_spinner"
                             android:textColor="@color/SpinnerBlue" />
 
@@ -325,7 +326,7 @@
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dip"
+                        android:layout_marginLeft="20dip"
                         android:orientation="vertical" >
 
                         <TextView
@@ -337,7 +338,7 @@
                             android:ellipsize="marquee"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:paddingLeft="10dip"
+                            android:paddingLeft="15dip"
                             android:background="@drawable/custom_spinner"
                             android:textColor="@color/SpinnerBlue" />
 
@@ -568,6 +569,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="40dip"
+                android:paddingBottom="10dip"
                 android:gravity="center_horizontal"
                 android:orientation="vertical" >
 
@@ -577,12 +579,16 @@
                     android:background="@color/DividerColorBlue"/>
 
                 <Button
-                    android:layout_height="43dip"
-                    android:layout_width="160dip"
-                    android:gravity="center"
+                    android:id="@+id/btnFilterReset"
+                    android:layout_height="44dip"
+                    android:layout_width="170dip"
+                    android:gravity="center|right"
+                    android:paddingLeft="15dip"
+                    android:paddingRight="24dip"
                     android:text="Reset Filters"
                     android:textSize="19sp"
                     android:textStyle="bold"
+                    android:drawableLeft="@drawable/filter_reset"
                     android:textColor="@color/white"
                     android:layout_marginTop="20dip"
                     android:fontFamily="sans-serif-condensed"

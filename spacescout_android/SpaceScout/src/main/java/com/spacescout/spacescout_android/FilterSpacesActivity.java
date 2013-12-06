@@ -1,57 +1,113 @@
 package com.spacescout.spacescout_android;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.util.Arrays;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  *
  * Created by ajay alfred on 11/5/13.
  */
-public class FilterSpacesActivity extends Fragment {
+public class FilterSpacesActivity extends Activity implements CustomDialogFragment.FilterDialogActionsListener{
 
-    private View view;
     private CustomDialogFragment customDialog = new CustomDialogFragment();
 
     public String[] arrToDisplay;
+    public boolean[] arrSpaceTypeBool;
+    public int arrSpaceLocBool;
+    public int arrFromDayBool;
+    public int arrToDayBool;
+    public boolean[] arrSpaceNoiseBool;
+    public boolean[] arrSpaceResourcesBool;
+    public boolean[] arrSpaceFoodBool;
+    public TextView spaceType, spaceLoc, spaceNoise, spaceCapacity, spaceFromDay, spaceFromTime, spaceToDay, spaceToTime;
+    public TextView spaceResources, spaceFood;
+
+    private boolean initLoad;
+
     public int singleSelect;
 
     public FilterSpacesActivity() {
-        //empty constructor
+        initLoad = true;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle bundle) {
-        super.onCreate(bundle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        if(view == null)
-            view = inflater.inflate(R.layout.fragment_space_filter, container, false);
+        getActionBar().setDisplayShowCustomEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(false);
 
-        TextView spaceType = (TextView) view.findViewById(R.id.spinnerSpaceType);
+        LayoutInflater inflator = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflator.inflate(R.layout.custom_title_actionbar, null);
+
+        Typeface typeface = Typeface.createFromAsset(this.getAssets(), "fonts/Manteka.ttf");
+
+        TextView titleSpace = (TextView) v.findViewById(R.id.titleSpace);
+        TextView titleScout = (TextView) v.findViewById(R.id.titleScout);
+        titleSpace.setTypeface(typeface);
+        titleScout.setTypeface(typeface);
+
+        getActionBar().setCustomView(v);
+
+        //set layout view
+        setContentView(R.layout.layout_space_filter);
+
+        if(initLoad){
+            //space type list
+            arrToDisplay = getResources().getStringArray(R.array.space_type_list);
+            arrSpaceTypeBool = new boolean[arrToDisplay.length];
+            for (int i = 0; i < arrSpaceTypeBool.length; i++) {
+                arrSpaceTypeBool[i] = false;
+            }
+
+            //space loc single select bool
+            arrSpaceLocBool = 0;
+
+            //space noise
+            arrSpaceNoiseBool = new boolean[arrToDisplay.length];
+            for (int i = 0; i < arrSpaceNoiseBool.length; i++) {
+                arrSpaceNoiseBool[i] = false;
+            }
+
+            //space from day
+            arrFromDayBool = 0;
+
+            //space to day
+            arrToDayBool = 0;
+
+            //space resources
+            arrSpaceResourcesBool = new boolean[arrToDisplay.length];
+            for (int i = 0; i < arrSpaceResourcesBool.length; i++) {
+                arrSpaceResourcesBool[i] = false;
+            }
+
+            //space food
+            arrSpaceFoodBool = new boolean[arrToDisplay.length];
+            for (int i = 0; i < arrSpaceFoodBool.length; i++) {
+                arrSpaceFoodBool[i] = false;
+            }
+        }
+
+        spaceType = (TextView) findViewById(R.id.spinnerSpaceType);
         spaceType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 arrToDisplay = getResources().getStringArray(R.array.space_type_list);
-                boolean[] arrSpaceTypeBool = new boolean[arrToDisplay.length];
-                for (int i = 0; i < arrSpaceTypeBool.length; i++) {
-                    arrSpaceTypeBool[i] = false;
-                }
 
                 Bundle dialogBundle = new Bundle();
                 dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
@@ -65,17 +121,16 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
-        TextView spaceLoc = (TextView) view.findViewById(R.id.spinnerSpaceLoc);
+        spaceLoc = (TextView) findViewById(R.id.spinnerSpaceLoc);
         spaceLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 arrToDisplay = getResources().getStringArray(R.array.space_loc_list);
-                singleSelect = 0;
 
                 Bundle dialogBundle = new Bundle();
                 dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
-                dialogBundle.putInt("singleSelect", singleSelect);
+                dialogBundle.putInt("singleSelect", arrSpaceLocBool);
                 dialogBundle.putString("dialogType", "SpaceLoc");
                 dialogBundle.putString("dialogSelect", "single");
                 dialogBundle.putString("dialogTitle", "Select a location");
@@ -84,16 +139,13 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
-        TextView spaceNoise = (TextView) view.findViewById(R.id.spinnerSpaceNoise);
+        spaceNoise = (TextView) findViewById(R.id.spinnerSpaceNoise);
         spaceNoise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 arrToDisplay = getResources().getStringArray(R.array.space_noise_list);
-                boolean[] arrSpaceNoiseBool = new boolean[arrToDisplay.length];
-                for (int i = 0; i < arrSpaceNoiseBool.length; i++) {
-                    arrSpaceNoiseBool[i] = false;
-                }
+
                 Bundle dialogBundle = new Bundle();
                 dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
                 dialogBundle.putBooleanArray("arrSpaceNoiseBool", arrSpaceNoiseBool);
@@ -105,11 +157,10 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
-        SeekBar spaceCapacity = (SeekBar) view.findViewById(R.id.seekerCapacity);
+        SeekBar spaceCapacity = (SeekBar) findViewById(R.id.seekerCapacity);
         spaceCapacity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-            TextView spaceCapValue = (TextView) view.findViewById(R.id.seekerCapacityValue);
-            int progChanged = 0;
+            TextView spaceCapValue = (TextView) findViewById(R.id.seekerCapacityValue);
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
@@ -118,29 +169,23 @@ public class FilterSpacesActivity extends Fragment {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStopTrackingTouch(SeekBar seekBar) {}
 
-            }
         });
 
-        TextView spaceFromDay = (TextView) view.findViewById(R.id.spinnerSpaceFromDay);
+        spaceFromDay = (TextView) findViewById(R.id.spinnerSpaceFromDay);
         spaceFromDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 arrToDisplay = getResources().getStringArray(R.array.space_timings_daylist);
-                boolean[] arrFromDayBool = new boolean[arrToDisplay.length];
-                for (int i = 0; i < arrFromDayBool.length; i++) {
-                    arrFromDayBool[i] = false;
-                }
+
                 Bundle dialogBundle = new Bundle();
                 dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
-                dialogBundle.putBooleanArray("arrFromDayBool", arrFromDayBool);
+                dialogBundle.putInt("singleSelect", arrFromDayBool);
                 dialogBundle.putString("dialogType", "SpaceTimeFromDay");
                 dialogBundle.putString("dialogSelect", "single");
                 dialogBundle.putString("dialogTitle", "Select a day");
@@ -149,7 +194,15 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
-        TextView spaceFromTime = (TextView) view.findViewById(R.id.spinnerSpaceFromTime);
+        spaceFromTime = (TextView) findViewById(R.id.spinnerSpaceFromTime);
+
+        //initial time setup
+        if(initLoad){
+            final Calendar c = Calendar.getInstance();
+            SimpleDateFormat displayFormat = new SimpleDateFormat("hh:mm a");
+            spaceFromTime.setText(displayFormat.format(c.getTime()));
+        }
+
         spaceFromTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,19 +217,16 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
-        TextView spaceToDay = (TextView) view.findViewById(R.id.spinnerSpaceToDay);
+        spaceToDay = (TextView) findViewById(R.id.spinnerSpaceToDay);
         spaceToDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 arrToDisplay = getResources().getStringArray(R.array.space_timings_daylist);
-                boolean[] arrToDayBool = new boolean[arrToDisplay.length];
-                for (int i = 0; i < arrToDayBool.length; i++) {
-                    arrToDayBool[i] = false;
-                }
+
                 Bundle dialogBundle = new Bundle();
                 dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
-                dialogBundle.putBooleanArray("arrToDayBool", arrToDayBool);
+                dialogBundle.putInt("singleSelect", arrToDayBool);
                 dialogBundle.putString("dialogType", "SpaceTimeToDay");
                 dialogBundle.putString("dialogSelect", "single");
                 dialogBundle.putString("dialogTitle", "Select a day");
@@ -185,7 +235,15 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
-        TextView spaceToTime = (TextView) view.findViewById(R.id.spinnerSpaceToTime);
+        spaceToTime = (TextView) findViewById(R.id.spinnerSpaceToTime);
+        //initial time setup
+        if(initLoad){
+            final Calendar c = Calendar.getInstance();
+            c.add(Calendar.HOUR, 1);
+            SimpleDateFormat displayFormat = new SimpleDateFormat("hh:mm a");
+            spaceToTime.setText(displayFormat.format(c.getTime()));
+        }
+
         spaceToTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -200,16 +258,13 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
-        TextView spaceResources = (TextView) view.findViewById(R.id.spinnerSpaceResources);
+        spaceResources = (TextView) findViewById(R.id.spinnerSpaceResources);
         spaceResources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 arrToDisplay = getResources().getStringArray(R.array.space_resources_list);
-                boolean[] arrSpaceResourcesBool = new boolean[arrToDisplay.length];
-                for (int i = 0; i < arrSpaceResourcesBool.length; i++) {
-                    arrSpaceResourcesBool[i] = false;
-                }
+
                 Bundle dialogBundle = new Bundle();
                 dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
                 dialogBundle.putBooleanArray("arrSpaceResourcesBool", arrSpaceResourcesBool);
@@ -221,16 +276,13 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
-        TextView spaceFood = (TextView) view.findViewById(R.id.spinnerSpaceFood);
+        spaceFood = (TextView) findViewById(R.id.spinnerSpaceFood);
         spaceFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 arrToDisplay = getResources().getStringArray(R.array.space_food_list);
-                boolean[] arrSpaceFoodBool = new boolean[arrToDisplay.length];
-                for (int i = 0; i < arrSpaceFoodBool.length; i++) {
-                    arrSpaceFoodBool[i] = false;
-                }
+
                 Bundle dialogBundle = new Bundle();
                 dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
                 dialogBundle.putBooleanArray("arrSpaceFoodBool", arrSpaceFoodBool);
@@ -242,7 +294,21 @@ public class FilterSpacesActivity extends Fragment {
             }
         });
 
-        return view;
+        Button btnFilterReset = (Button) findViewById(R.id.btnFilterReset);
+        btnFilterReset.setOnClickListener(new View.OnClickListener() {
+
+            ScrollView scrollView = (ScrollView) findViewById(R.id.scrollerFilterPage);
+
+            @Override
+            public void onClick(View view) {
+                Toast toast = Toast.makeText(getBaseContext(), "Filters Reset", Toast.LENGTH_SHORT);
+                toast.show();
+
+                scrollView.smoothScrollTo(0,0);
+
+            }
+        });
+
     }
 
     @Override
@@ -250,13 +316,57 @@ public class FilterSpacesActivity extends Fragment {
         super.onResume();
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
+    public void postFilterDialogActions(String dType, boolean[] boolArray, String[] displayArray, int singleSelect) {
 
+        //flip bool flag for initial load
+        initLoad = false;
+        String temp = "";
+
+        if (dType.equalsIgnoreCase("SpaceType")) {
+            arrSpaceTypeBool = boolArray;
+            for(int i=0; i<displayArray.length; i++){
+                if(boolArray[i])
+                    temp += displayArray[i]+", ";
+            }
+
+            //if all values are unchecked, set to NP
+            if(temp.equalsIgnoreCase("")) temp="No preference";
+
+            //set text
+            spaceType.setText(temp);
+        }
+        else if (dType.equalsIgnoreCase("SpaceLoc")) {
+            arrSpaceLocBool = singleSelect;
+            temp = displayArray[singleSelect];
+
+            //if all values are unchecked, set to NP
+            if(temp.equalsIgnoreCase("")) temp="No preference";
+
+            //set text
+            spaceLoc.setText(temp);
+        }
+        else if (dType.equalsIgnoreCase("SpaceNoise")) {
+        }
+        else if (dType.equalsIgnoreCase("SpaceTimeFromDay")) {
+            arrFromDayBool = singleSelect;
+            temp = displayArray[singleSelect];
+
+            //set text
+            spaceFromDay.setText(temp);
+        }
+        else if (dType.equalsIgnoreCase("SpaceTimeToDay")) {
+            arrToDayBool = singleSelect;
+            temp = displayArray[singleSelect];
+
+            //set text
+            spaceToDay.setText(temp);
+        }
+        else if (dType.equalsIgnoreCase("SpaceResources")) {
+        }
+        else if (dType.equalsIgnoreCase("SpaceFood")) {
+        }
     }
-
 
     public String toString() {
         return getClass().getName() + "@" + Integer.toHexString(hashCode());

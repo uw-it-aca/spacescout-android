@@ -17,14 +17,15 @@ package com.spacescout.spacescout_android;
  */
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -38,7 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -48,7 +49,6 @@ public class MainActivity extends FragmentActivity {
 
     private FragmentManager fragmentManager;
     private Fragment fragSpaceList = new SpaceListActivity();
-    private Fragment fragFilterSpaces = new FilterSpacesActivity();
     private Fragment fragFavSpaces = new FavSpacesActivity();
     private Fragment fragSpaceMap = new SpaceMapActivity();
     private Fragment generalFrag;
@@ -159,15 +159,6 @@ public class MainActivity extends FragmentActivity {
             menu.findItem(R.id.action_space_map).setVisible(false);
         }
 
-//        generalFrag = fragmentManager.findFragmentByTag("FILTER_SPACES");
-        if (fragFilterSpaces != null && !drawerOpen
-                && fragFilterSpaces.isVisible()) {
-            menu.findItem(R.id.action_space_list).setVisible(false);
-            menu.findItem(R.id.action_space_map).setVisible(false);
-            menu.findItem(R.id.action_settings).setVisible(false);
-            menu.findItem(R.id.action_search).setVisible(false);
-        }
-
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -196,9 +187,8 @@ public class MainActivity extends FragmentActivity {
                 return super.onOptionsItemSelected(item);
 
             case R.id.action_search:
-                fragmentManager.beginTransaction().replace(R.id.container, fragFilterSpaces, "FILTER_SPACES").commit();
-                item.setVisible(false);
-                invalidateOptionsMenu();
+                Intent intent = new Intent(this, FilterSpacesActivity.class);
+                startActivity(intent);
                 mDrawerList.setItemChecked(1, true);
                 return super.onOptionsItemSelected(item);
 
@@ -226,7 +216,8 @@ public class MainActivity extends FragmentActivity {
                 invalidateOptionsMenu();
                 break;
             case 1:
-                fragmentManager.beginTransaction().replace(R.id.container, fragFilterSpaces, "FILTER_SPACES").commit();
+                Intent intent = new Intent(this, FilterSpacesActivity.class);
+                startActivity(intent);
                 invalidateOptionsMenu();
                 break;
             case 2:

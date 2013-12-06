@@ -7,9 +7,9 @@
     <color name="NavDrawerBg">#6699B9</color>
     <color name="NavSelectedItem">#25000000</color>
     <color name="NavPressedItem">#ff5886a5</color>
-    <color name="ActionBarBorder">#6699B9</color>
-    <color name="ActionBarBg">#ff65a6ca</color>
-    <color name="ActionBarBg_bkup">#6699B9</color>
+    <color name="ActionBarBorder">#ff76a8c8</color>
+    <color name="ActionBarBg">#ff7fb6d7</color>
+    <color name="ActionBarBg_bkup">#ff65a6ca</color>
     <color name="Space_bkup">#ff4b4b4b</color>
     <color name="Space">#ffffff</color>
     <color name="Scout_bkup">#ff6d6c6c</color>

@@ -10,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 /**
  *
  * Created by ajay alfred on 11/5/13.
  */
-public class CustomDialogFragment extends DialogFragment {
+public class CustomDialogFragment extends DialogFragment{
 
     private View titleView;
     public String[] arrToDisplay;
@@ -24,6 +23,14 @@ public class CustomDialogFragment extends DialogFragment {
     public String dialogType;
     public String dialogSelect;
     public int singleSelect;
+
+    public CustomDialogFragment() {
+        //empty constructor
+    }
+
+    public interface FilterDialogActionsListener {
+        void postFilterDialogActions(String dType, boolean[] boolArray, String[] displayArray, int singleSelect);
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -50,9 +57,9 @@ public class CustomDialogFragment extends DialogFragment {
         } else if (dialogType.equalsIgnoreCase("SpaceNoise")) {
             arrSelectBool = getArguments().getBooleanArray("arrSpaceNoiseBool");
         } else if (dialogType.equalsIgnoreCase("SpaceTimeFromDay")) {
-            arrSelectBool = getArguments().getBooleanArray("arrFromDayBool");
+            singleSelect = getArguments().getInt("singleSelect");
         } else if (dialogType.equalsIgnoreCase("SpaceTimeToDay")) {
-            arrSelectBool = getArguments().getBooleanArray("arrToDayBool");
+            singleSelect = getArguments().getInt("singleSelect");
         } else if (dialogType.equalsIgnoreCase("SpaceResources")) {
             arrSelectBool = getArguments().getBooleanArray("arrSpaceResourcesBool");
         } else if (dialogType.equalsIgnoreCase("SpaceFood")) {
@@ -75,9 +82,11 @@ public class CustomDialogFragment extends DialogFragment {
                 public void onClick(DialogInterface dialogInterface, int item, boolean isChecked) {
                     if (isChecked) {
                         Log.i("INFO", "checked item -> " + item);
+                        arrSelectBool[item] = isChecked;
                     }
                     if (!isChecked) {
                         Log.i("INFO", "unchecked -> " + item);
+                        arrSelectBool[item] = isChecked;
                     }
 
 
@@ -85,6 +94,8 @@ public class CustomDialogFragment extends DialogFragment {
             })
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                    FilterDialogActionsListener callingActivity = (FilterDialogActionsListener) getActivity();
+                    callingActivity.postFilterDialogActions(dialogType, arrSelectBool, arrToDisplay, 0);
                     dialog.dismiss();
                 }
             })
@@ -110,6 +121,8 @@ public class CustomDialogFragment extends DialogFragment {
             alertDialogBuilder.setSingleChoiceItems(arrToDisplay, singleSelect, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int item) {
                     Log.i("INFO", "selected -> " + item);
+                    FilterDialogActionsListener callingActivity = (FilterDialogActionsListener) getActivity();
+                    callingActivity.postFilterDialogActions(dialogType, arrSelectBool, arrToDisplay, item);
                     dialog.dismiss();
                 }
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
