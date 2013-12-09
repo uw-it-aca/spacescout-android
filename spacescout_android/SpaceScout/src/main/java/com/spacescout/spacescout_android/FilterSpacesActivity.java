@@ -30,6 +30,10 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
     public int arrSpaceLocBool;
     public int arrFromDayBool;
     public int arrToDayBool;
+    public int fromHour = 13;
+    public int fromMinute = 13;
+    public int toHour;
+    public int toMinute;
     public boolean[] arrSpaceNoiseBool;
     public boolean[] arrSpaceResourcesBool;
     public boolean[] arrSpaceFoodBool;
@@ -201,6 +205,8 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
             final Calendar c = Calendar.getInstance();
             SimpleDateFormat displayFormat = new SimpleDateFormat("hh:mm a");
             spaceFromTime.setText(displayFormat.format(c.getTime()));
+            fromHour = c.get(Calendar.HOUR_OF_DAY);
+            fromMinute = c.get(Calendar.MINUTE);
         }
 
         spaceFromTime.setOnClickListener(new View.OnClickListener() {
@@ -209,9 +215,11 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
                 arrToDisplay = getResources().getStringArray(R.array.space_timings_daylist);
                 Bundle dialogBundle = new Bundle();
                 dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
-                dialogBundle.putString("dialogType", "none");
+                dialogBundle.putString("dialogType", "SpaceFromTime");
                 dialogBundle.putString("dialogSelect", "time");
                 dialogBundle.putString("dialogTitle", "Select time");
+                dialogBundle.putInt("hour", fromHour);
+                dialogBundle.putInt("minute", fromMinute);
                 customDialog.setArguments(dialogBundle);
                 customDialog.show(getFragmentManager(),"from time dialog");
             }
@@ -242,6 +250,8 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
             c.add(Calendar.HOUR, 1);
             SimpleDateFormat displayFormat = new SimpleDateFormat("hh:mm a");
             spaceToTime.setText(displayFormat.format(c.getTime()));
+            toHour = c.get(Calendar.HOUR_OF_DAY);
+            toMinute = c.get(Calendar.MINUTE);
         }
 
         spaceToTime.setOnClickListener(new View.OnClickListener() {
@@ -250,9 +260,11 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
                 arrToDisplay = getResources().getStringArray(R.array.space_timings_daylist);
                 Bundle dialogBundle = new Bundle();
                 dialogBundle.putStringArray("arrayToDisplay", arrToDisplay);
-                dialogBundle.putString("dialogType", "none");
+                dialogBundle.putString("dialogType", "SpaceToTime");
                 dialogBundle.putString("dialogSelect", "time");
                 dialogBundle.putString("dialogTitle", "Select time");
+                dialogBundle.putInt("hour", toHour);
+                dialogBundle.putInt("minute", toMinute);
                 customDialog.setArguments(dialogBundle);
                 customDialog.show(getFragmentManager(),"to time dialog");
             }
@@ -347,6 +359,17 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
             spaceLoc.setText(temp);
         }
         else if (dType.equalsIgnoreCase("SpaceNoise")) {
+            arrSpaceNoiseBool = boolArray;
+            for(int i=0; i<displayArray.length; i++){
+                if(boolArray[i])
+                    temp += displayArray[i]+", ";
+            }
+
+            //if all values are unchecked, set to NP
+            if(temp.equalsIgnoreCase("")) temp="No preference";
+
+            //set text
+            spaceNoise.setText(temp);
         }
         else if (dType.equalsIgnoreCase("SpaceTimeFromDay")) {
             arrFromDayBool = singleSelect;
@@ -355,6 +378,18 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
             //set text
             spaceFromDay.setText(temp);
         }
+        else if (dType.equalsIgnoreCase("SpaceFromTime")) {
+            fromHour =  Integer.valueOf(displayArray[0]);
+            fromMinute = Integer.valueOf(displayArray[1]);
+
+            final Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY, fromHour);
+            c.set(Calendar.MINUTE, fromMinute);
+            SimpleDateFormat displayFormat = new SimpleDateFormat("hh:mm a");
+
+            //set text
+            spaceFromTime.setText(displayFormat.format(c.getTime()));
+        }
         else if (dType.equalsIgnoreCase("SpaceTimeToDay")) {
             arrToDayBool = singleSelect;
             temp = displayArray[singleSelect];
@@ -362,9 +397,43 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
             //set text
             spaceToDay.setText(temp);
         }
+        else if (dType.equalsIgnoreCase("SpaceToTime")) {
+            toHour =  Integer.valueOf(displayArray[0]);
+            toMinute = Integer.valueOf(displayArray[1]);
+
+            final Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY, toHour);
+            c.set(Calendar.MINUTE, toMinute);
+            SimpleDateFormat displayFormat = new SimpleDateFormat("hh:mm a");
+
+            //set text
+            spaceToTime.setText(displayFormat.format(c.getTime()));
+        }
         else if (dType.equalsIgnoreCase("SpaceResources")) {
+            arrSpaceResourcesBool = boolArray;
+            for(int i=0; i<displayArray.length; i++){
+                if(boolArray[i])
+                    temp += displayArray[i]+", ";
+            }
+
+            //if all values are unchecked, set to NP
+            if(temp.equalsIgnoreCase("")) temp="No preference";
+
+            //set text
+            spaceResources.setText(temp);
         }
         else if (dType.equalsIgnoreCase("SpaceFood")) {
+            arrSpaceFoodBool = boolArray;
+            for(int i=0; i<displayArray.length; i++){
+                if(boolArray[i])
+                    temp += displayArray[i]+", ";
+            }
+
+            //if all values are unchecked, set to NP
+            if(temp.equalsIgnoreCase("")) temp="No preference";
+
+            //set text
+            spaceFood.setText(temp);
         }
     }
 

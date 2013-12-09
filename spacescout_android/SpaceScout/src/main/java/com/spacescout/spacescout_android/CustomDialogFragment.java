@@ -3,6 +3,7 @@ package com.spacescout.spacescout_android;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 /**
  *
@@ -18,6 +20,7 @@ import android.widget.TextView;
 public class CustomDialogFragment extends DialogFragment{
 
     private View titleView;
+    private View timeView;
     public String[] arrToDisplay;
     public boolean[] arrSelectBool;
     public String dialogType;
@@ -42,7 +45,7 @@ public class CustomDialogFragment extends DialogFragment{
         TextView title = (TextView) titleView.findViewById(R.id.dialogTitle);
         title.setText(getArguments().getString("dialogTitle"));
 
-        View timeView = inflater.inflate(R.layout.custom_time_picker, null);
+        timeView = inflater.inflate(R.layout.custom_time_picker, null);
 
         //get array and bool to display
         arrToDisplay = getArguments().getStringArray("arrayToDisplay");
@@ -52,17 +55,33 @@ public class CustomDialogFragment extends DialogFragment{
 
         if (dialogType.equalsIgnoreCase("SpaceType")) {
             arrSelectBool = getArguments().getBooleanArray("arrSpaceTypeBool");
-        } else if (dialogType.equalsIgnoreCase("SpaceLoc")) {
+        }
+        else if (dialogType.equalsIgnoreCase("SpaceLoc")) {
             singleSelect = getArguments().getInt("singleSelect");
-        } else if (dialogType.equalsIgnoreCase("SpaceNoise")) {
+        }
+        else if (dialogType.equalsIgnoreCase("SpaceNoise")) {
             arrSelectBool = getArguments().getBooleanArray("arrSpaceNoiseBool");
-        } else if (dialogType.equalsIgnoreCase("SpaceTimeFromDay")) {
+        }
+        else if (dialogType.equalsIgnoreCase("SpaceTimeFromDay")) {
             singleSelect = getArguments().getInt("singleSelect");
-        } else if (dialogType.equalsIgnoreCase("SpaceTimeToDay")) {
+        }
+        else if (dialogType.equalsIgnoreCase("SpaceFromTime")) {
+            TimePicker timePicker = (TimePicker) timeView.findViewById(R.id.timePicker);
+            timePicker.setCurrentHour(getArguments().getInt("hour"));
+            timePicker.setCurrentMinute(getArguments().getInt("minute"));
+        }
+        else if (dialogType.equalsIgnoreCase("SpaceTimeToDay")) {
             singleSelect = getArguments().getInt("singleSelect");
-        } else if (dialogType.equalsIgnoreCase("SpaceResources")) {
+        }
+        else if (dialogType.equalsIgnoreCase("SpaceToTime")) {
+            TimePicker timePicker = (TimePicker) timeView.findViewById(R.id.timePicker);
+            timePicker.setCurrentHour(getArguments().getInt("hour"));
+            timePicker.setCurrentMinute(getArguments().getInt("minute"));
+        }
+        else if (dialogType.equalsIgnoreCase("SpaceResources")) {
             arrSelectBool = getArguments().getBooleanArray("arrSpaceResourcesBool");
-        } else if (dialogType.equalsIgnoreCase("SpaceFood")) {
+        }
+        else if (dialogType.equalsIgnoreCase("SpaceFood")) {
             arrSelectBool = getArguments().getBooleanArray("arrSpaceFoodBool");
         }
 
@@ -110,6 +129,16 @@ public class CustomDialogFragment extends DialogFragment{
             alertDialogBuilder.setView(timeView)
             .setPositiveButton("Done", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                    TimePicker timePicker = (TimePicker) timeView.findViewById(R.id.timePicker);
+                    int hour = timePicker.getCurrentHour();
+                    int minute = timePicker.getCurrentMinute();
+                    int item = 0;
+                    arrToDisplay[0] = Integer.toString(hour);
+                    arrToDisplay[1] = Integer.toString(minute);
+
+                    FilterDialogActionsListener callingActivity = (FilterDialogActionsListener) getActivity();
+                    callingActivity.postFilterDialogActions(dialogType, arrSelectBool, arrToDisplay, item);
+
                     dialog.dismiss();
                 }
             })
