@@ -261,4 +261,9 @@ public class MainActivity extends Activity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
 }

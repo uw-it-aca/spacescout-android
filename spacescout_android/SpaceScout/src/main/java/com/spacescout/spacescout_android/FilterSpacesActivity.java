@@ -2,10 +2,14 @@ package com.spacescout.spacescout_android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
@@ -56,14 +60,10 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
         getActionBar().setDisplayShowTitleEnabled(false);
 
         LayoutInflater inflator = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflator.inflate(R.layout.custom_title_actionbar, null);
+        View v = inflator.inflate(R.layout.custom_pagetitle_actionbar, null);
 
-        Typeface typeface = Typeface.createFromAsset(this.getAssets(), "fonts/Manteka.ttf");
-
-        TextView titleSpace = (TextView) v.findViewById(R.id.titleSpace);
-        TextView titleScout = (TextView) v.findViewById(R.id.titleScout);
-        titleSpace.setTypeface(typeface);
-        titleScout.setTypeface(typeface);
+        TextView pageTitle = (TextView) v.findViewById(R.id.pageTitle);
+        pageTitle.setText("FILTER SPACES");
 
         getActionBar().setCustomView(v);
 
@@ -306,21 +306,32 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
             }
         });
 
-        Button btnFilterReset = (Button) findViewById(R.id.btnFilterReset);
-        btnFilterReset.setOnClickListener(new View.OnClickListener() {
+    }
 
-            ScrollView scrollView = (ScrollView) findViewById(R.id.scrollerFilterPage);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.filter_spaces, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-            @Override
-            public void onClick(View view) {
-                Toast toast = Toast.makeText(getBaseContext(), "Filters Reset", Toast.LENGTH_SHORT);
-                toast.show();
+    /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
 
-                scrollView.smoothScrollTo(0,0);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-            }
-        });
+        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollerFilterPage);
 
+        Toast toast = Toast.makeText(getBaseContext(), "Filters Reset", Toast.LENGTH_SHORT);
+        toast.show();
+
+        scrollView.smoothScrollTo(0,0);
+
+        return true;
     }
 
     @Override

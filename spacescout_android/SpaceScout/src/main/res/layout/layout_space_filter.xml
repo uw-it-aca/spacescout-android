@@ -2,72 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:orientation="vertical"
     android:background="@color/white">
-
-    <LinearLayout
-        android:id="@+id/filterHeader"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginTop="14dip"
-        android:layout_marginBottom="12dip">
-
-        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/filterTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/filter_title"
-            android:textColor="@color/SpinnerMainTitle"
-            android:textStyle="bold"
-            android:layout_gravity="bottom"
-            android:textSize="18sp"
-            android:fontFamily="sans-serif-condensed"
-            android:paddingLeft="18dip" />
-
-        <RelativeLayout
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:gravity="right"
-            android:layout_marginRight="18dp">
-
-            <ImageButton
-                android:layout_height="40dip"
-                android:layout_width="120dip"
-                android:src="@drawable/btn_filter_white"
-                android:background="@drawable/filter_btn_bg"
-                android:contentDescription="filter button"
-                android:cropToPadding="false" />
-
-            </RelativeLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/divider1"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dip"
-        android:layout_below="@id/filterHeader">
-
-        <View android:id="@+id/divider_line"
-            android:layout_width="fill_parent"
-            android:layout_height="1dip"
-            android:background="@color/DividerColor"/>
-
-    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollerFilterPage"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent"
-        android:layout_below="@id/divider1" >
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:layout_marginBottom="70dip"
+        android:layout_width="fill_parent" >
 
         <LinearLayout
             android:id="@+id/filterCritBody"
             android:padding="20dip"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_width="fill_parent"
             android:orientation="vertical" >
 
@@ -414,7 +362,7 @@
                 android:layout_marginTop="5dip"
                 android:layout_marginBottom="12dip" >
 
-                <View android:id="@+id/divider_line"
+                <View
                     android:layout_width="fill_parent"
                     android:layout_height="1dip"
                     android:background="@color/DividerColor"/>
@@ -565,40 +513,36 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="40dip"
-                android:paddingBottom="10dip"
-                android:gravity="center_horizontal"
-                android:orientation="vertical" >
-
-                <View android:id="@+id/divider_line"
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dip"
-                    android:background="@color/DividerColorBlue"/>
-
-                <Button
-                    android:id="@+id/btnFilterReset"
-                    android:layout_height="43dip"
-                    android:layout_width="170dip"
-                    android:gravity="center|right"
-                    android:paddingLeft="17dip"
-                    android:paddingRight="22dip"
-                    android:text="Reset Filters"
-                    android:textSize="19sp"
-                    android:textStyle="bold"
-                    android:drawableLeft="@drawable/filter_reset"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="20dip"
-                    android:fontFamily="sans-serif-condensed"
-                    android:background="@drawable/filter_reset_btn"
-                    android:cropToPadding="false" />
-
-            </LinearLayout>
-
         </LinearLayout>
 
     </ScrollView>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingTop="10dip"
+        android:paddingBottom="10dip"
+        android:paddingLeft="15dip"
+        android:paddingRight="15dip" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/DividerColor"/>
+
+        <ImageButton
+            android:layout_height="50dip"
+            android:layout_width="fill_parent"
+            android:src="@drawable/btn_filter_white"
+            android:background="@drawable/filter_btn_bg"
+            android:layout_marginTop="12dip"
+            android:contentDescription="filter button"
+            android:cropToPadding="false" />
+
+    </LinearLayout>
 
 </RelativeLayout>
