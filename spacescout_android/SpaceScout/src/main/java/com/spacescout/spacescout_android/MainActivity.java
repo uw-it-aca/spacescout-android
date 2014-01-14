@@ -49,7 +49,6 @@ public class MainActivity extends Activity {
 
     private FragmentManager fragmentManager;
     private Fragment fragSpaceList = new SpaceListActivity();
-    private Fragment fragFavSpaces = new FavSpacesActivity();
     private Fragment fragSpaceMap = new SpaceMapActivity();
     private Fragment generalFrag;
 
@@ -71,7 +70,7 @@ public class MainActivity extends Activity {
         mTitle = mDrawerTitle = getTitle();
 
         //Generate nav menu item title
-        navItemTitle = new String[]{"All Spaces", "Filter Spaces", "My Favorite Spaces"};
+        navItemTitle = new String[]{"All Spaces", "Filter Spaces", "Favorite Spaces"};
 
         navItemIcon = new int[]{R.drawable.nav_all_spaces, R.drawable.nav_search, R.drawable.nav_fav_spaces};
 
@@ -145,10 +144,6 @@ public class MainActivity extends Activity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_search).setVisible(!drawerOpen);
-        menu.findItem(R.id.action_space_list).setVisible(!drawerOpen);
-        menu.findItem(R.id.action_space_map).setVisible(!drawerOpen);
-        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
 
 //        generalFrag = fragmentManager.findFragmentByTag("SPACE_LIST");
         if (fragSpaceList != null && !drawerOpen
@@ -208,7 +203,7 @@ public class MainActivity extends Activity {
     private void selectItem(int position) {
 
         fragmentManager = getFragmentManager();
-
+        Intent intent;
         // Locate Position
         switch (position) {
             case 0:
@@ -216,12 +211,13 @@ public class MainActivity extends Activity {
                 invalidateOptionsMenu();
                 break;
             case 1:
-                Intent intent = new Intent(this, FilterSpacesActivity.class);
+                intent = new Intent(this, FilterSpacesActivity.class);
                 startActivity(intent);
                 invalidateOptionsMenu();
                 break;
             case 2:
-                fragmentManager.beginTransaction().replace(R.id.container, fragFavSpaces, "FAV_SPACES").commit();
+                intent = new Intent(this, FavSpacesActivity.class);
+                startActivity(intent);
                 invalidateOptionsMenu();
                 break;
             case 3:
@@ -264,6 +260,17 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
+        LayoutInflater inflator = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflator.inflate(R.layout.custom_title_actionbar, null);
+
+        Typeface typeface = Typeface.createFromAsset(this.getAssets(), "fonts/Manteka.ttf");
+
+        TextView titleSpace = (TextView) v.findViewById(R.id.titleSpace);
+        TextView titleScout = (TextView) v.findViewById(R.id.titleScout);
+        titleSpace.setTypeface(typeface);
+        titleScout.setTypeface(typeface);
+
+        getActionBar().setCustomView(v);
     }
 
 }

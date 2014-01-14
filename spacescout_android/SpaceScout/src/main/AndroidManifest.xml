@@ -46,11 +46,32 @@
 
         <activity
             android:name="com.spacescout.spacescout_android.FilterSpacesActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:parentActivityName="com.spacescout.spacescout_android.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.spacescout.spacescout_android.FilterSpacesActivity" />
+        </activity>
+
+        <activity
+            android:name="com.spacescout.spacescout_android.FavSpacesActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name"
+            android:parentActivityName="com.spacescout.spacescout_android.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.spacescout.spacescout_android.FavSpacesActivity" />
+        </activity>
+
+        <activity
+            android:name="com.spacescout.spacescout_android.SpaceDetailsActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name"
+            android:parentActivityName="com.spacescout.spacescout_android.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.spacescout.spacescout_android.SpaceDetailsActivity" />
         </activity>
 
         <meta-data

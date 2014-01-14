@@ -315,23 +315,20 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
         return super.onCreateOptionsMenu(menu);
     }
 
-    /* Called whenever we call invalidateOptionsMenu() */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
 
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollerFilterPage);
-
-        Toast toast = Toast.makeText(getBaseContext(), "Filters Reset", Toast.LENGTH_SHORT);
-        toast.show();
-
-        scrollView.smoothScrollTo(0,0);
-
+            case R.id.action_filter_reset:
+                ScrollView scrollView = (ScrollView) findViewById(R.id.scrollerFilterPage);
+                Toast toast = Toast.makeText(getBaseContext(), "Filters Reset", Toast.LENGTH_SHORT);
+                toast.show();
+                scrollView.smoothScrollTo(0,0);
+        }
         return true;
+//
     }
 
     @Override

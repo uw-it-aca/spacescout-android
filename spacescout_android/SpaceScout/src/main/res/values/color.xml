@@ -4,9 +4,9 @@
     <color name="DividerColor">#ff7a7fb1</color>
     <color name="DividerColorBlue">#9984bbdc</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="NavDrawerBg">#6699B9</color>
+    <color name="NavDrawerBg">#515151</color>
     <color name="NavSelectedItem">#25000000</color>
-    <color name="NavPressedItem">#ff5886a5</color>
+    <color name="NavPressedItem">#25000000</color>
     <color name="ActionBarBorder">#ff76a8c8</color>
     <color name="ActionBarBg">#ff7fb6d7</color>
     <color name="ActionBarBg_bkup">#ff65a6ca</color>
@@ -22,9 +22,11 @@
     <color name="SpinnerHighlight">#306699b9</color>
     <color name="DialogBg">#434D7A</color>
     <color name="DialogButtonPressBg">#951e95cc</color>
-    <color name="DialogWindowBg">#90ffffff</color>
+    <color name="DialogWindowBg">#95ffffff</color>
     <color name="FilterResetBtnBg">#ff84bbdc</color>
     <color name="FilterResetBtnStroke">#ff6db0d4</color>
+    <color name="SpaceDetailsBG">#FAFAFA</color>
+    <color name="SuperLightBlue">#408EADCB</color>
 
     <color name="yellow">#FFFF00</color>
     <color name="fuchsia">#FF00FF</color>
