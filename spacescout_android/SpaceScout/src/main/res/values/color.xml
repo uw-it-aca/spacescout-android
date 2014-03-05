@@ -25,8 +25,9 @@
     <color name="DialogWindowBg">#95ffffff</color>
     <color name="FilterResetBtnBg">#ff84bbdc</color>
     <color name="FilterResetBtnStroke">#ff6db0d4</color>
-    <color name="SpaceDetailsBG">#FAFAFA</color>
-    <color name="SuperLightBlue">#408EADCB</color>
+    <color name="SpaceDetailsBG">#fff7f7f7</color>
+    <color name="SuperLightBlue">#388EADCB</color>
+    <color name="SuperLightBlueBorder">#90bdbdcb</color>
 
     <color name="yellow">#FFFF00</color>
     <color name="fuchsia">#FF00FF</color>

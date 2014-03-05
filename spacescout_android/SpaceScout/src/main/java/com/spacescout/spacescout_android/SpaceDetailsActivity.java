@@ -45,8 +45,8 @@ public class SpaceDetailsActivity extends Activity{
 
         Bundle extras = getIntent().getExtras();
 
-        sampleText = (TextView) findViewById(R.id.txtSample);
-        sampleText.setText(extras.getString("spaceTitle"));
+//        sampleText = (TextView) findViewById(R.id.txtSample);
+//        sampleText.setText(extras.getString("spaceTitle"));
     }
 
     @Override
