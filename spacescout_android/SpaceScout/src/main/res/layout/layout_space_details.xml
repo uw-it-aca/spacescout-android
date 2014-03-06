@@ -190,7 +190,7 @@
                     android:layout_height="wrap_content"
                     android:text=":"
                     android:fontFamily="sans-serif-condensed"
-                    android:textColor="#434588"
+                    android:textColor="#ff5d87b9"
                     android:textSize="16sp" />
 
                 <TextView
@@ -225,7 +225,7 @@
                     android:layout_height="wrap_content"
                     android:text=":"
                     android:fontFamily="sans-serif-condensed"
-                    android:textColor="#434588"
+                    android:textColor="#ff5d87b9"
                     android:textSize="16sp" />
 
                 <TextView
@@ -260,7 +260,7 @@
                     android:layout_height="wrap_content"
                     android:text=":"
                     android:fontFamily="sans-serif-condensed"
-                    android:textColor="#434588"
+                    android:textColor="#ff5d87b9"
                     android:textSize="16sp" />
 
                 <TextView
@@ -296,7 +296,7 @@
                     android:layout_height="wrap_content"
                     android:text=":"
                     android:fontFamily="sans-serif-condensed"
-                    android:textColor="#434588"
+                    android:textColor="#ff5d87b9"
                     android:textSize="16sp" />
 
                 <TextView
@@ -357,7 +357,7 @@
                     android:layout_height="wrap_content"
                     android:text=":"
                     android:fontFamily="sans-serif-condensed"
-                    android:textColor="#434588"
+                    android:textColor="#ff5d87b9"
                     android:textSize="16sp" />
 
                 <TextView
@@ -393,7 +393,7 @@
                     android:layout_height="wrap_content"
                     android:text=":"
                     android:fontFamily="sans-serif-condensed"
-                    android:textColor="#434588"
+                    android:textColor="#ff5d87b9"
                     android:textSize="16sp" />
 
                 <TextView
@@ -429,7 +429,7 @@
                     android:layout_height="wrap_content"
                     android:text=":"
                     android:fontFamily="sans-serif-condensed"
-                    android:textColor="#434588"
+                    android:textColor="#ff5d87b9"
                     android:textSize="16sp" />
 
                 <TextView
@@ -465,7 +465,7 @@
                     android:layout_height="wrap_content"
                     android:text=":"
                     android:fontFamily="sans-serif-condensed"
-                    android:textColor="#434588"
+                    android:textColor="#ff5d87b9"
                     android:textSize="16sp" />
 
                 <TextView
