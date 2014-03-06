@@ -89,11 +89,11 @@
                         android:fontFamily="sans-serif-condensed"
                         android:textColor="#6699CC"
                         android:textStyle="bold"
-                        android:textSize="21sp" />
+                        android:textSize="20sp" />
 
                     <ImageView
-                        android:layout_width="18dip"
-                        android:layout_height="18dip"
+                        android:layout_width="17dip"
+                        android:layout_height="17dip"
                         android:layout_marginTop="6dp"
                         android:src="@drawable/seat_icon" />
 
@@ -130,7 +130,7 @@
                         android:layout_gravity="bottom"
                         android:gravity="bottom"
                         android:textColor="#ff5d87b9"
-                        android:textSize="15sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -156,7 +156,7 @@
             android:layout_marginBottom="2dp"
             android:text="Open Hours"
             android:textStyle="bold"
-            android:textColor="#ff8faac3"
+            android:textColor="#ffa1b4c8"
             android:textSize="15sp" />
 
         <LinearLayout
@@ -165,7 +165,7 @@
             android:layout_below="@id/txtOpenHours"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:padding="12dp"
             android:background="@drawable/custom_space_details_bg" >
 
@@ -177,21 +177,29 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
-                    android:text="MON - FRI"
+                    android:text="M, T, W, Th"
                     android:fontFamily="sans-serif-condensed"
-                    android:textColor="#434588"
+                    android:textColor="#ff5d87b9"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:text=":  07:30 - 17:00"
+                    android:text=":"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="#434588"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="7:30a - 10p"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/green"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -199,15 +207,14 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal"
-                android:layout_marginBottom="10dp"
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
-                    android:text="SAT- SUN"
+                    android:text="F"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="#ff5d87b9"
                     android:textStyle="bold"
@@ -216,10 +223,89 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#434588"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
-                    android:text=":  Closed"
+                    android:text="7:30a - 6p"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/green"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:text="Sa"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="#ff5d87b9"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#434588"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="1p - 5p"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/green"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:text="Su"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#434588"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="Closed"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/Tomato"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -236,16 +322,16 @@
             android:layout_marginBottom="2dp"
             android:text="Environment"
             android:textStyle="bold"
-            android:textColor="#ff8faac3"
+            android:textColor="#ffa1b4c8"
             android:textSize="15sp" />
 
         <LinearLayout
-            android:id="@+id/spacedetail_sec3"
+            android:id="@+id/spacedetail_sec4"
             android:layout_width="fill_parent"
             android:layout_below="@id/txtEnviron"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:padding="12dp"
             android:background="@drawable/custom_space_details_bg" >
 
@@ -253,17 +339,26 @@
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:text="Resources"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="#ff5d87b9"
                     android:textStyle="bold"
                     android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#434588"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -280,17 +375,26 @@
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="7dp"
+                android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:text="Food/Coffee"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="#ff5d87b9"
                     android:textStyle="bold"
                     android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#434588"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -307,17 +411,26 @@
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="7dp"
+                android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:text="Noise Level"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="#ff5d87b9"
                     android:textStyle="bold"
                     android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#434588"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -339,13 +452,21 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:text="Lighting"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="#ff5d87b9"
                     android:textStyle="bold"
                     android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#434588"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
