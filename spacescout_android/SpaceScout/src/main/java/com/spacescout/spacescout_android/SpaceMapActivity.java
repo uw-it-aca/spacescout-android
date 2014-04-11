@@ -2,6 +2,8 @@ package com.spacescout.spacescout_android;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +15,12 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -77,16 +84,65 @@ public class SpaceMapActivity extends Fragment{
 
 
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        map.addMarker(new MarkerOptions()
-                .position(UnivWashington)
-                .title("University of Washington")
-                .snippet("Students: 1234")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
 
+        new JSONParse().execute();
 
+    }
 
+    private class JSONParse extends AsyncTask<String, String, JSONArray> {
+        private ProgressDialog pDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected JSONArray doInBackground(String... args) {
+            JSONParser jParser = new JSONParser();
+            // Getting JSON from URL
+            JSONArray json = jParser.getJSONFromUrl("http://skor.cac.washington.edu:9001/api/v1/spot/all");
+            return json;
+        }
+        @Override
+        protected void onPostExecute(JSONArray json) {
+
+            try {
+
+                  System.out.println("test3");
+
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                for(int i = 0; i < json.length(); i++){
+                    JSONObject curr = json.getJSONObject(i);
+                    JSONObject info = curr.getJSONObject("extended_info");
+
+                    JSONObject location = curr.getJSONObject("location");
+                    double lng = Double.parseDouble(location.getString("longitude"));
+                    double lat = Double.parseDouble(location.getString("latitude"));
+                    String name = curr.getString("name");
+                    String campus = info.getString("campus");
+
+                    if(campus.equals("seattle")){
+
+                        System.out.println(campus);
+                        LatLng currLoc = new LatLng(lat, lng);
+                        builder.include(currLoc);
+                        map.addMarker(new MarkerOptions()
+                                .position(currLoc)
+                                .title(name)
+                                .snippet("Students: 1234")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+                    }
+                }
+
+                LatLngBounds bounds = builder.build();
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
+                System.out.println("test4");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public String toString() {
