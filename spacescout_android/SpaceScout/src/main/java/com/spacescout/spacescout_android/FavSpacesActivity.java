@@ -47,6 +47,7 @@ public class FavSpacesActivity extends Activity{
 
         getActionBar().setCustomView(v);
 
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
         //set layout view
         setContentView(R.layout.layout_space_favs);

@@ -445,7 +445,4 @@ public class FilterSpacesActivity extends Activity implements CustomDialogFragme
         }
     }
 
-    public String toString() {
-        return getClass().getName() + "@" + Integer.toHexString(hashCode());
-    }
 }

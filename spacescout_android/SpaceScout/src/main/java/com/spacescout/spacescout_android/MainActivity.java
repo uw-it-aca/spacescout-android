@@ -63,6 +63,8 @@ public class MainActivity extends Activity {
         getActionBar().setDisplayShowCustomEnabled(true);
         getActionBar().setDisplayShowTitleEnabled(false);
 
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
         //set content to layout_main
         setContentView(R.layout.layout_main);
 

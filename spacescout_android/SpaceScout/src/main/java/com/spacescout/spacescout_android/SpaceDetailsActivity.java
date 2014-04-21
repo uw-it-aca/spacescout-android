@@ -41,6 +41,8 @@ public class SpaceDetailsActivity extends Activity{
 
         getActionBar().setCustomView(v);
 
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
         setContentView(R.layout.layout_space_details);
 
         Bundle extras = getIntent().getExtras();
