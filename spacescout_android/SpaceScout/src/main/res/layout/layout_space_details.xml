@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:layout_marginBottom="5dip"
+    android:background="@color/SpaceDetailsBG"
+    android:scrollbars="none"
+    android:layout_width="fill_parent" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:paddingTop="14dip"
+        android:paddingBottom="8dip" >
+
+        <LinearLayout
+            android:id="@+id/spacedetail_sec1"
+            android:layout_width="fill_parent"
+            android:layout_height="360dip"
+            android:orientation="vertical"
+            android:background="@drawable/custom_space_details_bg" >
+
+            <ImageView
+                android:id="@+id/spaceCarouselImage"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:padding="0dp"
+                android:cropToPadding="true"
+                android:background="@color/SuperLightBlue"
+                android:src="@drawable/space_img_lrg"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/spaceFavIcon"
+                    android:layout_width="22dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/fav_heart_uncheck"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/spaceTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Commons Lounge"
+                        android:textColor="#434588"
+                        android:textStyle="bold"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/spaceDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
+                        android:text="Discussion Room"
+                        android:textColor="#57588D"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="15dp"
+                    android:gravity="right"  >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="40"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="#6699CC"
+                        android:textStyle="bold"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:layout_width="17dip"
+                        android:layout_height="17dip"
+                        android:layout_marginTop="6dp"
+                        android:src="@drawable/seat_icon" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="16dip"
+                    android:layout_height="16dip"
+                    android:layout_marginRight="10dip"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginLeft="6dp"
+                    android:src="@drawable/map_pin_blue" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
+                        android:text="Alder Hall Commons, NE 40th St Entrance"
+                        android:layout_gravity="bottom"
+                        android:gravity="bottom"
+                        android:textColor="#ff5d87b9"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="Get directions to this space in Google Maps"
+                        android:textColor="#6699CC"
+                        android:textSize="11sp" />
+
+                    </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtOpenHours"
+            android:layout_below="@id/spacedetail_sec1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginBottom="2dp"
+            android:text="Open Hours"
+            android:textStyle="bold"
+            android:textColor="#ffa1b4c8"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:id="@+id/spacedetail_sec2"
+            android:layout_width="fill_parent"
+            android:layout_below="@id/txtOpenHours"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="4dp"
+            android:padding="12dp"
+            android:background="@drawable/custom_space_details_bg" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:text="M, T, W, Th"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="7:30a - 10p"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/green"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:text="F"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="7:30a - 6p"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/green"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:text="Sa"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="1p - 5p"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/green"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:text="Su"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="Closed"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/Tomato"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtEnviron"
+            android:layout_below="@id/spacedetail_sec2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginBottom="2dp"
+            android:text="Environment"
+            android:textStyle="bold"
+            android:textColor="#ffa1b4c8"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:id="@+id/spacedetail_sec4"
+            android:layout_width="fill_parent"
+            android:layout_below="@id/txtEnviron"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="4dp"
+            android:padding="12dp"
+            android:background="@drawable/custom_space_details_bg" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:text="Resources"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textStyle="bold"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="Outlets, Computer, Printing, Scanning"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#434588"
+                    android:textSize="17sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:text="Food/Coffee"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textStyle="bold"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="In building"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#434588"
+                    android:textSize="17sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:text="Noise Level"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textStyle="bold"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="Silent"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#434588"
+                    android:textSize="17sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:text="Lighting"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textStyle="bold"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#ff5d87b9"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="Natural Light"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="#434588"
+                    android:textSize="17sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>

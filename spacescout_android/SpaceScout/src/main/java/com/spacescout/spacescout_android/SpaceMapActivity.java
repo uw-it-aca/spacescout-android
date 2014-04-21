@@ -83,7 +83,7 @@ public class SpaceMapActivity extends Fragment{
                 .snippet("Students: 1234")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 15.5f));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
 
 
 

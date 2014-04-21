@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetBottom="0dp"
+    android:insetLeft="-5dp"
+    android:insetRight="-5dp"
+    android:insetTop="-5dp" >
+
+    <shape>
+        <solid android:color="@color/ActionBarBg" />
+
+        <stroke
+            android:width="1dp"
+            android:color="@color/ActionBarBorder" />
+    </shape>
+
+</inset>

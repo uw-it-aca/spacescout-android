@@ -8,9 +8,9 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="35dip"
-        android:layout_height="35dip"
-        android:paddingLeft="9dp"
+        android:layout_width="36dip"
+        android:layout_height="36dip"
+        android:paddingLeft="10dp"
         android:adjustViewBounds="true" />
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,11 +18,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
-        android:textSize="20sp"
+        android:textSize="17sp"
         android:gravity="center_vertical"
-        android:paddingTop="22dp"
-        android:paddingBottom="22dp"
-        android:paddingLeft="7dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="23dp"
+        android:paddingLeft="2dp"
         android:scaleX="0.92"
         />
 

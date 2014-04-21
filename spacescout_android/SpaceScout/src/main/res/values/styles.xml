@@ -7,6 +7,26 @@
     <!-- Custom application theme. -->
     <style name="CustomAppTheme" parent="android:Theme.Holo.Light">
         <item name="android:activatedBackgroundIndicator">@drawable/activated_background</item>
+        <item name="android:actionBarStyle">@style/SpaceScoutActionBar</item>
     </style>
+
+    <!-- SpaceScout Action Bar style -->
+    <style name="SpaceScoutActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid">
+        <item name="android:background">@drawable/actionbar_bg</item>
+        <item name="android:height">52dp</item>
+    </style>
+
+    <!-- SpaceScout custom dialog style -->
+    <style name="popupStyle" parent="android:Theme.Holo.Light.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:windowBackground">@color/DialogWindowBg</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
+
 
 </resources>

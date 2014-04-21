@@ -2,13 +2,11 @@
 
     <item android:id="@+id/action_space_list"
         android:title="@string/action_space_list"
-        android:icon="@drawable/action_space_list"
-        android:showAsAction="always" />
+        android:showAsAction="never" />
 
     <item android:id="@+id/action_space_map"
         android:title="@string/action_space_map"
-        android:icon="@drawable/action_space_map"
-        android:showAsAction="always" />
+        android:showAsAction="never" />
 
     <item android:id="@+id/action_search"
         android:title="@string/action_search"
