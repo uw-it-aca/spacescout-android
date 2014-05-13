@@ -22,6 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+
 /**
  *
  * Created by ajay alfred on 11/5/13.
@@ -97,10 +99,13 @@ public class SpaceMapActivity extends Fragment{
             super.onPreExecute();
         }
         @Override
-        protected JSONArray doInBackground(String... args) {
+        protected JSONArray doInBackground(String... args){
             JSONParser jParser = new JSONParser();
+            JSONArray json = new JSONArray();
+            System.out.println("trying");
             // Getting JSON from URL
-            JSONArray json = jParser.getJSONFromUrl("http://skor.cac.washington.edu:9001/api/v1/spot/all");
+             json = jParser.getJSONFromUrl("http://skor.cac.washington.edu:9001/api/v1/spot/all");
+
             return json;
         }
         @Override
@@ -135,6 +140,7 @@ public class SpaceMapActivity extends Fragment{
 
                     }
                 }
+
 
                 LatLngBounds bounds = builder.build();
                 map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
