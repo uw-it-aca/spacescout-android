@@ -18,9 +18,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 import oauth.signpost.OAuthConsumer;
-import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
-import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 
 /**
  * Created by ajay alfred on 11/5/13.
@@ -49,12 +47,6 @@ public class JSONParser {
         OAuthConsumer consumer = new CommonsHttpOAuthConsumer(
                 "1f5135d490fd0ef9685448f248138c99cbacca6d",
                 "037215f1105e6d50911e149fe5a67c4ae29524f3");
-
-        OAuthProvider provider = new CommonsHttpOAuthProvider(
-                "https://skor.cac.washington.edu:9001/oauth/request_token",
-                "https://skor.cac.washington.edu:9001/oauth/access_token",
-                "https://skor.cac.washington.edu:9001/oauth/authorize");
-
 
         System.out.println("Request token: " + consumer.getToken());
         System.out.println("Token secret: " + consumer.getTokenSecret());

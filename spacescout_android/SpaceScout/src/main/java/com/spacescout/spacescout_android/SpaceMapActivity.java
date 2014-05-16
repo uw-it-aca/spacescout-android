@@ -13,22 +13,37 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
+import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm.MAX_DISTANCE_AT_ZOOM;
 /**
  *
  * Created by ajay alfred on 11/5/13.
  */
 public class SpaceMapActivity extends Fragment{
+
+    int dist = MAX_DISTANCE_AT_ZOOM;
+
+    public ClusterManager<MyItem> mClusterManager;
+    public void setUpClusterer() {
+
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+        mClusterManager = new ClusterManager<MyItem>(this.getActivity(), map);
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        map.setOnCameraChangeListener(mClusterManager);
+        map.setOnMarkerClickListener(mClusterManager);
+
+    }
 
     public SpaceMapActivity() {
         ///empty constructor required for fragment subclasses
@@ -44,7 +59,6 @@ public class SpaceMapActivity extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle bundle) {
         super.onCreate(bundle);
-
         if(view == null)
             view = inflater.inflate(R.layout.fragment_space_map, container, false);
         return view;
@@ -92,7 +106,7 @@ public class SpaceMapActivity extends Fragment{
 
     }
 
-    private class JSONParse extends AsyncTask<String, String, JSONArray> {
+    public class JSONParse extends AsyncTask<String, String, JSONArray> {
         private ProgressDialog pDialog;
         @Override
         protected void onPreExecute() {
@@ -113,7 +127,9 @@ public class SpaceMapActivity extends Fragment{
 
             try {
 
-                  System.out.println("test3");
+                System.out.println("test3");
+                setUpClusterer();
+                mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyItem>(new CustomClusteringAlgorithm<MyItem>()));
 
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -129,26 +145,29 @@ public class SpaceMapActivity extends Fragment{
 
                     if(campus.equals("seattle")){
 
-                        System.out.println(campus);
+                        mClusterManager.addItem(new MyItem(lat, lng));
+//
+//                        System.out.println(campus);
                         LatLng currLoc = new LatLng(lat, lng);
                         builder.include(currLoc);
-                        map.addMarker(new MarkerOptions()
-                                .position(currLoc)
-                                .title(name)
-                                .snippet("Students: 1234")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+//                        map.addMarker(new MarkerOptions()
+//                                .position(currLoc)
+//                                .title(name)
+//                                .snippet("Students: 1234")
+//                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
                     }
                 }
 
+               LatLngBounds bounds = builder.build();
+               map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70));
 
-                LatLngBounds bounds = builder.build();
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
                 System.out.println("test4");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+
     }
 
     public String toString() {

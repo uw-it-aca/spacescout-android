@@ -25,6 +25,7 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:+'
     compile 'com.google.android.gms:play-services:4.0.30'
+    compile 'com.google.maps.android:android-maps-utils:0.2+'
     compile files('libs/signpost-jetty6-1.2.1.2.jar')
     compile files('libs/signpost-core-1.2.1.2.jar')
     compile files('libs/signpost-commonshttp4-1.2.1.2.jar')
