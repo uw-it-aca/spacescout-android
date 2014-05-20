@@ -22,6 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashSet;
+
 import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm.MAX_DISTANCE_AT_ZOOM;
 /**
  *
@@ -124,12 +126,13 @@ public class SpaceMapActivity extends Fragment{
         }
         @Override
         protected void onPostExecute(JSONArray json) {
+            HashSet<String> buildings = new HashSet<String>();
 
             try {
 
                 System.out.println("test3");
                 setUpClusterer();
-                mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyItem>(new CustomClusteringAlgorithm<MyItem>()));
+                mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyItem>(new ClusterByBuilding<MyItem>()));
 
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -141,13 +144,12 @@ public class SpaceMapActivity extends Fragment{
                     double lng = Double.parseDouble(location.getString("longitude"));
                     double lat = Double.parseDouble(location.getString("latitude"));
                     String name = curr.getString("name");
+                    String building_name = location.getString("building_name");
                     String campus = info.getString("campus");
 
-                    if(campus.equals("seattle")){
-
-                        mClusterManager.addItem(new MyItem(lat, lng));
-//
-//                        System.out.println(campus);
+                    if(campus.equals("seattle") && (!buildings.contains(building_name))){
+                        buildings.add(building_name);
+                        mClusterManager.addItem(new MyItem(lat, lng, building_name));
                         LatLng currLoc = new LatLng(lat, lng);
                         builder.include(currLoc);
 //                        map.addMarker(new MarkerOptions()
@@ -158,7 +160,8 @@ public class SpaceMapActivity extends Fragment{
 
                     }
                 }
-
+                System.out.println("Zoom Level: "+map.getMaxZoomLevel());
+                System.out.println("Zoom Level: "+map.getCameraPosition().zoom);
                LatLngBounds bounds = builder.build();
                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70));
 

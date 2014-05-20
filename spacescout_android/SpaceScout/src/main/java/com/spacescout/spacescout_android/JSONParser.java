@@ -48,8 +48,6 @@ public class JSONParser {
                 "1f5135d490fd0ef9685448f248138c99cbacca6d",
                 "037215f1105e6d50911e149fe5a67c4ae29524f3");
 
-        System.out.println("Request token: " + consumer.getToken());
-        System.out.println("Token secret: " + consumer.getTokenSecret());
         // Making HTTP request
         try {
             // defaultHttpClient

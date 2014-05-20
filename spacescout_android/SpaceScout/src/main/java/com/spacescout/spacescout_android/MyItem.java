@@ -9,13 +9,20 @@ import com.google.maps.android.clustering.ClusterItem;
 
 public class MyItem implements ClusterItem {
     private final LatLng mPosition;
+    private final String building_name;
 
-    public MyItem(double lat, double lng) {
+    public MyItem(double lat, double lng, String name) {
         mPosition = new LatLng(lat, lng);
+        building_name = name;
     }
 
     @Override
     public LatLng getPosition() {
         return mPosition;
     }
+
+    public String getBuilding() {
+        return building_name;
+    }
+
 }
