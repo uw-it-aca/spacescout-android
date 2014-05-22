@@ -13,16 +13,20 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
+import com.google.maps.android.ui.IconGenerator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm.MAX_DISTANCE_AT_ZOOM;
 /**
@@ -31,8 +35,10 @@ import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBas
  */
 public class SpaceMapActivity extends Fragment{
 
-    int dist = MAX_DISTANCE_AT_ZOOM;
 
+
+    int dist = MAX_DISTANCE_AT_ZOOM;
+    IconGenerator tc = new IconGenerator(this.getActivity());
     public ClusterManager<MyItem> mClusterManager;
     public void setUpClusterer() {
 
@@ -44,6 +50,7 @@ public class SpaceMapActivity extends Fragment{
         // manager.
         map.setOnCameraChangeListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
+
 
     }
 
@@ -81,6 +88,22 @@ public class SpaceMapActivity extends Fragment{
             return;
     }
 
+    protected void addMarkerToMap(LatLng loc, int text) {
+        IconGenerator iconFactory = new IconGenerator(this.getActivity());
+        iconFactory.setContentPadding(0, 0, 0, 0);
+        iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
+        addIcon(iconFactory, Integer.toString(text), loc);
+    }
+
+    private void addIcon(IconGenerator iconFactory, String text, LatLng position) {
+        MarkerOptions markerOptions = new MarkerOptions().
+                icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(text))).
+                position(position).
+                anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
+
+        map.addMarker(markerOptions);
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -103,6 +126,7 @@ public class SpaceMapActivity extends Fragment{
 
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
+        System.out.println("checking");
 
         new JSONParse().execute();
 
@@ -124,10 +148,10 @@ public class SpaceMapActivity extends Fragment{
 
             return json;
         }
+
         @Override
         protected void onPostExecute(JSONArray json) {
-            HashSet<String> buildings = new HashSet<String>();
-
+            HashMap<String, Building> building_cluster = new HashMap<String, Building>();
             try {
 
                 System.out.println("test3");
@@ -147,29 +171,46 @@ public class SpaceMapActivity extends Fragment{
                     String building_name = location.getString("building_name");
                     String campus = info.getString("campus");
 
-                    if(campus.equals("seattle") && (!buildings.contains(building_name))){
-                        buildings.add(building_name);
-                        mClusterManager.addItem(new MyItem(lat, lng, building_name));
+                    if(campus.equals("seattle") && (!building_cluster.containsKey(building_name))){
                         LatLng currLoc = new LatLng(lat, lng);
+
+                        Building buil = new Building(currLoc, building_name, 1);
+                        building_cluster.put(building_name, buil);
+
+//                        mClusterManager.addItem(new MyItem(lat, lng, building_name));
+
                         builder.include(currLoc);
+//                        Bitmap bmp = tc.makeIcon("hello");
+
 //                        map.addMarker(new MarkerOptions()
 //                                .position(currLoc)
 //                                .title(name)
 //                                .snippet("Students: 1234")
-//                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
+//                                .icon(BitmapDescriptorFactory.defaultMarker()));
+                    }else if(building_cluster.containsKey(building_name)){
+                        Building temp = building_cluster.get(building_name);
+                        temp.increaseSpots();
                     }
                 }
+
+                Iterator it = building_cluster.keySet().iterator();
+                while (it.hasNext()) {
+                    String key = (String)it.next();
+                    Building b = (Building)building_cluster.get(key);
+                    addMarkerToMap(b.getPosition(), b.getSpots());
+                }
+
                 System.out.println("Zoom Level: "+map.getMaxZoomLevel());
                 System.out.println("Zoom Level: "+map.getCameraPosition().zoom);
                LatLngBounds bounds = builder.build();
                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70));
-
                 System.out.println("test4");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+
+
 
     }
 
