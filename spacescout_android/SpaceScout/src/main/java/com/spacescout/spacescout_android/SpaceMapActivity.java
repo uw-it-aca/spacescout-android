@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.ui.IconGenerator;
 import com.spacescout.spacescout_android.TouchableWrapper.UpdateMapAfterUserInteraction;
 
@@ -80,9 +81,6 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         mTouchView = new TouchableWrapper(getActivity());
         mTouchView.addView(view);
         return mTouchView;
-//
-//        if(view == null)
-//            view = inflater.inflate(R.layout.fragment_space_map, container, false);
     }
 
     @Override
@@ -115,10 +113,6 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
 
         map.addMarker(markerOptions);
     }
-
-
-
-//    map.OnCameraChangeListener(mOnCameraChangeListener);
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -167,19 +161,15 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
 
         @Override
         protected void onPostExecute(JSONArray json) {
+            DisplayClustersByDistance(json);
+
+        }
+
+        protected void DisplayClustersByBuilding(JSONArray json){
+
             HashMap<String, Building> building_cluster = new HashMap<String, Building>();
 
-            if (mMapIsTouched){
-                System.out.println("hello-true");
-            }else {
-                System.out.println("hello-false");
-            }
-
             try {
-
-                System.out.println("test3");
-//                setUpClusterer();
-//                mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyItem>(new ClusterByBuilding<MyItem>()));
 
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -199,17 +189,7 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
 
                         Building buil = new Building(currLoc, building_name, 1);
                         building_cluster.put(building_name, buil);
-
-//                        mClusterManager.addItem(new MyItem(lat, lng, building_name));
-
                         builder.include(currLoc);
-//                        Bitmap bmp = tc.makeIcon("hello");
-
-//                        map.addMarker(new MarkerOptions()
-//                                .position(currLoc)
-//                                .title(name)
-//                                .snippet("Students: 1234")
-//                                .icon(BitmapDescriptorFactory.defaultMarker()));
                     }else if(building_cluster.containsKey(building_name)){
                         Building temp = building_cluster.get(building_name);
                         temp.increaseSpots();
@@ -223,16 +203,55 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
                     addMarkerToMap(b.getPosition(), b.getSpots());
                 }
 
-                System.out.println("Zoom Level: "+map.getMaxZoomLevel());
-                System.out.println("Zoom Level: "+map.getCameraPosition().zoom);
-               LatLngBounds bounds = builder.build();
-               map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70));
-                System.out.println("test4");
+                LatLngBounds bounds = builder.build();
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
         }
+
+        protected void DisplayClustersByDistance(JSONArray json){
+            HashMap<String, Building> building_cluster = new HashMap<String, Building>();
+
+            if (mMapIsTouched){
+                System.out.println("hello-true");
+            }else {
+                System.out.println("hello-false");
+            }
+
+            try {
+
+                System.out.println("test3");
+                setUpClusterer();
+                mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyItem>(new CustomClusteringAlgorithm<MyItem>()));
+
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                for(int i = 0; i < json.length(); i++){
+                    JSONObject curr = json.getJSONObject(i);
+                    JSONObject info = curr.getJSONObject("extended_info");
+
+                    JSONObject location = curr.getJSONObject("location");
+                    double lng = Double.parseDouble(location.getString("longitude"));
+                    double lat = Double.parseDouble(location.getString("latitude"));
+                    String name = curr.getString("name");
+                    String campus = info.getString("campus");
+
+                    if(campus.equals("seattle")){
+                        LatLng currLoc = new LatLng(lat, lng);
+
+                        mClusterManager.addItem(new MyItem(lat, lng, name));
+
+                    }
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
-
-
 }
