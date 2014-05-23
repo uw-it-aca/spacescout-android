@@ -18,8 +18,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.ui.IconGenerator;
+import com.spacescout.spacescout_android.TouchableWrapper.UpdateMapAfterUserInteraction;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,9 +33,10 @@ import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBas
  *
  * Created by ajay alfred on 11/5/13.
  */
-public class SpaceMapActivity extends Fragment{
+public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInteraction {
 
-
+    public static boolean mMapIsTouched = false;
+    public float zoomLevel = 0;
 
     int dist = MAX_DISTANCE_AT_ZOOM;
     IconGenerator tc = new IconGenerator(this.getActivity());
@@ -51,8 +52,8 @@ public class SpaceMapActivity extends Fragment{
         map.setOnCameraChangeListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
 
-
     }
+
 
     public SpaceMapActivity() {
         ///empty constructor required for fragment subclasses
@@ -63,6 +64,12 @@ public class SpaceMapActivity extends Fragment{
     private MapFragment mapFragment;
     private FragmentManager fm;
     private View view;
+    public TouchableWrapper mTouchView;
+
+    public void onUpdateMapAfterUserInteraction() {
+        System.out.println("hello");
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,7 +77,12 @@ public class SpaceMapActivity extends Fragment{
         super.onCreate(bundle);
         if(view == null)
             view = inflater.inflate(R.layout.fragment_space_map, container, false);
-        return view;
+        mTouchView = new TouchableWrapper(getActivity());
+        mTouchView.addView(view);
+        return mTouchView;
+//
+//        if(view == null)
+//            view = inflater.inflate(R.layout.fragment_space_map, container, false);
     }
 
     @Override
@@ -78,7 +90,6 @@ public class SpaceMapActivity extends Fragment{
         super.onResume();
         setUpMap();
     }
-
 
     private void setUpMap() {
         if (map != null)
@@ -90,10 +101,11 @@ public class SpaceMapActivity extends Fragment{
 
     protected void addMarkerToMap(LatLng loc, int text) {
         IconGenerator iconFactory = new IconGenerator(this.getActivity());
-        iconFactory.setContentPadding(0, 0, 0, 0);
+        iconFactory.setContentPadding(1, 1, 1, 1);
         iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
         addIcon(iconFactory, Integer.toString(text), loc);
     }
+
 
     private void addIcon(IconGenerator iconFactory, String text, LatLng position) {
         MarkerOptions markerOptions = new MarkerOptions().
@@ -104,6 +116,9 @@ public class SpaceMapActivity extends Fragment{
         map.addMarker(markerOptions);
     }
 
+
+
+//    map.OnCameraChangeListener(mOnCameraChangeListener);
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -128,11 +143,12 @@ public class SpaceMapActivity extends Fragment{
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
         System.out.println("checking");
 
-        new JSONParse().execute();
 
+
+        new JSONParse().execute();
     }
 
-    public class JSONParse extends AsyncTask<String, String, JSONArray> {
+    public class JSONParse extends AsyncTask<String, String, JSONArray>  {
         private ProgressDialog pDialog;
         @Override
         protected void onPreExecute() {
@@ -142,9 +158,9 @@ public class SpaceMapActivity extends Fragment{
         protected JSONArray doInBackground(String... args){
             JSONParser jParser = new JSONParser();
             JSONArray json = new JSONArray();
-            System.out.println("trying");
+
             // Getting JSON from URL
-             json = jParser.getJSONFromUrl("http://skor.cac.washington.edu:9001/api/v1/spot/all");
+            json = jParser.getJSONFromUrl("http://skor.cac.washington.edu:9001/api/v1/spot/all");
 
             return json;
         }
@@ -152,11 +168,18 @@ public class SpaceMapActivity extends Fragment{
         @Override
         protected void onPostExecute(JSONArray json) {
             HashMap<String, Building> building_cluster = new HashMap<String, Building>();
+
+            if (mMapIsTouched){
+                System.out.println("hello-true");
+            }else {
+                System.out.println("hello-false");
+            }
+
             try {
 
                 System.out.println("test3");
-                setUpClusterer();
-                mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyItem>(new ClusterByBuilding<MyItem>()));
+//                setUpClusterer();
+//                mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyItem>(new ClusterByBuilding<MyItem>()));
 
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -209,12 +232,7 @@ public class SpaceMapActivity extends Fragment{
                 e.printStackTrace();
             }
         }
-
-
-
     }
 
-    public String toString() {
-        return getClass().getName() + "@" + Integer.toHexString(hashCode());
-    }
+
 }
