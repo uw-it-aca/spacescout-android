@@ -28,20 +28,29 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Iterator;
-
-import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm.MAX_DISTANCE_AT_ZOOM;
 /**
  *
  * Created by ajay alfred on 11/5/13.
  */
 public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInteraction {
 
+
+    static final LatLng UnivWashington = new LatLng(47.655263166697765, -122.30669233862307);
+    private GoogleMap map;
+    private MapFragment mapFragment;
+    private FragmentManager fm;
+    private View view;
+    public TouchableWrapper mTouchView;
     public static boolean mMapIsTouched = false;
     public float zoomLevel = 0;
-
-    int dist = MAX_DISTANCE_AT_ZOOM;
-    IconGenerator tc = new IconGenerator(this.getActivity());
+    public IconGenerator tc = new IconGenerator(this.getActivity());
     public ClusterManager<MyItem> mClusterManager;
+    public JSONArray mJson;
+
+    public SpaceMapActivity() {
+        ///empty constructor required for fragment subclasses
+    }
+
     public void setUpClusterer() {
 
         // Initialize the manager with the context and the map.
@@ -55,21 +64,8 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
 
     }
 
-
-    public SpaceMapActivity() {
-        ///empty constructor required for fragment subclasses
-    }
-
-    static final LatLng UnivWashington = new LatLng(47.655263166697765, -122.30669233862307);
-    private GoogleMap map;
-    private MapFragment mapFragment;
-    private FragmentManager fm;
-    private View view;
-    public TouchableWrapper mTouchView;
-
     public void onUpdateMapAfterUserInteraction() {
         System.out.println("hello");
-
     }
 
     @Override
@@ -99,7 +95,6 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
 
     protected void addMarkerToMap(LatLng loc, int text) {
         IconGenerator iconFactory = new IconGenerator(this.getActivity());
-        iconFactory.setContentPadding(1, 1, 1, 1);
         iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
         addIcon(iconFactory, Integer.toString(text), loc);
     }
@@ -128,7 +123,6 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         }
         map = mapFragment.getMap();
 
-//        map.setMyLocationEnabled(true);
         UiSettings uiSettings = map.getUiSettings();
         uiSettings.setZoomControlsEnabled(false);
 
@@ -136,10 +130,90 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
         System.out.println("checking");
-
-
-
         new JSONParse().execute();
+    }
+
+    public void DisplayClustersByDistance(JSONArray json){
+        HashMap<String, Building> building_cluster = new HashMap<String, Building>();
+
+        if (mMapIsTouched){
+            System.out.println("hello-true");
+        }else {
+            System.out.println("hello-false");
+        }
+
+        try {
+
+            System.out.println("test3");
+            setUpClusterer();
+            mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyItem>(new CustomClusteringAlgorithm<MyItem>()));
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+            for(int i = 0; i < json.length(); i++){
+                JSONObject curr = json.getJSONObject(i);
+                JSONObject info = curr.getJSONObject("extended_info");
+
+                JSONObject location = curr.getJSONObject("location");
+                double lng = Double.parseDouble(location.getString("longitude"));
+                double lat = Double.parseDouble(location.getString("latitude"));
+                String name = curr.getString("name");
+                String campus = info.getString("campus");
+
+                if(campus.equals("seattle")){
+                    LatLng currLoc = new LatLng(lat, lng);
+                    mClusterManager.addItem(new MyItem(lat, lng, name));
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void DisplayClustersByBuilding(JSONArray json){
+
+        HashMap<String, Building> building_cluster = new HashMap<String, Building>();
+
+        try {
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+            for(int i = 0; i < json.length(); i++){
+                JSONObject curr = json.getJSONObject(i);
+                JSONObject info = curr.getJSONObject("extended_info");
+
+                JSONObject location = curr.getJSONObject("location");
+                double lng = Double.parseDouble(location.getString("longitude"));
+                double lat = Double.parseDouble(location.getString("latitude"));
+                String name = curr.getString("name");
+                String building_name = location.getString("building_name");
+                String campus = info.getString("campus");
+
+                if(campus.equals("seattle") && (!building_cluster.containsKey(building_name))){
+                    LatLng currLoc = new LatLng(lat, lng);
+
+                    Building buil = new Building(currLoc, building_name, 1);
+                    building_cluster.put(building_name, buil);
+                    builder.include(currLoc);
+                }else if(building_cluster.containsKey(building_name)){
+                    Building temp = building_cluster.get(building_name);
+                    temp.increaseSpots();
+                }
+            }
+
+            Iterator it = building_cluster.keySet().iterator();
+            while (it.hasNext()) {
+                String key = (String)it.next();
+                Building b = (Building)building_cluster.get(key);
+                addMarkerToMap(b.getPosition(), b.getSpots());
+            }
+
+            LatLngBounds bounds = builder.build();
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public class JSONParse extends AsyncTask<String, String, JSONArray>  {
@@ -152,7 +226,6 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         protected JSONArray doInBackground(String... args){
             JSONParser jParser = new JSONParser();
             JSONArray json = new JSONArray();
-
             // Getting JSON from URL
             json = jParser.getJSONFromUrl("http://skor.cac.washington.edu:9001/api/v1/spot/all");
 
@@ -161,97 +234,8 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
 
         @Override
         protected void onPostExecute(JSONArray json) {
-            DisplayClustersByDistance(json);
-
+            mJson = json;
+            DisplayClustersByBuilding(json);
         }
-
-        protected void DisplayClustersByBuilding(JSONArray json){
-
-            HashMap<String, Building> building_cluster = new HashMap<String, Building>();
-
-            try {
-
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-                for(int i = 0; i < json.length(); i++){
-                    JSONObject curr = json.getJSONObject(i);
-                    JSONObject info = curr.getJSONObject("extended_info");
-
-                    JSONObject location = curr.getJSONObject("location");
-                    double lng = Double.parseDouble(location.getString("longitude"));
-                    double lat = Double.parseDouble(location.getString("latitude"));
-                    String name = curr.getString("name");
-                    String building_name = location.getString("building_name");
-                    String campus = info.getString("campus");
-
-                    if(campus.equals("seattle") && (!building_cluster.containsKey(building_name))){
-                        LatLng currLoc = new LatLng(lat, lng);
-
-                        Building buil = new Building(currLoc, building_name, 1);
-                        building_cluster.put(building_name, buil);
-                        builder.include(currLoc);
-                    }else if(building_cluster.containsKey(building_name)){
-                        Building temp = building_cluster.get(building_name);
-                        temp.increaseSpots();
-                    }
-                }
-
-                Iterator it = building_cluster.keySet().iterator();
-                while (it.hasNext()) {
-                    String key = (String)it.next();
-                    Building b = (Building)building_cluster.get(key);
-                    addMarkerToMap(b.getPosition(), b.getSpots());
-                }
-
-                LatLngBounds bounds = builder.build();
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        protected void DisplayClustersByDistance(JSONArray json){
-            HashMap<String, Building> building_cluster = new HashMap<String, Building>();
-
-            if (mMapIsTouched){
-                System.out.println("hello-true");
-            }else {
-                System.out.println("hello-false");
-            }
-
-            try {
-
-                System.out.println("test3");
-                setUpClusterer();
-                mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyItem>(new CustomClusteringAlgorithm<MyItem>()));
-
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-                for(int i = 0; i < json.length(); i++){
-                    JSONObject curr = json.getJSONObject(i);
-                    JSONObject info = curr.getJSONObject("extended_info");
-
-                    JSONObject location = curr.getJSONObject("location");
-                    double lng = Double.parseDouble(location.getString("longitude"));
-                    double lat = Double.parseDouble(location.getString("latitude"));
-                    String name = curr.getString("name");
-                    String campus = info.getString("campus");
-
-                    if(campus.equals("seattle")){
-                        LatLng currLoc = new LatLng(lat, lng);
-
-                        mClusterManager.addItem(new MyItem(lat, lng, name));
-
-                    }
-                }
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
     }
 }
