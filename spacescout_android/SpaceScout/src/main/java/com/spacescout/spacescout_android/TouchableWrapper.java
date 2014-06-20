@@ -21,6 +21,7 @@ public class TouchableWrapper extends FrameLayout {
         }
     }
 
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         switch (event.getAction()) {

@@ -32,6 +32,14 @@ import java.util.Iterator;
  *
  * Created by ajay alfred on 11/5/13.
  */
+
+/**
+ *
+ * This class displays the map and its markers/clusters
+ * It is extending a fragment so that it can be embedded into the MainActivity
+ * It is implementing the UpdateMapAfterUserInteraction class for Callback Method for Map touch or zoom change
+ *
+ */
 public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInteraction {
 
 
@@ -51,6 +59,8 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         ///empty constructor required for fragment subclasses
     }
 
+    // Setting up the ClusterManager which would contain all the clusters
+    // This is only used by DisplayClustersByDistance() method
     public void setUpClusterer() {
 
         // Initialize the manager with the context and the map.
@@ -64,10 +74,13 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
 
     }
 
+    // This method is being implemented as part of the interface UpdateMapAfterUserInteraction
+    // This is essentially a callback for touch event on the map
     public void onUpdateMapAfterUserInteraction() {
         System.out.println("hello");
     }
 
+    // This is the default method needed for Android Frafments
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle bundle) {
@@ -79,12 +92,14 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         return mTouchView;
     }
 
+    // This is the default method needed for Android Fragments
     @Override
     public void onResume() {
         super.onResume();
         setUpMap();
     }
 
+    // Setting up a Map
     private void setUpMap() {
         if (map != null)
             return;
@@ -93,6 +108,8 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
             return;
     }
 
+    // This adds a marker to the map with IconGenerator class
+    // The method takes the LatLng object location and text to be put on the marker/cluster as an Integer
     protected void addMarkerToMap(LatLng loc, int text) {
         IconGenerator iconFactory = new IconGenerator(this.getActivity());
         iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
@@ -100,6 +117,8 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
     }
 
 
+    // This is the helper method for adding a marker to the map
+    // This is invoked by addMarkerToMap
     private void addIcon(IconGenerator iconFactory, String text, LatLng position) {
         MarkerOptions markerOptions = new MarkerOptions().
                 icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(text))).
@@ -109,6 +128,7 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         map.addMarker(markerOptions);
     }
 
+    // This is the default method needed for Android Fragments
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -133,23 +153,19 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         new JSONParse().execute();
     }
 
+    // This method displays the clusters on the map by clustering by distance
+    // It takes the json data as parameter
     public void DisplayClustersByDistance(JSONArray json){
-        HashMap<String, Building> building_cluster = new HashMap<String, Building>();
-
-        if (mMapIsTouched){
-            System.out.println("hello-true");
-        }else {
-            System.out.println("hello-false");
-        }
 
         try {
 
-            System.out.println("test3");
+            // Setting up cluster manager with the CustomClusteringAlgorithm Class
             setUpClusterer();
             mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyItem>(new CustomClusteringAlgorithm<MyItem>()));
 
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+            // Looping through JSON Data to add it to the Cluster Manager
             for(int i = 0; i < json.length(); i++){
                 JSONObject curr = json.getJSONObject(i);
                 JSONObject info = curr.getJSONObject("extended_info");
@@ -171,14 +187,20 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         }
     }
 
+
+    // This method displays the clusters on the map by clustering by Building Names
+    // It takes the json data as parameter
     public void DisplayClustersByBuilding(JSONArray json){
 
+        // HashMap to keep track of all buildings with their building objects
         HashMap<String, Building> building_cluster = new HashMap<String, Building>();
 
         try {
 
+            // Builder object to build bound for all clusters/markers
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+            // Looping through all json data
             for(int i = 0; i < json.length(); i++){
                 JSONObject curr = json.getJSONObject(i);
                 JSONObject info = curr.getJSONObject("extended_info");
@@ -193,15 +215,19 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
                 if(campus.equals("seattle") && (!building_cluster.containsKey(building_name))){
                     LatLng currLoc = new LatLng(lat, lng);
 
+                    // Creating Building Objects with location, building name
                     Building buil = new Building(currLoc, building_name, 1);
                     building_cluster.put(building_name, buil);
                     builder.include(currLoc);
                 }else if(building_cluster.containsKey(building_name)){
+
+                    // Increasing the number of spots in the current building
                     Building temp = building_cluster.get(building_name);
                     temp.increaseSpots();
                 }
             }
 
+            // Iterating through the hashmap of all buildings to add to the maps
             Iterator it = building_cluster.keySet().iterator();
             while (it.hasNext()) {
                 String key = (String)it.next();
@@ -216,8 +242,11 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         }
     }
 
+
+    // A class to asynchronously get JSON data from API
     public class JSONParse extends AsyncTask<String, String, JSONArray>  {
         private ProgressDialog pDialog;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -235,6 +264,9 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         @Override
         protected void onPostExecute(JSONArray json) {
             mJson = json;
+
+            // CALLING THE CLUSTERING METHOD
+            // THIS CAN BE CHANGED TO DisplayClustersByDistance()
             DisplayClustersByBuilding(json);
         }
     }
