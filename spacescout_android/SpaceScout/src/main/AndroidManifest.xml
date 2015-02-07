@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="18" />
+        android:minSdkVersion="19"
+        android:targetSdkVersion="21" />
 
     <permission
         android:name="com.spacescout.spacescout_android.permission.MAPS_RECEIVE"
@@ -80,7 +80,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyB0dIJi7ZZ0xYj59m2XFn5HsS7lV1YYFz8" />
+            android:value="@string/googleMapsKey" />
 
     </application>
 
