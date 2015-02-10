@@ -85,6 +85,10 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="signpost-commonshttp4-1.2.1.2" level="project" />
+    <orderEntry type="library" exported="" name="android-maps-utils-0.2.1" level="project" />
+    <orderEntry type="library" exported="" name="signpost-jetty6-1.2.1.2" level="project" />
+    <orderEntry type="library" exported="" name="signpost-core-1.2.1.2" level="project" />
     <orderEntry type="library" exported="" name="play-services-4.0.30" level="project" />
   </component>
 </module>

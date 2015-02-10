@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="android-maps-utils-0.2.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/SpaceScout/build/exploded-aar/com.google.maps.android/android-maps-utils/0.2.1/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/SpaceScout/build/exploded-aar/com.google.maps.android/android-maps-utils/0.2.1/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

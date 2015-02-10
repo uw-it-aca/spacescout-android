@@ -7,21 +7,25 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+
+import oauth.signpost.OAuthConsumer;
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 
 /**
  * Created by ajay alfred on 11/5/13.
  */
 public class JSONParser {
+    static JSONArray jObj = null;
     static InputStream is = null;
-    static JSONObject jObj = null;
     static String json = "";
 
     // constructor
@@ -29,14 +33,27 @@ public class JSONParser {
 
     }
 
-    public JSONObject getJSONFromUrl(String url) {
+    private static String readAll(Reader rd) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+            sb.append((char) cp);
+        }
+        return sb.toString();
+    }
+
+    public JSONArray getJSONFromUrl(String url){
+
+        OAuthConsumer consumer = new CommonsHttpOAuthConsumer(
+                "1f5135d490fd0ef9685448f248138c99cbacca6d",
+                "037215f1105e6d50911e149fe5a67c4ae29524f3");
 
         // Making HTTP request
         try {
             // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
-
+            consumer.sign(httpGet);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
             is = httpEntity.getContent();
@@ -45,7 +62,7 @@ public class JSONParser {
             e.printStackTrace();
         } catch (ClientProtocolException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -65,7 +82,7 @@ public class JSONParser {
 
         // try parse the string to a JSON object
         try {
-            jObj = new JSONObject(json);
+            jObj = new JSONArray(json);
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
         }
