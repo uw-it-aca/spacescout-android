@@ -194,7 +194,7 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
 
         // HashMap to keep track of all buildings with their building objects
         HashMap<String, Building> building_cluster = new HashMap<String, Building>();
-
+        //TODO: error handling if can't obtain json or json is null
         try {
 
             // Builder object to build bound for all clusters/markers
@@ -253,10 +253,10 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         }
         @Override
         protected JSONArray doInBackground(String... args){
-            JSONParser jParser = new JSONParser();
+            JSONParser jParser = new JSONParser(getActivity());
             JSONArray json = new JSONArray();
             // Getting JSON from URL
-            json = jParser.getJSONFromUrl("http://skor.cac.washington.edu:9001/api/v1/spot/all");
+            json = jParser.getJSONFromUrl("http://ketchup.eplt.washington.edu:8000/api/v1/spot/all");
 
             return json;
         }

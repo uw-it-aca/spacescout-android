@@ -1,5 +1,6 @@
 package com.spacescout.spacescout_android;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -27,10 +28,11 @@ public class JSONParser {
     static JSONArray jObj = null;
     static InputStream is = null;
     static String json = "";
+    private Context appContext;
 
     // constructor
-    public JSONParser() {
-
+    public JSONParser(Context c) {
+        appContext = c;
     }
 
     private static String readAll(Reader rd) throws IOException {
@@ -43,10 +45,9 @@ public class JSONParser {
     }
 
     public JSONArray getJSONFromUrl(String url){
-
         OAuthConsumer consumer = new CommonsHttpOAuthConsumer(
-                "1f5135d490fd0ef9685448f248138c99cbacca6d",
-                "037215f1105e6d50911e149fe5a67c4ae29524f3");
+                appContext.getResources().getString(R.string.consumerKey),
+                appContext.getResources().getString(R.string.consumerSecret));
 
         // Making HTTP request
         try {
