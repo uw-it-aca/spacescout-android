@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 /**
@@ -256,7 +257,11 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
             JSONParser jParser = new JSONParser(getActivity());
             JSONArray json = new JSONArray();
             // Getting JSON from URL
-            json = jParser.getJSONFromUrl("http://ketchup.eplt.washington.edu:8000/api/v1/spot/all");
+            try {
+                json = jParser.getJSONFromUrl("http://ketchup.eplt.washington.edu:8000/api/v1/spot/all");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             return json;
         }
@@ -265,9 +270,11 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         protected void onPostExecute(JSONArray json) {
             mJson = json;
 
-            // CALLING THE CLUSTERING METHOD
-            // THIS CAN BE CHANGED TO DisplayClustersByDistance()
-            DisplayClustersByBuilding(json);
+            // CALLING THE CLUSTERING METHOD.
+            // THIS CAN BE CHANGED TO DisplayClustersByDistance().
+            // Only call if JSON actually contains something.
+            if (json != null)
+                DisplayClustersByBuilding(json);
         }
     }
 }
