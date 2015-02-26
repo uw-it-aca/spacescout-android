@@ -61,7 +61,6 @@ public class JSONParser {
     // Handled exceptions: HttpHostConnectException
     public JSONArray getJSONFromUrl(String url) throws IOException {
         OAuthConsumer consumer = new CommonsHttpOAuthConsumer(
-//          OAuthConsumer consumer = new DefaultOAuthConsumer(
                 appContext.getResources().getString(R.string.consumerKey),
                 appContext.getResources().getString(R.string.consumerSecret));
 
@@ -72,16 +71,23 @@ public class JSONParser {
             HttpGet httpGet = new HttpGet(url);
             consumer.sign(httpGet);
             HttpResponse response = httpClient.execute(httpGet);
-            HttpEntity httpEntity = response.getEntity();
-            is = httpEntity.getContent();
-            Log.d("oauth", "Sending 'GET' request to URL : " + url);
-            Log.d("oauth", "Response Code : " +
-                    response.getStatusLine().getStatusCode());
+            int statusCode = response.getStatusLine().getStatusCode();
+            String errorMsg;
+            switch (statusCode) {
+                case 401:
+                    errorMsg = "Authentication error. Check key & secret";
+                    Log.d("oauth", errorMsg);
+                    return null;
+                case 200:
+                    HttpEntity httpEntity = response.getEntity();
+                    is = httpEntity.getContent();
+            }
         } catch (UnsupportedEncodingException | ClientProtocolException e) {
             e.printStackTrace();
         } catch (HttpHostConnectException e) {
             String errorMsg = "Can't connect to server. Probably down.";
             Log.d("oauth", errorMsg);
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,51 +105,6 @@ public class JSONParser {
         } catch (Exception e) {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
-
-        /* Aba: trying to implement httpURLConnection */
-//        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-//        int responseCode = 0;
-//
-//        try {
-//            // optional default is GET
-//            conn.setRequestMethod("GET");
-//            consumer.sign(conn);
-//            conn.connect();
-//            responseCode = conn.getResponseCode();
-//            Log.d("oauth" ,"Sending 'GET' request to URL : " + url);
-//            Log.d("oauth" ,"Response Code : " + responseCode);
-//        } catch (IOException e) {
-//            responseCode = conn.getResponseCode();
-//        } catch (OAuthCommunicationException | OAuthExpectationFailedException | OAuthMessageSignerException e) {
-//            e.printStackTrace();
-//        }
-
-//        // handle 401 response or check if responseCode never changed
-//        if (responseCode == 401) {
-//            CharSequence text_401 = "Got a " + responseCode;
-//            int duration = Toast.LENGTH_SHORT;
-//
-//            Toast toast = Toast.makeText(appContext, text_401, duration);
-//            toast.show();
-//            System.out.println(text_401);
-//        } else if (responseCode == 0) {
-//            CharSequence text_401 = "Response did not change!";
-//            int duration = Toast.LENGTH_SHORT;
-//
-//            Toast toast = Toast.makeText(appContext, text_401, duration);
-//            toast.show();
-//            System.out.println(text_401);
-//        }
-//
-//        BufferedReader in = new BufferedReader(
-//                new InputStreamReader(conn.getInputStream()));
-//        StringBuilder sb = new StringBuilder();
-//        String line = null;
-//        while ((line = in.readLine()) != null) {
-//            sb.append(line + "\n");
-//        }
-//        in.close();
-//        json = sb.toString();
 
         // try parse the string to a JSON object
         try {
