@@ -2,7 +2,6 @@ package com.spacescout.spacescout_android;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,26 +18,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import oauth.signpost.OAuthConsumer;
-import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
-import oauth.signpost.exception.OAuthCommunicationException;
-import oauth.signpost.exception.OAuthExpectationFailedException;
-import oauth.signpost.exception.OAuthMessageSignerException;
-import oauth.signpost.exception.OAuthNotAuthorizedException;
 
 /**
  * Created by ajay alfred on 11/5/13.
+ * Modified by azri azmi
  */
 public class JSONParser {
     static JSONArray jObj = null;
     static InputStream is = null;
     static String json = "";
     private Context appContext;
+    private int statusCode;
 
     // constructor
     public JSONParser(Context c) {
@@ -60,6 +53,7 @@ public class JSONParser {
     // Connects to the server with the url. Signs the request with signpost for OAuth 1.0.
     // Handled exceptions: HttpHostConnectException
     public JSONArray getJSONFromUrl(String url) throws IOException {
+
         OAuthConsumer consumer = new CommonsHttpOAuthConsumer(
                 appContext.getResources().getString(R.string.consumerKey),
                 appContext.getResources().getString(R.string.consumerSecret));
@@ -71,23 +65,27 @@ public class JSONParser {
             HttpGet httpGet = new HttpGet(url);
             consumer.sign(httpGet);
             HttpResponse response = httpClient.execute(httpGet);
-            int statusCode = response.getStatusLine().getStatusCode();
+            statusCode = response.getStatusLine().getStatusCode();
             String errorMsg;
             switch (statusCode) {
-                case 401:
-                    errorMsg = "Authentication error. Check key & secret";
-                    Log.d("oauth", errorMsg);
-                    return null;
                 case 200:
                     HttpEntity httpEntity = response.getEntity();
                     is = httpEntity.getContent();
+                    break;
+                case 401:
+                    errorMsg = "Can't authenticate. Check key & secret";
+                    Log.d("oauth", errorMsg);
+                    return null;
+                default:
+                    errorMsg = "Can't connect to server. Status code " + statusCode + ".";
+                    Log.d("oauth", errorMsg);
+                    return null;
             }
         } catch (UnsupportedEncodingException | ClientProtocolException e) {
             e.printStackTrace();
         } catch (HttpHostConnectException e) {
             String errorMsg = "Can't connect to server. Probably down.";
             Log.d("oauth", errorMsg);
-            return null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,6 +113,9 @@ public class JSONParser {
 
         // return JSON String
         return jObj;
+    }
 
+    public int getStatusCode() {
+        return statusCode;
     }
 }

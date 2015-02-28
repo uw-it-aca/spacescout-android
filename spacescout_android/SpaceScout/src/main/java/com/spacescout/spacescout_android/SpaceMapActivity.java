@@ -1,10 +1,13 @@
 package com.spacescout.spacescout_android;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +35,7 @@ import java.util.Iterator;
 /**
  *
  * Created by ajay alfred on 11/5/13.
+ * modified by azri azmi
  */
 
 /**
@@ -195,7 +199,6 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
 
         // HashMap to keep track of all buildings with their building objects
         HashMap<String, Building> building_cluster = new HashMap<String, Building>();
-        //TODO: error handling if can't obtain json or json is null
         try {
 
             // Builder object to build bound for all clusters/markers
@@ -247,6 +250,7 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
     // A class to asynchronously get JSON data from API
     public class JSONParse extends AsyncTask<String, String, JSONArray>  {
         private ProgressDialog pDialog;
+        private int statusCode;
 
         @Override
         protected void onPreExecute() {
@@ -259,6 +263,7 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
             // Getting JSON from URL
             try {
                 json = jParser.getJSONFromUrl("http://ketchup.eplt.washington.edu:8000/api/v1/spot/all");
+                statusCode = jParser.getStatusCode();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -270,11 +275,43 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         protected void onPostExecute(JSONArray json) {
             mJson = json;
 
-            // CALLING THE CLUSTERING METHOD.
-            // THIS CAN BE CHANGED TO DisplayClustersByDistance().
-            // Only call if JSON actually contains something.
-            if (json != null)
-                DisplayClustersByBuilding(json);
+            // handle different status codes
+            // only continue processing json if code 200
+            switch (statusCode) {
+                case 200:
+                    // CALLING THE CLUSTERING METHOD.
+                    // THIS CAN BE CHANGED TO DisplayClustersByDistance().
+                    DisplayClustersByBuilding(json);
+                    break;
+                case 401:
+                    showStatusDialog("Authentication Issue", "Check key & secret.");
+                    break;
+                default:
+                    showStatusDialog("Connection Issue", "Can't connect to server. Status code: " + statusCode + ".");
+            }
+        }
+
+        // creates and shows a new dialog modal
+        // let's user retry connecting to the server
+        private void showStatusDialog(String title, String message) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // retry
+                            Log.d("oauth", "Retrying connection.");
+                            new JSONParse().execute();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            Log.d("oauth", "Showing dialogue " + title);
         }
     }
 }
