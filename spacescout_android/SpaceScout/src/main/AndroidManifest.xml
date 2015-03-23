@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.spacescout.spacescout_android"
-    android:versionCode="1"
-    android:versionName="1.0">
-    <!--TODO: remove unused stuff. commenting for future commit -->
-    <uses-sdk
-        android:minSdkVersion="19"
-        android:targetSdkVersion="21" />
+    package="com.spacescout.spacescout_android">
 
     <permission
         android:name="com.spacescout.spacescout_android.permission.MAPS_RECEIVE"
