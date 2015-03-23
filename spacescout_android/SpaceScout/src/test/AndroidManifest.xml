@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.spacescout.spacescout_android.test"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <!-- Min/target SDK versions (<uses-sdk>) managed by build.gradle -->
+
+    <!-- We add an application tag here just so that we can indicate that
+         this package needs to link against the android.test library,
+         which is needed when building test cases. -->
+    <application>
+        <uses-library android:name="android.test.runner" />
+    </application>
+
+    <!--
+    Specifies the instrumentation test runner used to run the tests.
+    -->
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="com.spacescout.spacescout_android"
+        android:label="Tests for com.spacescout.spacescout_android" />
+
+</manifest>

@@ -35,22 +35,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.apache.http.client.HttpClient;
 
 
 public class MainActivity extends Activity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-
     private FragmentManager fragmentManager;
-    private Fragment fragSpaceList = new SpaceListActivity();
-    private Fragment fragSpaceMap = new SpaceMapActivity();
+    private Fragment fragSpaceList;
     private Fragment generalFrag;
+
+    public SpaceMapActivity fragSpaceMap;
 
     NavMenuListAdapter mNavMenuAdapter;
     String[] navItemTitle;
@@ -128,6 +130,9 @@ public class MainActivity extends Activity {
         titleScout.setTypeface(typeface);
 
         getActionBar().setCustomView(v);
+
+        fragSpaceMap = new SpaceMapActivity();
+        fragSpaceList = new SpaceListActivity();
 
         if (savedInstanceState == null) {
             selectItem(0);

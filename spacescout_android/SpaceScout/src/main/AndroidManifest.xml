@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.spacescout.spacescout_android"
     android:versionCode="1"
-    android:versionName="1.0" >
-
+    android:versionName="1.0">
+    <!--TODO: remove unused stuff. commenting for future commit -->
     <uses-sdk
         android:minSdkVersion="19"
         android:targetSdkVersion="21" />
@@ -72,10 +72,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.spacescout.spacescout_android.SpaceDetailsActivity" />
         </activity>
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

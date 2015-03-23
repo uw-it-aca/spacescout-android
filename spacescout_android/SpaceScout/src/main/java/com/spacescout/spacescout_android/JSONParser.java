@@ -6,6 +6,7 @@ import android.util.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -61,7 +62,7 @@ public class JSONParser {
         // Making HTTP request
         try {
             // defaultHttpClient
-            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
             consumer.sign(httpGet);
             HttpResponse response = httpClient.execute(httpGet);

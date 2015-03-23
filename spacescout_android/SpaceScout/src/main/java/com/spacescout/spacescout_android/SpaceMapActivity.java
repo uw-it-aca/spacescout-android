@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,13 +34,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.WeakHashMap;
 /**
  *
  * Created by ajay alfred on 11/5/13.
- * modified by azri azmi
- */
-
-/**
+ * Modified by azri azmi.
  *
  * This class displays the map and its markers/clusters
  * It is extending a fragment so that it can be embedded into the MainActivity
@@ -47,21 +47,62 @@ import java.util.Iterator;
  */
 public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInteraction {
 
-
     static final LatLng UnivWashington = new LatLng(47.655263166697765, -122.30669233862307);
+
     private GoogleMap map;
     private MapFragment mapFragment;
     private FragmentManager fm;
     private View view;
+
     public TouchableWrapper mTouchView;
     public static boolean mMapIsTouched = false;
     public float zoomLevel = 0;
-    public IconGenerator tc = new IconGenerator(this.getActivity());
+    public IconGenerator tc;
     public ClusterManager<MyItem> mClusterManager;
     public JSONArray mJson;
+    public WeakHashMap<String, AlertDialog> alertDialogues;
+    public WeakHashMap<String, Toast> toasts;
+
+    final String url = "http://ketchup.eplt.washington.edu:8000/api/v1/spot/all";
+    private JSONParser jParser;
 
     public SpaceMapActivity() {
         ///empty constructor required for fragment subclasses
+    }
+
+    // This is the default method needed for Android Fragments
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        fm = getFragmentManager();
+        mapFragment = (MapFragment) fm.findFragmentById(R.id.map);
+        alertDialogues = new WeakHashMap<>();
+        toasts = new WeakHashMap<>();
+
+        // TODO: handle map fragment null error for API 21
+        if(mapFragment == null)
+        {
+            mapFragment = MapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.map, mapFragment).commit();
+        }
+        map = mapFragment.getMap();
+
+        UiSettings uiSettings = map.getUiSettings();
+        uiSettings.setZoomControlsEnabled(false);
+
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
+        Log.d("SpaceMapActivity", "checking");
+
+        tc = new IconGenerator(this.getActivity());
+
+        jParser = new JSONParser(getActivity());
+        connectToServer();
+    }
+
+    public void connectToServer() {
+        new getJson().execute();
     }
 
     // Setting up the ClusterManager which would contain all the clusters
@@ -133,34 +174,9 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         map.addMarker(markerOptions);
     }
 
-    // This is the default method needed for Android Fragments
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        fm = getFragmentManager();
-        mapFragment = (MapFragment) fm.findFragmentById(R.id.map);
-
-        if(mapFragment == null)
-        {
-            mapFragment = MapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.map, mapFragment).commit();
-        }
-        map = mapFragment.getMap();
-
-        UiSettings uiSettings = map.getUiSettings();
-        uiSettings.setZoomControlsEnabled(false);
-
-
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
-        System.out.println("checking");
-        new JSONParse().execute();
-    }
-
     // This method displays the clusters on the map by clustering by distance
     // It takes the json data as parameter
-    public void DisplayClustersByDistance(JSONArray json){
+    public void DisplayClustersByDistance(JSONArray mJson){
 
         try {
 
@@ -171,8 +187,8 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             // Looping through JSON Data to add it to the Cluster Manager
-            for(int i = 0; i < json.length(); i++){
-                JSONObject curr = json.getJSONObject(i);
+            for(int i = 0; i < mJson.length(); i++){
+                JSONObject curr = mJson.getJSONObject(i);
                 JSONObject info = curr.getJSONObject("extended_info");
 
                 JSONObject location = curr.getJSONObject("location");
@@ -195,7 +211,7 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
 
     // This method displays the clusters on the map by clustering by Building Names
     // It takes the json data as parameter
-    public void DisplayClustersByBuilding(JSONArray json){
+    public void DisplayClustersByBuilding(){
 
         // HashMap to keep track of all buildings with their building objects
         HashMap<String, Building> building_cluster = new HashMap<String, Building>();
@@ -205,8 +221,8 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             // Looping through all json data
-            for(int i = 0; i < json.length(); i++){
-                JSONObject curr = json.getJSONObject(i);
+            for(int i = 0; i < mJson.length(); i++){
+                JSONObject curr = mJson.getJSONObject(i);
                 JSONObject info = curr.getJSONObject("extended_info");
 
                 JSONObject location = curr.getJSONObject("location");
@@ -246,72 +262,98 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         }
     }
 
+    public JSONArray getJSONFromUrl() {
+        JSONArray json = new JSONArray();
+        try {
+            json = jParser.getJSONFromUrl(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public int getHttpStatus() {
+        return jParser.getStatusCode();
+    }
 
     // A class to asynchronously get JSON data from API
-    public class JSONParse extends AsyncTask<String, String, JSONArray>  {
+    // Purposely wrote "Json" in titleCase to differentiate from Android methods
+    public class getJson extends AsyncTask<String, String, JSONArray>  {
         private ProgressDialog pDialog;
-        private int statusCode;
+        protected int statusCode;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
+
         @Override
         protected JSONArray doInBackground(String... args){
-            JSONParser jParser = new JSONParser(getActivity());
-            JSONArray json = new JSONArray();
             // Getting JSON from URL
-            try {
-                json = jParser.getJSONFromUrl("http://ketchup.eplt.washington.edu:8000/api/v1/spot/all");
-                statusCode = jParser.getStatusCode();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            JSONArray json = getJSONFromUrl();
+            statusCode = getHttpStatus();
 
             return json;
         }
 
         @Override
         protected void onPostExecute(JSONArray json) {
-            mJson = json;
-
-            // handle different status codes
-            // only continue processing json if code 200
-            switch (statusCode) {
-                case 200:
-                    // CALLING THE CLUSTERING METHOD.
-                    // THIS CAN BE CHANGED TO DisplayClustersByDistance().
-                    DisplayClustersByBuilding(json);
-                    break;
-                case 401:
-                    showStatusDialog("Authentication Issue", "Check key & secret.");
-                    break;
-                default:
-                    showStatusDialog("Connection Issue", "Can't connect to server. Status code: " + statusCode + ".");
-            }
+            handleHttpResponse(statusCode, json);
         }
+    }
 
-        // creates and shows a new dialog modal
-        // let's user retry connecting to the server
-        private void showStatusDialog(String title, String message) {
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(title)
-                    .setMessage(message)
-                    .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // retry
-                            Log.d("oauth", "Retrying connection.");
-                            new JSONParse().execute();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-            Log.d("oauth", "Showing dialogue " + title);
+    public void handleHttpResponse(int statusCode, JSONArray json) {
+        // handle different status codes
+        // only continue processing json if code 200
+        switch (statusCode) {
+            case 200:
+                // CALLING THE CLUSTERING METHOD.
+                // THIS CAN BE CHANGED TO DisplayClustersByDistance().
+                if (json == null || json.length() == 0) {
+                    Toast toast = Toast.makeText(getActivity(), "Sorry, no spaces found", Toast.LENGTH_SHORT);
+                    toasts.put("Sorry, no spaces found" ,toast);
+                    toast.show();
+                } else {
+                    mJson = json;
+                    DisplayClustersByBuilding();
+                }
+                break;
+            case 401:
+                showStatusDialog("Authentication Issue", "Check key & secret.");
+                break;
+            default:
+                showStatusDialog("Connection Issue", "Can't connect to server. Status code: " + statusCode + ".");
+                break;
         }
+    }
+
+    // creates and shows a new dialog modal
+    // let's user retry connecting to the server
+    private void showStatusDialog(String title, String message) {
+        AlertDialog.Builder dialogueBuilder = new AlertDialog.Builder(getActivity())
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // retry
+                        Log.d("oauth", "Retrying connection.");
+                        new getJson().execute();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert);
+        AlertDialog dialogue = dialogueBuilder.create();
+        alertDialogues.put(title, dialogue);
+        dialogue.show();
+
+        Log.d("oauth", "Showing dialogue " + title);
+    }
+
+    public AlertDialog getUsedDialogue(String key) {
+        return alertDialogues.get(key);
     }
 }
