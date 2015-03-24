@@ -94,7 +94,7 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
         Log.d("SpaceMapActivity", "checking");
 
-        tc = new IconGenerator(this.getActivity());
+        tc = new IconGenerator(getActivity());
 
         jParser = new JSONParser(getActivity());
         connectToServer();
@@ -156,15 +156,14 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
     // This adds a marker to the map with IconGenerator class
     // The method takes the LatLng object location and text to be put on the marker/cluster as an Integer
     protected void addMarkerToMap(LatLng loc, int text) {
-        IconGenerator iconFactory = new IconGenerator(this.getActivity());
-        iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
+        IconGenerator iconFactory = new IconGenerator(getActivity());
         addIcon(iconFactory, Integer.toString(text), loc);
     }
-
 
     // This is the helper method for adding a marker to the map
     // This is invoked by addMarkerToMap
     private void addIcon(IconGenerator iconFactory, String text, LatLng position) {
+        iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
         MarkerOptions markerOptions = new MarkerOptions().
                 icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(text))).
                 position(position).
