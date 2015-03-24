@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,7 +37,7 @@ import java.util.WeakHashMap;
 /**
  *
  * Created by ajay alfred on 11/5/13.
- * Modified by azri azmi.
+ * Modified by azri92.
  *
  * This class displays the map and its markers/clusters
  * It is extending a fragment so that it can be embedded into the MainActivity
@@ -251,7 +250,7 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
             Iterator it = building_cluster.keySet().iterator();
             while (it.hasNext()) {
                 String key = (String)it.next();
-                Building b = (Building)building_cluster.get(key);
+                Building b = building_cluster.get(key);
                 addMarkerToMap(b.getPosition(), b.getSpots());
             }
 
@@ -337,7 +336,7 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
                     public void onClick(DialogInterface dialog, int which) {
                         // retry
                         Log.d("oauth", "Retrying connection.");
-                        new getJson().execute();
+                        connectToServer();
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

@@ -87,6 +87,7 @@ public class JSONParser {
         } catch (HttpHostConnectException e) {
             String errorMsg = "Can't connect to server. Probably down.";
             Log.d("oauth", errorMsg);
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
         }
