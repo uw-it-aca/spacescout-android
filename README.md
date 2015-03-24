@@ -7,3 +7,5 @@ Test server can be created based on https://github.com/uw-it-aca/spacescout_buil
 This project is currently undergoing development.
 
 [Design Spec](https://github.com/uw-it-aca/spacescout-android/wiki/Design-Spec)
+
+Guides and docs in Wiki.
