@@ -1,8 +1,9 @@
 package com.spacescout.spacescout_android;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.graphics.Bitmap;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -44,13 +47,12 @@ import java.util.WeakHashMap;
  * It is implementing the UpdateMapAfterUserInteraction class for Callback Method for Map touch or zoom change
  *
  */
-public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInteraction {
+public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInteraction, OnMapReadyCallback {
 
     static final LatLng UnivWashington = new LatLng(47.655263166697765, -122.30669233862307);
 
     private GoogleMap map;
-    private MapFragment mapFragment;
-    private FragmentManager fm;
+    private SupportMapFragment mapFragment;
     private View view;
 
     public TouchableWrapper mTouchView;
@@ -74,30 +76,27 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        fm = getFragmentManager();
-        mapFragment = (MapFragment) fm.findFragmentById(R.id.map);
-        alertDialogues = new WeakHashMap<>();
-        toasts = new WeakHashMap<>();
-
-        // TODO: handle map fragment null error for API 21
-        if(mapFragment == null)
-        {
-            mapFragment = MapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.map, mapFragment).commit();
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        if(mapFragment == null) { // azri92: not sure if this actually helps
+            mapFragment = SupportMapFragment.newInstance();
+            getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
         }
-        map = mapFragment.getMap();
-
-        UiSettings uiSettings = map.getUiSettings();
-        uiSettings.setZoomControlsEnabled(false);
-
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
-        Log.d("SpaceMapActivity", "checking");
+        mapFragment.getMapAsync(this);
 
         tc = new IconGenerator(getActivity());
-
+        alertDialogues = new WeakHashMap<>();
+        toasts = new WeakHashMap<>();
         jParser = new JSONParser(getActivity());
+
         connectToServer();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        UiSettings uiSettings = map.getUiSettings();
+        uiSettings.setZoomControlsEnabled(false);
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
     }
 
     public void connectToServer() {
@@ -164,8 +163,9 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
     // This is invoked by addMarkerToMap
     private void addIcon(IconGenerator iconFactory, String text, LatLng position) {
         iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
+        Bitmap bmp = iconFactory.makeIcon(text);
         MarkerOptions markerOptions = new MarkerOptions().
-                icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(text))).
+                icon(BitmapDescriptorFactory.fromBitmap(bmp)).
                 position(position).
                 anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
 
