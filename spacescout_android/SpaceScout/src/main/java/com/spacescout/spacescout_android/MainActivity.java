@@ -18,8 +18,9 @@ package com.spacescout.spacescout_android;
 
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -35,22 +36,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-
     private FragmentManager fragmentManager;
-    private Fragment fragSpaceList = new SpaceListActivity();
-    private Fragment fragSpaceMap = new SpaceMapActivity();
+    private Fragment fragSpaceList;
     private Fragment generalFrag;
+
+    public SpaceMapActivity fragSpaceMap;
 
     NavMenuListAdapter mNavMenuAdapter;
     String[] navItemTitle;
@@ -129,6 +129,9 @@ public class MainActivity extends Activity {
 
         getActionBar().setCustomView(v);
 
+        fragSpaceMap = new SpaceMapActivity();
+        fragSpaceList = new SpaceListActivity();
+
         if (savedInstanceState == null) {
             selectItem(0);
         }
@@ -162,7 +165,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        fragmentManager = getFragmentManager();
+        fragmentManager = getSupportFragmentManager();
 
         // The action bar home/up action should open or close the drawer.
         // ActionBarDrawerToggle will take care of this.
@@ -204,7 +207,7 @@ public class MainActivity extends Activity {
 
     private void selectItem(int position) {
 
-        fragmentManager = getFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         Intent intent;
         // Locate Position
         switch (position) {

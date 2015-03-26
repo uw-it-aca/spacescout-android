@@ -1,17 +1,24 @@
 package com.spacescout.spacescout_android;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -26,37 +33,74 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.WeakHashMap;
 /**
  *
  * Created by ajay alfred on 11/5/13.
- */
-
-/**
+ * Modified by azri92.
  *
  * This class displays the map and its markers/clusters
  * It is extending a fragment so that it can be embedded into the MainActivity
  * It is implementing the UpdateMapAfterUserInteraction class for Callback Method for Map touch or zoom change
  *
  */
-public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInteraction {
-
+public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInteraction, OnMapReadyCallback {
 
     static final LatLng UnivWashington = new LatLng(47.655263166697765, -122.30669233862307);
+
     private GoogleMap map;
-    private MapFragment mapFragment;
-    private FragmentManager fm;
+    private SupportMapFragment mapFragment;
     private View view;
+
     public TouchableWrapper mTouchView;
     public static boolean mMapIsTouched = false;
     public float zoomLevel = 0;
-    public IconGenerator tc = new IconGenerator(this.getActivity());
+    public IconGenerator tc;
     public ClusterManager<MyItem> mClusterManager;
     public JSONArray mJson;
+    public WeakHashMap<String, AlertDialog> alertDialogues;
+    public WeakHashMap<String, Toast> toasts;
+
+    final String url = "http://ketchup.eplt.washington.edu:8000/api/v1/spot/all";
+    private JSONParser jParser;
 
     public SpaceMapActivity() {
         ///empty constructor required for fragment subclasses
+    }
+
+    // This is the default method needed for Android Fragments
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        if(mapFragment == null) { // azri92: not sure if this actually helps
+            mapFragment = SupportMapFragment.newInstance();
+            getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
+        }
+        mapFragment.getMapAsync(this);
+
+        tc = new IconGenerator(getActivity());
+        alertDialogues = new WeakHashMap<>();
+        toasts = new WeakHashMap<>();
+        jParser = new JSONParser(getActivity());
+
+        connectToServer();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        UiSettings uiSettings = map.getUiSettings();
+        uiSettings.setZoomControlsEnabled(false);
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
+    }
+
+    public void connectToServer() {
+        new getJson().execute();
     }
 
     // Setting up the ClusterManager which would contain all the clusters
@@ -111,51 +155,26 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
     // This adds a marker to the map with IconGenerator class
     // The method takes the LatLng object location and text to be put on the marker/cluster as an Integer
     protected void addMarkerToMap(LatLng loc, int text) {
-        IconGenerator iconFactory = new IconGenerator(this.getActivity());
-        iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
+        IconGenerator iconFactory = new IconGenerator(getActivity());
         addIcon(iconFactory, Integer.toString(text), loc);
     }
-
 
     // This is the helper method for adding a marker to the map
     // This is invoked by addMarkerToMap
     private void addIcon(IconGenerator iconFactory, String text, LatLng position) {
+        iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
+        Bitmap bmp = iconFactory.makeIcon(text);
         MarkerOptions markerOptions = new MarkerOptions().
-                icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(text))).
+                icon(BitmapDescriptorFactory.fromBitmap(bmp)).
                 position(position).
                 anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
 
         map.addMarker(markerOptions);
     }
 
-    // This is the default method needed for Android Fragments
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        fm = getFragmentManager();
-        mapFragment = (MapFragment) fm.findFragmentById(R.id.map);
-
-        if(mapFragment == null)
-        {
-            mapFragment = MapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.map, mapFragment).commit();
-        }
-        map = mapFragment.getMap();
-
-        UiSettings uiSettings = map.getUiSettings();
-        uiSettings.setZoomControlsEnabled(false);
-
-
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
-        System.out.println("checking");
-        new JSONParse().execute();
-    }
-
     // This method displays the clusters on the map by clustering by distance
     // It takes the json data as parameter
-    public void DisplayClustersByDistance(JSONArray json){
+    public void DisplayClustersByDistance(JSONArray mJson){
 
         try {
 
@@ -166,8 +185,8 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             // Looping through JSON Data to add it to the Cluster Manager
-            for(int i = 0; i < json.length(); i++){
-                JSONObject curr = json.getJSONObject(i);
+            for(int i = 0; i < mJson.length(); i++){
+                JSONObject curr = mJson.getJSONObject(i);
                 JSONObject info = curr.getJSONObject("extended_info");
 
                 JSONObject location = curr.getJSONObject("location");
@@ -190,19 +209,18 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
 
     // This method displays the clusters on the map by clustering by Building Names
     // It takes the json data as parameter
-    public void DisplayClustersByBuilding(JSONArray json){
+    public void DisplayClustersByBuilding(){
 
         // HashMap to keep track of all buildings with their building objects
         HashMap<String, Building> building_cluster = new HashMap<String, Building>();
-        //TODO: error handling if can't obtain json or json is null
         try {
 
             // Builder object to build bound for all clusters/markers
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             // Looping through all json data
-            for(int i = 0; i < json.length(); i++){
-                JSONObject curr = json.getJSONObject(i);
+            for(int i = 0; i < mJson.length(); i++){
+                JSONObject curr = mJson.getJSONObject(i);
                 JSONObject info = curr.getJSONObject("extended_info");
 
                 JSONObject location = curr.getJSONObject("location");
@@ -231,7 +249,7 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
             Iterator it = building_cluster.keySet().iterator();
             while (it.hasNext()) {
                 String key = (String)it.next();
-                Building b = (Building)building_cluster.get(key);
+                Building b = building_cluster.get(key);
                 addMarkerToMap(b.getPosition(), b.getSpots());
             }
 
@@ -242,32 +260,98 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
         }
     }
 
+    public JSONArray getJSONFromUrl() {
+        JSONArray json = new JSONArray();
+        try {
+            json = jParser.getJSONFromUrl(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public int getHttpStatus() {
+        return jParser.getStatusCode();
+    }
 
     // A class to asynchronously get JSON data from API
-    public class JSONParse extends AsyncTask<String, String, JSONArray>  {
+    // Purposely wrote "Json" in titleCase to differentiate from Android methods
+    public class getJson extends AsyncTask<String, String, JSONArray>  {
         private ProgressDialog pDialog;
+        protected int statusCode;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
+
         @Override
         protected JSONArray doInBackground(String... args){
-            JSONParser jParser = new JSONParser(getActivity());
-            JSONArray json = new JSONArray();
             // Getting JSON from URL
-            json = jParser.getJSONFromUrl("http://ketchup.eplt.washington.edu:8000/api/v1/spot/all");
+            JSONArray json = getJSONFromUrl();
+            statusCode = getHttpStatus();
 
             return json;
         }
 
         @Override
         protected void onPostExecute(JSONArray json) {
-            mJson = json;
-
-            // CALLING THE CLUSTERING METHOD
-            // THIS CAN BE CHANGED TO DisplayClustersByDistance()
-            DisplayClustersByBuilding(json);
+            handleHttpResponse(statusCode, json);
         }
+    }
+
+    public void handleHttpResponse(int statusCode, JSONArray json) {
+        // handle different status codes
+        // only continue processing json if code 200
+        switch (statusCode) {
+            case 200:
+                // CALLING THE CLUSTERING METHOD.
+                // THIS CAN BE CHANGED TO DisplayClustersByDistance().
+                if (json == null || json.length() == 0) {
+                    Toast toast = Toast.makeText(getActivity(), "Sorry, no spaces found", Toast.LENGTH_SHORT);
+                    toasts.put("Sorry, no spaces found" ,toast);
+                    toast.show();
+                } else {
+                    mJson = json;
+                    DisplayClustersByBuilding();
+                }
+                break;
+            case 401:
+                showStatusDialog("Authentication Issue", "Check key & secret.");
+                break;
+            default:
+                showStatusDialog("Connection Issue", "Can't connect to server. Status code: " + statusCode + ".");
+                break;
+        }
+    }
+
+    // creates and shows a new dialog modal
+    // let's user retry connecting to the server
+    private void showStatusDialog(String title, String message) {
+        AlertDialog.Builder dialogueBuilder = new AlertDialog.Builder(getActivity())
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // retry
+                        Log.d("oauth", "Retrying connection.");
+                        connectToServer();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert);
+        AlertDialog dialogue = dialogueBuilder.create();
+        alertDialogues.put(title, dialogue);
+        dialogue.show();
+
+        Log.d("oauth", "Showing dialogue " + title);
+    }
+
+    public AlertDialog getUsedDialogue(String key) {
+        return alertDialogues.get(key);
     }
 }
