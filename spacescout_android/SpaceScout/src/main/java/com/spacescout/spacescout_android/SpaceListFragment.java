@@ -14,7 +14,7 @@ import org.json.JSONArray;
  *
  * Created by ajay alfred on 11/5/13.
  */
-public class SpaceListActivity extends Fragment {
+public class SpaceListFragment extends Fragment {
 
     //URL to get JSON Array
     private static String url = "http://students.washington.edu/ajalfred/space_scout/space_76.json";

@@ -47,7 +47,7 @@ import java.util.WeakHashMap;
  * It is implementing the UpdateMapAfterUserInteraction class for Callback Method for Map touch or zoom change
  *
  */
-public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInteraction, OnMapReadyCallback {
+public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInteraction, OnMapReadyCallback {
 
     static final LatLng UnivWashington = new LatLng(47.655263166697765, -122.30669233862307);
 
@@ -67,7 +67,7 @@ public class SpaceMapActivity extends Fragment implements UpdateMapAfterUserInte
     final String url = "http://ketchup.eplt.washington.edu:8000/api/v1/spot/all";
     private JSONParser jParser;
 
-    public SpaceMapActivity() {
+    public SpaceMapFragment() {
         ///empty constructor required for fragment subclasses
     }
 
