@@ -14,10 +14,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 /**
- *
  * Created by ajay alfred on 11/5/13.
+ *
+ * Custom dialog fragment (duh..) :P
  */
-public class CustomDialogFragment extends DialogFragment{
+
+public class CustomDialogFragment extends DialogFragment {
 
     private View titleView;
     private View timeView;

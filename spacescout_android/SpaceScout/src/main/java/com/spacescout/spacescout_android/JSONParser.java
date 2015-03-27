@@ -26,7 +26,12 @@ import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 /**
  * Created by ajay alfred on 11/5/13.
  * Modified by azri azmi
+ *
+ * Used to establish an HTTP connection to given URL and process the received JSON file.
+ * Returns null if HTTP response is other than 200 (success).
+ *
  */
+
 public class JSONParser {
     static JSONArray jObj = null;
     static InputStream is = null;
@@ -61,7 +66,7 @@ public class JSONParser {
 
         // Making HTTP request
         try {
-            // defaultHttpClient
+            // TODO: defaultHttpClient is deprecated
             HttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
             consumer.sign(httpGet);

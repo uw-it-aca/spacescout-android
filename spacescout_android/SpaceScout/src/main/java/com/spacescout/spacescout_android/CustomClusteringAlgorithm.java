@@ -23,7 +23,11 @@ import java.util.Set;
 
 /**
  * Created by gupta37 on 5/16/14.
+ *
+ * For clustering markers on Google Maps our own way.
  */
+
+
 public class CustomClusteringAlgorithm <T extends ClusterItem> implements Algorithm<T> {
     public static final int MAX_DISTANCE_AT_ZOOM = 40;
 

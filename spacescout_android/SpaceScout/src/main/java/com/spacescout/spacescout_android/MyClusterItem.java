@@ -5,6 +5,8 @@ import com.google.maps.android.clustering.ClusterItem;
 
 /**
  * Created by gupta37 on 5/13/14.
+ *
+ * Item class for marker clustering.
  */
 
 public class MyClusterItem implements ClusterItem {

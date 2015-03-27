@@ -10,8 +10,11 @@ import android.widget.TextView;
 
 /**
  * Created by ajay alfred on 11/6/13.
+ *
+ * Adapter for SpaceListFragment.
  */
-public class SpaceListArrayAdapter extends ArrayAdapter{
+
+public class SpaceListArrayAdapter extends ArrayAdapter {
 
     //define varables
     private final Context context;
@@ -31,6 +34,7 @@ public class SpaceListArrayAdapter extends ArrayAdapter{
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //get space list row view group
+        // TODO: Should use view holder pattern
         View rowView = inflater.inflate(R.layout.custom_space_list_row, parent, false);
 
         //get the different views inside the view group

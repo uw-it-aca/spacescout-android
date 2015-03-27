@@ -16,10 +16,13 @@ import android.widget.TextView;
 import org.json.JSONArray;
 
 /**
- *
  * Created by ajay alfred on 11/5/13.
+ *
+ * Displays user's favorite spaces.
+ * Currently uses dummy data.
  */
-public class FavSpacesActivity extends Activity{
+
+public class FavSpacesActivity extends Activity {
 
     //URL to get JSON Array
     private static String url = "http://students.washington.edu/ajalfred/space_scout/space_76.json";

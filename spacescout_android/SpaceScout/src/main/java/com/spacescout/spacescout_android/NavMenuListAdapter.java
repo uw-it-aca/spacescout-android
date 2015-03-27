@@ -11,8 +11,11 @@ import android.widget.TextView;
 
 /**
  * Created by ajay alfred on 11/4/13.
+ *
+ * Adapter for navigation menu.
  */
-public class NavMenuListAdapter extends BaseAdapter{
+
+public class NavMenuListAdapter extends BaseAdapter {
 
     //declare variables
     Context context;

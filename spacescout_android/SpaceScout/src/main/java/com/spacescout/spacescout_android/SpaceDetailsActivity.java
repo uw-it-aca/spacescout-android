@@ -16,10 +16,12 @@ import android.widget.TextView;
 import org.json.JSONArray;
 
 /**
- *
  * Created by ajay alfred on 11/5/13.
+ *
+ * Displayes details of a Space when selected.
  */
-public class SpaceDetailsActivity extends Activity{
+
+public class SpaceDetailsActivity extends Activity {
 
     //Setting variables
     private TextView sampleText = null;

@@ -22,10 +22,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- *
  * Created by ajay alfred on 11/5/13.
+ *
+ * Space filtering dialog.
  */
-public class FilterSpacesActivity extends Activity implements CustomDialogFragment.FilterDialogActionsListener{
+
+public class FilterSpacesActivity extends Activity implements CustomDialogFragment.FilterDialogActionsListener {
 
     private CustomDialogFragment customDialog = new CustomDialogFragment();
 

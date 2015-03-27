@@ -4,7 +4,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by gupta37 on 5/22/14.
+ *
+ * Building item for clustering.
  */
+
 public class Building {
     private LatLng mPosition;
     private String mName;
