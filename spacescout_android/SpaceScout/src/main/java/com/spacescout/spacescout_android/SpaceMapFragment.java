@@ -3,7 +3,6 @@ package com.spacescout.spacescout_android;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
@@ -37,16 +35,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.WeakHashMap;
+
 /**
- *
  * Created by ajay alfred on 11/5/13.
  * Modified by azri92.
  *
- * This class displays the map and its markers/clusters
- * It is extending a fragment so that it can be embedded into the MainActivity
- * It is implementing the UpdateMapAfterUserInteraction class for Callback Method for Map touch or zoom change
+ * This class displays spaces on a Google map and its markers/clusters.
+ * Extends a fragment that is embedded onto MainActivity.
+ * Implements UpdateMapAfterUserInteraction for callback ethod for Map touch or zoom change.
+ * Implements OnMapReadyCallback for callback method for preparing the map.
  *
  */
+
 public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInteraction, OnMapReadyCallback {
 
     static final LatLng UnivWashington = new LatLng(47.655263166697765, -122.30669233862307);
@@ -59,11 +59,13 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
     public static boolean mMapIsTouched = false;
     public float zoomLevel = 0;
     public IconGenerator tc;
-    public ClusterManager<MyItem> mClusterManager;
+    public ClusterManager<MyClusterItem> mClusterManager;
     public JSONArray mJson;
     public WeakHashMap<String, AlertDialog> alertDialogues;
     public WeakHashMap<String, Toast> toasts;
 
+    // TODO: Should use a gitignored String resource
+    // TODO: Implement different urls instead of default "all"
     final String url = "http://ketchup.eplt.washington.edu:8000/api/v1/spot/all";
     private JSONParser jParser;
 
@@ -109,7 +111,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
 
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<MyItem>(this.getActivity(), map);
+        mClusterManager = new ClusterManager<MyClusterItem>(this.getActivity(), map);
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
@@ -180,7 +182,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
 
             // Setting up cluster manager with the CustomClusteringAlgorithm Class
             setUpClusterer();
-            mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyItem>(new CustomClusteringAlgorithm<MyItem>()));
+            mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyClusterItem>(new CustomClusteringAlgorithm<MyClusterItem>()));
 
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -197,7 +199,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
 
                 if(campus.equals("seattle")){
                     LatLng currLoc = new LatLng(lat, lng);
-                    mClusterManager.addItem(new MyItem(lat, lng, name));
+                    mClusterManager.addItem(new MyClusterItem(lat, lng, name));
                 }
             }
 
@@ -307,13 +309,13 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
             case 200:
                 // CALLING THE CLUSTERING METHOD.
                 // THIS CAN BE CHANGED TO DisplayClustersByDistance().
-                if (json == null || json.length() == 0) {
+                if (json != null) {
+                    mJson = json;
+                    DisplayClustersByBuilding();
+                } else {
                     Toast toast = Toast.makeText(getActivity(), "Sorry, no spaces found", Toast.LENGTH_SHORT);
                     toasts.put("Sorry, no spaces found" ,toast);
                     toast.show();
-                } else {
-                    mJson = json;
-                    DisplayClustersByBuilding();
                 }
                 break;
             case 401:
@@ -341,6 +343,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // do nothing
+                        dialog.dismiss();
                     }
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert);

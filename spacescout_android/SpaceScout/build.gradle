@@ -22,6 +22,7 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0-ALPHA"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     sourceSets {
         androidTest.setRoot('test')
@@ -30,15 +31,17 @@ android {
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
+        exclude 'LICENSE.txt'
     }
 
-//    testOptions {
-//        unitTests.returnDefaultValues = true
-//    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
-    androidTestCompile 'junit:junit:4.12'
+//    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test:testing-support-lib:+'
 
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.google.android.gms:play-services:7.0.0'

@@ -17,7 +17,6 @@ package com.spacescout.spacescout_android;
  */
 
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -36,13 +35,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
+
+/**
+ * The first Activity to run.
+ * Immediately calls SpaceMapFragment on startup.
+ *
+ */
 
 public class MainActivity extends FragmentActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    // TODO: Replace deprecated class
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
@@ -50,7 +55,7 @@ public class MainActivity extends FragmentActivity {
     private Fragment fragSpaceList;
     private Fragment generalFrag;
 
-    public SpaceMapActivity fragSpaceMap;
+    public SpaceMapFragment fragSpaceMap;
 
     NavMenuListAdapter mNavMenuAdapter;
     String[] navItemTitle;
@@ -129,8 +134,8 @@ public class MainActivity extends FragmentActivity {
 
         getActionBar().setCustomView(v);
 
-        fragSpaceMap = new SpaceMapActivity();
-        fragSpaceList = new SpaceListActivity();
+        fragSpaceMap = new SpaceMapFragment();
+        fragSpaceList = new SpaceListFragment();
 
         if (savedInstanceState == null) {
             selectItem(0);
@@ -160,6 +165,11 @@ public class MainActivity extends FragmentActivity {
         }
 
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
