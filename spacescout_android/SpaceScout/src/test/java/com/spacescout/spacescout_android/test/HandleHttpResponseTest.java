@@ -42,6 +42,7 @@ public class HandleHttpResponseTest extends ActivityInstrumentationTestCase2<Mai
     public void testPreConditions() {
         assertNotNull(mActivity);
         assertNotNull(mFragment);
+        getActivity().finish();
     }
 
     @Test
@@ -54,6 +55,7 @@ public class HandleHttpResponseTest extends ActivityInstrumentationTestCase2<Mai
             @Override
             public void run() {
                 checkDialog(0, "Connection Issue");
+                getActivity().finish();
             }
         });
     }
@@ -67,6 +69,7 @@ public class HandleHttpResponseTest extends ActivityInstrumentationTestCase2<Mai
             @Override
             public void run() {
                 checkDialog(401, "Authentication Issue");
+                getActivity().finish();
             }
         });
     }
@@ -81,6 +84,8 @@ public class HandleHttpResponseTest extends ActivityInstrumentationTestCase2<Mai
                 mFragment.handleHttpResponse(200, null);
                 // check that toast with given text key exists
                 assertTrue(mFragment.toasts.containsKey("Sorry, no spaces found"));
+                getActivity().finish();
+                getActivity().finish();
             }
         });
     }
@@ -93,6 +98,7 @@ public class HandleHttpResponseTest extends ActivityInstrumentationTestCase2<Mai
             @Override
             public void run() {
                 checkDialog(300, "Connection Issue");
+                getActivity().finish();
             }
         });
     }
