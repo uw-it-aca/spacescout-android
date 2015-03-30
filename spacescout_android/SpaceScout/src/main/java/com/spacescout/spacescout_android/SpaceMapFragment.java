@@ -64,9 +64,6 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
     public WeakHashMap<String, AlertDialog> alertDialogues;
     public WeakHashMap<String, Toast> toasts;
 
-    // TODO: Should use a gitignored String resource
-    // TODO: Implement different urls instead of default "all"
-    final String url = "http://ketchup.eplt.washington.edu:8000/api/v1/spot/all";
     private JSONParser jParser;
 
     public SpaceMapFragment() {
@@ -262,7 +259,37 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         }
     }
 
-    public JSONArray getJSONFromUrl() {
+    // A class to asynchronously get JSON data from API
+    // Purposely wrote "Json" in titleCase to differentiate from Android methods
+    public class getJson extends AsyncTask<String, String, JSONArray>  {
+        private ProgressDialog pDialog;
+        protected int statusCode;
+        // TODO: Implement different urls instead of default "all"
+        // Grabs from String resource in values
+        // Can't initialize before OnActivityCreated
+        final String urlAll = getResources().getString(R.string.urlAll);
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected JSONArray doInBackground(String... args){
+            // Getting JSON from URL
+            JSONArray json = getJSONFromUrl(urlAll);
+            statusCode = getHttpStatus();
+
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray json) {
+            handleHttpResponse(statusCode, json);
+        }
+    }
+
+    public JSONArray getJSONFromUrl(String url) {
         JSONArray json = new JSONArray();
         try {
             json = jParser.getJSONFromUrl(url);
@@ -274,32 +301,6 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
 
     public int getHttpStatus() {
         return jParser.getStatusCode();
-    }
-
-    // A class to asynchronously get JSON data from API
-    // Purposely wrote "Json" in titleCase to differentiate from Android methods
-    public class getJson extends AsyncTask<String, String, JSONArray>  {
-        private ProgressDialog pDialog;
-        protected int statusCode;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected JSONArray doInBackground(String... args){
-            // Getting JSON from URL
-            JSONArray json = getJSONFromUrl();
-            statusCode = getHttpStatus();
-
-            return json;
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray json) {
-            handleHttpResponse(statusCode, json);
-        }
     }
 
     public void handleHttpResponse(int statusCode, JSONArray json) {
