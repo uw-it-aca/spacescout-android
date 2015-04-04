@@ -1,15 +1,26 @@
 package com.spacescout.spacescout_android;
 
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.StaticCluster;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.quadtree.PointQuadTree;
+import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,15 +38,16 @@ import java.util.Set;
  * For clustering markers on Google Maps our own way.
  */
 
-
 public class CustomClusteringAlgorithm <T extends ClusterItem> implements Algorithm<T> {
     public static final int MAX_DISTANCE_AT_ZOOM = 40;
 
     private final Collection<QuadItem<T>> mItems = new ArrayList<>();
     private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTree<>(0, 1, 0, 1);
 
+    // something about the earth being spherical
     private static final SphericalMercatorProjection PROJECTION = new SphericalMercatorProjection(1);
 
+    // adds item (markers) to the map
     @Override
     public void addItem(T item) {
         final QuadItem<T> quadItem = new QuadItem<>(item);
@@ -60,17 +72,21 @@ public class CustomClusteringAlgorithm <T extends ClusterItem> implements Algori
         }
     }
 
+    // Must be implemented but is never used.
     @Override
     public void removeItem(T item) {
         // TODO: delegate QuadItem#hashCode and QuadItem#equals to its item.
         throw new UnsupportedOperationException("NonHierarchicalDistanceBasedAlgorithm.remove not implemented");
     }
 
+    // This is where the fun's at.
+
     @Override
     public Set<? extends Cluster<T>> getClusters(double zoom) {
         final int discreteZoom = (int) zoom;
 
-        final double zoomSpecificSpan = MAX_DISTANCE_AT_ZOOM / Math.pow(2, discreteZoom) / 256;
+        //
+        final double zoomSpecificSpan = MAX_DISTANCE_AT_ZOOM / Math.pow(2, discreteZoom) / 100 /*256*/;
 
         final Set<QuadItem<T>> visitedCandidates = new HashSet<>();
         final Set<Cluster<T>> results = new HashSet<>();

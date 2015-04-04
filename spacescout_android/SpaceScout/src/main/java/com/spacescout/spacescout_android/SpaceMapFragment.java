@@ -26,6 +26,8 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.ui.IconGenerator;
 import com.spacescout.spacescout_android.TouchableWrapper.UpdateMapAfterUserInteraction;
+import com.spacescout.spacescout_android.model.Building;
+import com.spacescout.spacescout_android.model.Space;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,8 +61,9 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
     public static boolean mMapIsTouched = false;
     public float zoomLevel = 0;
     public IconGenerator tc;
-    public ClusterManager<MyClusterItem> mClusterManager;
+    public ClusterManager<Space> mClusterManager;
     public JSONArray mJson;
+
     public WeakHashMap<String, AlertDialog> alertDialogues;
     public WeakHashMap<String, Toast> toasts;
 
@@ -87,13 +90,19 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         toasts = new WeakHashMap<>();
         jParser = new JSONParser(getActivity());
 
+        // this is how you access methods in parent activity
+        ((MainActivity) getActivity()).testMethod();
+
         connectToServer();
+
     }
 
     @Override
+    // disables map zoom controls and rotation gesture
     public void onMapReady(GoogleMap map) {
         UiSettings uiSettings = map.getUiSettings();
         uiSettings.setZoomControlsEnabled(false);
+        uiSettings.setRotateGesturesEnabled(false);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
     }
@@ -102,25 +111,11 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         new getJson().execute();
     }
 
-    // Setting up the ClusterManager which would contain all the clusters
-    // This is only used by DisplayClustersByDistance() method
-    public void setUpClusterer() {
-
-        // Initialize the manager with the context and the map.
-        // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<MyClusterItem>(this.getActivity(), map);
-
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
-        map.setOnCameraChangeListener(mClusterManager);
-        map.setOnMarkerClickListener(mClusterManager);
-
-    }
-
     // This method is being implemented as part of the interface UpdateMapAfterUserInteraction
     // This is essentially a callback for touch event on the map
+    // TODO: this is where we implement sending another request when the user moves around the map
     public void onUpdateMapAfterUserInteraction() {
-        System.out.println("hello");
+//        System.out.println("hello");
     }
 
     // This is the default method needed for Android Frafments
@@ -130,7 +125,12 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         super.onCreate(bundle);
         if(view == null)
             view = inflater.inflate(R.layout.fragment_space_map, container, false);
+
         mTouchView = new TouchableWrapper(getActivity());
+        // TODO: need to avoid restarting fragment on backpress
+        if(view.getParent() != null) {
+            ((ViewGroup)view.getParent()).removeView(view);
+        }
         mTouchView.addView(view);
         return mTouchView;
     }
@@ -151,26 +151,6 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
             return;
     }
 
-    // This adds a marker to the map with IconGenerator class
-    // The method takes the LatLng object location and text to be put on the marker/cluster as an Integer
-    protected void addMarkerToMap(LatLng loc, int text) {
-        IconGenerator iconFactory = new IconGenerator(getActivity());
-        addIcon(iconFactory, Integer.toString(text), loc);
-    }
-
-    // This is the helper method for adding a marker to the map
-    // This is invoked by addMarkerToMap
-    private void addIcon(IconGenerator iconFactory, String text, LatLng position) {
-        iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
-        Bitmap bmp = iconFactory.makeIcon(text);
-        MarkerOptions markerOptions = new MarkerOptions().
-                icon(BitmapDescriptorFactory.fromBitmap(bmp)).
-                position(position).
-                anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
-
-        map.addMarker(markerOptions);
-    }
-
     // This method displays the clusters on the map by clustering by distance
     // It takes the json data as parameter
     public void DisplayClustersByDistance(JSONArray mJson){
@@ -179,8 +159,11 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
 
             // Setting up cluster manager with the CustomClusteringAlgorithm Class
             setUpClusterer();
-            mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<MyClusterItem>(new CustomClusteringAlgorithm<MyClusterItem>()));
+            mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<Space>()));
+            //TODO: Use CustomRenderer to set minimum cluster size
+            // mClusterManager.setRenderer(new CustomeRenderer<>(this, mMap, mClusterManager));
 
+            // Use to create a minimum bound based on a set of LatLng points.
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             // Looping through JSON Data to add it to the Cluster Manager
@@ -191,12 +174,13 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
                 JSONObject location = curr.getJSONObject("location");
                 double lng = Double.parseDouble(location.getString("longitude"));
                 double lat = Double.parseDouble(location.getString("latitude"));
+                int id = Integer.parseInt(curr.getString("id"));
                 String name = curr.getString("name");
                 String campus = info.getString("campus");
 
                 if(campus.equals("seattle")){
                     LatLng currLoc = new LatLng(lat, lng);
-                    mClusterManager.addItem(new MyClusterItem(lat, lng, name));
+                    mClusterManager.addItem(new Space(id, lat, lng, name));
                 }
             }
 
@@ -205,6 +189,20 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         }
     }
 
+    // Setting up the ClusterManager which would contain all the clusters
+    // This is only used by DisplayClustersByDistance() method
+    public void setUpClusterer() {
+
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+        mClusterManager = new ClusterManager<>(this.getActivity(), map);
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        map.setOnCameraChangeListener(mClusterManager);
+        map.setOnMarkerClickListener(mClusterManager);
+
+    }
 
     // This method displays the clusters on the map by clustering by Building Names
     // It takes the json data as parameter
@@ -259,6 +257,26 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         }
     }
 
+    // This adds a marker to the map with IconGenerator class
+    // The method takes the LatLng object location and text to be put on the marker/cluster as an Integer
+    protected void addMarkerToMap(LatLng loc, int text) {
+        IconGenerator iconFactory = new IconGenerator(getActivity());
+        addIcon(iconFactory, Integer.toString(text), loc);
+    }
+
+    // This is the helper method for adding a marker to the map
+    // This is invoked by addMarkerToMap
+    private void addIcon(IconGenerator iconFactory, String text, LatLng position) {
+        iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
+        Bitmap bmp = iconFactory.makeIcon(text);
+        MarkerOptions markerOptions = new MarkerOptions().
+                icon(BitmapDescriptorFactory.fromBitmap(bmp)).
+                position(position).
+                anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
+
+        map.addMarker(markerOptions);
+    }
+
     // A class to asynchronously get JSON data from API
     // Purposely wrote "Json" in titleCase to differentiate from Android methods
     public class getJson extends AsyncTask<String, String, JSONArray>  {
@@ -305,14 +323,13 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
 
     public void handleHttpResponse(int statusCode, JSONArray json) {
         // handle different status codes
-        // only continue processing json if code 200
+        // only continue processing json if code 200 & json is not empty
         switch (statusCode) {
             case 200:
-                // CALLING THE CLUSTERING METHOD.
-                // THIS CAN BE CHANGED TO DisplayClustersByDistance().
                 if (json != null) {
                     mJson = json;
-                    DisplayClustersByBuilding();
+//                    DisplayClustersByBuilding();
+                    DisplayClustersByDistance(mJson);
                 } else {
                     Toast toast = Toast.makeText(getActivity(), "Sorry, no spaces found", Toast.LENGTH_SHORT);
                     toasts.put("Sorry, no spaces found" ,toast);

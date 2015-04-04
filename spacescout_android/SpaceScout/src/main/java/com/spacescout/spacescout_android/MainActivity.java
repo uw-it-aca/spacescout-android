@@ -20,6 +20,7 @@ package com.spacescout.spacescout_android;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -28,6 +29,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -187,12 +189,18 @@ public class MainActivity extends FragmentActivity {
 
             //on click of space list action item
             case R.id.action_space_list:
-                fragmentManager.beginTransaction().replace(R.id.container, fragSpaceList, "SPACE_LIST").commit();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.container, fragSpaceList, "SPACE_LIST");
+                ft.addToBackStack("SPACE_LIST");
+                ft.commit();
                 invalidateOptionsMenu();
                 return super.onOptionsItemSelected(item);
 
             case R.id.action_space_map:
-                fragmentManager.beginTransaction().replace(R.id.container, fragSpaceMap, "SPACE_MAP").commit();
+                ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.container, fragSpaceMap, "SPACE_MAP");
+                ft.addToBackStack("SPACE_MAP");
+                ft.commit();
                 invalidateOptionsMenu();
                 return super.onOptionsItemSelected(item);
 
@@ -288,4 +296,7 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setCustomView(v);
     }
 
+    public void testMethod() {
+        Log.d("test", "testMethod was run!");
+    }
 }
