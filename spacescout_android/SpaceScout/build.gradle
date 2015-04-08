@@ -18,6 +18,7 @@ android {
     buildToolsVersion '22.0.0'
 
     defaultConfig {
+        applicationId "edu.uw.spacescout_android"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1

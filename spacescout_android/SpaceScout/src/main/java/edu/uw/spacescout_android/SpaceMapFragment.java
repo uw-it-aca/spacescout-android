@@ -1,4 +1,4 @@
-package com.spacescout.spacescout_android;
+package edu.uw.spacescout_android;
 
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
@@ -25,9 +25,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.ui.IconGenerator;
-import com.spacescout.spacescout_android.TouchableWrapper.UpdateMapAfterUserInteraction;
-import com.spacescout.spacescout_android.model.Building;
-import com.spacescout.spacescout_android.model.Space;
+import edu.uw.spacescout_android.TouchableWrapper.UpdateMapAfterUserInteraction;
+import edu.uw.spacescout_android.model.Building;
+import edu.uw.spacescout_android.model.Space;
 
 import org.json.JSONArray;
 import org.json.JSONException;

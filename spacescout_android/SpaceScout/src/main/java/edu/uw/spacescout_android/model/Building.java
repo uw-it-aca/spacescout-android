@@ -1,4 +1,4 @@
-package com.spacescout.spacescout_android.model;
+package edu.uw.spacescout_android.model;
 
 import com.google.android.gms.maps.model.LatLng;
 

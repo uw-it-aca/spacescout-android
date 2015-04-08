@@ -1,19 +1,13 @@
-package com.spacescout.spacescout_android;
+package edu.uw.spacescout_android;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
-
-import org.json.JSONArray;
 
 /**
  * Created by ajay alfred on 11/5/13.

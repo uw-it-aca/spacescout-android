@@ -1,4 +1,4 @@
-package com.spacescout.spacescout_android;
+package edu.uw.spacescout_android;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;

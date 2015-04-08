@@ -1,12 +1,12 @@
-package com.spacescout.spacescout_android.test;
+package edu.uw.spacescout_android.test;
 
 import android.app.AlertDialog;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.spacescout.spacescout_android.MainActivity;
-import com.spacescout.spacescout_android.SpaceMapFragment;
+import edu.uw.spacescout_android.MainActivity;
+import edu.uw.spacescout_android.SpaceMapFragment;
 
 import org.junit.After;
 import org.junit.Before;

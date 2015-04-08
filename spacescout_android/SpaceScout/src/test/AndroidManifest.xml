@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.spacescout.spacescout_android.test"
+    package="edu.uw.spacescout_android.test"
     android:versionCode="1"
     android:versionName="1.0">
 
@@ -19,7 +19,7 @@
     -->
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="com.spacescout.spacescout_android"
-        android:label="Tests for com.spacescout.spacescout_android" />
+        android:targetPackage="edu.uw.spacescout_android"
+        android:label="Tests for edu.uw.spacescout_android" />
 
 </manifest>

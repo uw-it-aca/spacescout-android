@@ -1,4 +1,4 @@
-package com.spacescout.spacescout_android;
+package edu.uw.spacescout_android;
 
 /*
  * Copyright 2013 The Android Open Source Project

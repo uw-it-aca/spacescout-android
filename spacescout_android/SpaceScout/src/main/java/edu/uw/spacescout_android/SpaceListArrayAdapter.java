@@ -1,4 +1,4 @@
-package com.spacescout.spacescout_android;
+package edu.uw.spacescout_android;
 
 import android.content.Context;
 import android.view.LayoutInflater;

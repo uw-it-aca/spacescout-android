@@ -1,9 +1,8 @@
-package com.spacescout.spacescout_android;
+package edu.uw.spacescout_android;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;

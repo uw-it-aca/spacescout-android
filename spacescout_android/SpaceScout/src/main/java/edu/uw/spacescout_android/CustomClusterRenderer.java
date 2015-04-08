@@ -1,4 +1,4 @@
-package com.spacescout.spacescout_android;
+package edu.uw.spacescout_android;
 
 import android.content.Context;
 import android.widget.ImageView;
@@ -9,7 +9,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.spacescout.spacescout_android.model.Space;
+import edu.uw.spacescout_android.model.Space;
 
 /**
  * Created by aazri3 on 4/2/15.
