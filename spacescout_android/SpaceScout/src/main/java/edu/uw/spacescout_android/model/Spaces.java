@@ -2,30 +2,27 @@ package edu.uw.spacescout_android.model;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by aazri3 on 4/1/15.
+ *
+ * Holds a list of spaces.
  */
+
 public class Spaces {
-    private final String name;
-    private final LatLng position;
-    private final String buildingName;
+    private List<Space> spaces;
 
-
-    public Spaces(String name, LatLng position, String buildingName) {
-        this.name = name;
-        this.position = position;
-        this.buildingName = buildingName;
+    public Spaces() {
+        spaces = new ArrayList<>();
     }
 
-    public String getName() {
-        return name;
+    public void add(Space space) {
+        spaces.add(space);
     }
 
-    public LatLng getPosition() {
-        return position;
-    }
-
-    public String getBuildingName() {
-        return buildingName;
+    public Space get(int i) {
+        return spaces.get(i);
     }
 }
