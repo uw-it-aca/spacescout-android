@@ -17,6 +17,10 @@ package edu.uw.spacescout_android;
  */
 
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -40,6 +44,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
+import java.io.IOException;
+import java.util.WeakHashMap;
+
 /**
  * The first Activity to run.
  * Immediately calls SpaceMapFragment on startup.
@@ -55,9 +64,14 @@ public class MainActivity extends FragmentActivity {
     private CharSequence mTitle;
     private FragmentManager fragmentManager;
     private Fragment fragSpaceList;
+    private SpaceMapFragment fragSpaceMap;
     private Fragment generalFrag;
+    private JSONParser jParser;
 
-    public SpaceMapFragment fragSpaceMap;
+    public WeakHashMap<String, AlertDialog> alertDialogues;
+    public WeakHashMap<String, Toast> toasts;
+    public JSONArray mJson;
+    public String urlAll;
 
     NavMenuListAdapter mNavMenuAdapter;
     String[] navItemTitle;
@@ -135,6 +149,14 @@ public class MainActivity extends FragmentActivity {
         titleScout.setTypeface(typeface);
 
         getActionBar().setCustomView(v);
+
+        // for use the REST section
+        alertDialogues = new WeakHashMap<>();
+        toasts = new WeakHashMap<>();
+        jParser = new JSONParser(this);
+        urlAll = getResources().getString(R.string.urlAll);
+
+        connectToServer();
 
         fragSpaceMap = new SpaceMapFragment();
         fragSpaceList = new SpaceListFragment();
@@ -224,7 +246,6 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void selectItem(int position) {
-
         fragmentManager = getSupportFragmentManager();
         Intent intent;
         // Locate Position
@@ -296,7 +317,114 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setCustomView(v);
     }
 
+    /* The REST is here */
     public void testMethod() {
         Log.d("test", "testMethod was run!");
+    }
+
+    public void connectToServer() {
+        new getJson().execute();
+    }
+
+    // A class to asynchronously get JSON data from API
+    // Purposely wrote "Json" in titleCase to differentiate from Android methods
+    public class getJson extends AsyncTask<String, String, JSONArray> {
+        private ProgressDialog pDialog;
+        protected int statusCode;
+        // TODO: Implement different urls instead of default "all"
+        // Grabs from String resource in values
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MainActivity.this);
+            this.pDialog.setMessage("Filling spaces");
+            pDialog.show();
+        }
+
+        @Override
+        protected JSONArray doInBackground(String... args){
+            // Getting JSON from URL
+            JSONArray json = getJSONFromUrl(urlAll);
+            statusCode = getHttpStatus();
+
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray json) {
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+
+            handleHttpResponse(statusCode, json);
+        }
+    }
+
+    public JSONArray getJSONFromUrl(String url) {
+        JSONArray json = new JSONArray();
+        try {
+            json = jParser.getJSONFromUrl(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public int getHttpStatus() {
+        return jParser.getStatusCode();
+    }
+
+    public void handleHttpResponse(int statusCode, JSONArray json) {
+        // handle different status codes
+        // only continue processing json if code 200 & json is not empty
+        switch (statusCode) {
+            case 200:
+                if (json != null) {
+                    mJson = json;
+                    fragSpaceMap.DisplayClustersByDistance(mJson);
+                } else {
+                    Toast toast = Toast.makeText(this, "Sorry, no spaces found", Toast.LENGTH_SHORT);
+                    toasts.put("Sorry, no spaces found" ,toast);
+                    toast.show();
+                }
+                break;
+            case 401:
+                showStatusDialog("Authentication Issue", "Check key & secret.");
+                break;
+            default:
+                showStatusDialog("Connection Issue", "Can't connect to server. Status code: " + statusCode + ".");
+                break;
+        }
+    }
+
+    // creates and shows a new dialog modal
+    // let's user retry connecting to the server
+    private void showStatusDialog(String title, String message) {
+        AlertDialog.Builder dialogueBuilder = new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // retry
+                        Log.d("oauth", "Retrying connection.");
+                        connectToServer();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                        dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert);
+        AlertDialog dialogue = dialogueBuilder.create();
+        alertDialogues.put(title, dialogue);
+        dialogue.show();
+
+        Log.d("oauth", "Showing dialogue " + title);
+    }
+
+    public AlertDialog getUsedDialogue(String key) {
+        return alertDialogues.get(key);
     }
 }

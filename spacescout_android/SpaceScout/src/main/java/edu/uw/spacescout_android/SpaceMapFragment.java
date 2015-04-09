@@ -62,12 +62,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
     public float zoomLevel = 0;
     public IconGenerator tc;
     public ClusterManager<Space> mClusterManager;
-    public JSONArray mJson;
-
-    public WeakHashMap<String, AlertDialog> alertDialogues;
-    public WeakHashMap<String, Toast> toasts;
-
-    private JSONParser jParser;
+//    public JSONArray mJson;
 
     public SpaceMapFragment() {
         ///empty constructor required for fragment subclasses
@@ -86,14 +81,10 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         mapFragment.getMapAsync(this);
 
         tc = new IconGenerator(getActivity());
-        alertDialogues = new WeakHashMap<>();
-        toasts = new WeakHashMap<>();
-        jParser = new JSONParser(getActivity());
 
         // this is how you access methods in parent activity
         ((MainActivity) getActivity()).testMethod();
-
-        connectToServer();
+//        mJson = ((MainActivity) getActivity()).mJson;
 
     }
 
@@ -107,15 +98,11 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
     }
 
-    public void connectToServer() {
-        new getJson().execute();
-    }
-
     // This method is being implemented as part of the interface UpdateMapAfterUserInteraction
     // This is essentially a callback for touch event on the map
-    // TODO: this is where we implement sending another request when the user moves around the map
+    // TODO: send new request to server when the user moves around the map
     public void onUpdateMapAfterUserInteraction() {
-//        System.out.println("hello");
+//        ((MainActivity) getActivity()).connectToServer();
     }
 
     // This is the default method needed for Android Frafments
@@ -206,7 +193,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
 
     // This method displays the clusters on the map by clustering by Building Names
     // It takes the json data as parameter
-    public void DisplayClustersByBuilding(){
+    public void DisplayClustersByBuilding(JSONArray mJson){
 
         // HashMap to keep track of all buildings with their building objects
         HashMap<String, Building> building_cluster = new HashMap<String, Building>();
@@ -216,6 +203,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             // Looping through all json data
+            // TODO: this section will use model objects instead of json
             for(int i = 0; i < mJson.length(); i++){
                 JSONObject curr = mJson.getJSONObject(i);
                 JSONObject info = curr.getJSONObject("extended_info");
@@ -277,102 +265,4 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         map.addMarker(markerOptions);
     }
 
-    // A class to asynchronously get JSON data from API
-    // Purposely wrote "Json" in titleCase to differentiate from Android methods
-    public class getJson extends AsyncTask<String, String, JSONArray>  {
-        private ProgressDialog pDialog;
-        protected int statusCode;
-        // TODO: Implement different urls instead of default "all"
-        // Grabs from String resource in values
-        // Can't initialize before OnActivityCreated
-        final String urlAll = getResources().getString(R.string.urlAll);
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected JSONArray doInBackground(String... args){
-            // Getting JSON from URL
-            JSONArray json = getJSONFromUrl(urlAll);
-            statusCode = getHttpStatus();
-
-            return json;
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray json) {
-            handleHttpResponse(statusCode, json);
-        }
-    }
-
-    public JSONArray getJSONFromUrl(String url) {
-        JSONArray json = new JSONArray();
-        try {
-            json = jParser.getJSONFromUrl(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return json;
-    }
-
-    public int getHttpStatus() {
-        return jParser.getStatusCode();
-    }
-
-    public void handleHttpResponse(int statusCode, JSONArray json) {
-        // handle different status codes
-        // only continue processing json if code 200 & json is not empty
-        switch (statusCode) {
-            case 200:
-                if (json != null) {
-                    mJson = json;
-//                    DisplayClustersByBuilding();
-                    DisplayClustersByDistance(mJson);
-                } else {
-                    Toast toast = Toast.makeText(getActivity(), "Sorry, no spaces found", Toast.LENGTH_SHORT);
-                    toasts.put("Sorry, no spaces found" ,toast);
-                    toast.show();
-                }
-                break;
-            case 401:
-                showStatusDialog("Authentication Issue", "Check key & secret.");
-                break;
-            default:
-                showStatusDialog("Connection Issue", "Can't connect to server. Status code: " + statusCode + ".");
-                break;
-        }
-    }
-
-    // creates and shows a new dialog modal
-    // let's user retry connecting to the server
-    private void showStatusDialog(String title, String message) {
-        AlertDialog.Builder dialogueBuilder = new AlertDialog.Builder(getActivity())
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // retry
-                        Log.d("oauth", "Retrying connection.");
-                        connectToServer();
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                        dialog.dismiss();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert);
-        AlertDialog dialogue = dialogueBuilder.create();
-        alertDialogues.put(title, dialogue);
-        dialogue.show();
-
-        Log.d("oauth", "Showing dialogue " + title);
-    }
-
-    public AlertDialog getUsedDialogue(String key) {
-        return alertDialogues.get(key);
-    }
 }
