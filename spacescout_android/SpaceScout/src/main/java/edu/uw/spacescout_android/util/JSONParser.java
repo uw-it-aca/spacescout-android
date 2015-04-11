@@ -1,4 +1,4 @@
-package edu.uw.spacescout_android;
+package edu.uw.spacescout_android.util;
 
 import android.content.Context;
 import android.util.Log;
@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
+import edu.uw.spacescout_android.R;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 

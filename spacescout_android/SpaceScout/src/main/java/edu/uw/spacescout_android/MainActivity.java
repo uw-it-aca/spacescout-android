@@ -49,6 +49,8 @@ import org.json.JSONArray;
 import java.io.IOException;
 import java.util.WeakHashMap;
 
+import edu.uw.spacescout_android.util.JSONParser;
+
 /**
  * The first Activity to run.
  * Immediately calls SpaceMapFragment on startup.

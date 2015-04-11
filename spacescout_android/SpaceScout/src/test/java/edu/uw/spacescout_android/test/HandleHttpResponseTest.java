@@ -46,7 +46,7 @@ public class HandleHttpResponseTest extends ActivityInstrumentationTestCase2<Mai
     @Test
     public void testStatusZero() throws Throwable {
         dismissDefaultDialog();
-        // calls method with dummy status & null JSON
+        // calls method weith dummy status & null JSON
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {

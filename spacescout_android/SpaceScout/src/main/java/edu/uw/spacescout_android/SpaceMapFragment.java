@@ -142,17 +142,16 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
     // It takes the json data as parameter
     public void DisplayClustersByDistance(JSONArray mJson){
 
+        // Setting up cluster manager with the CustomClusteringAlgorithm Class
+        setUpClusterer();
+        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<Space>()));
+        //TODO: Use CustomRenderer to set minimum cluster size
+        // mClusterManager.setRenderer(new CustomeRenderer<>(this, mMap, mClusterManager));
+
+        // Use to create a minimum bound based on a set of LatLng points.
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
         try {
-
-            // Setting up cluster manager with the CustomClusteringAlgorithm Class
-            setUpClusterer();
-            mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<Space>()));
-            //TODO: Use CustomRenderer to set minimum cluster size
-            // mClusterManager.setRenderer(new CustomeRenderer<>(this, mMap, mClusterManager));
-
-            // Use to create a minimum bound based on a set of LatLng points.
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
             // Looping through JSON Data to add it to the Cluster Manager
             for(int i = 0; i < mJson.length(); i++){
                 JSONObject curr = mJson.getJSONObject(i);
