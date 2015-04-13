@@ -17,7 +17,7 @@ import edu.uw.spacescout_android.model.Spaces;
 public class JSONProcessor {
     // Accepts a JSONArray
     // Returns a Spaces object (a List of Space objects)
-    public Spaces toModel(JSONArray json) {
+    public static Spaces toModel(JSONArray json) {
         Spaces spaces = new Spaces();
 
         try {
@@ -32,8 +32,8 @@ public class JSONProcessor {
 
                 Space space = new Space(id, lat, lng, name);
 
-                JSONObject info = curr.getJSONObject("extended_info");
-                String campus = info.getString("campus");
+//                JSONObject info = curr.getJSONObject("extended_info");
+//                String campus = info.getString("campus");
 
                 spaces.add(space);
             }

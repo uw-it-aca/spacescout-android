@@ -28,6 +28,7 @@ import com.google.maps.android.ui.IconGenerator;
 import edu.uw.spacescout_android.TouchableWrapper.UpdateMapAfterUserInteraction;
 import edu.uw.spacescout_android.model.Building;
 import edu.uw.spacescout_android.model.Space;
+import edu.uw.spacescout_android.model.Spaces;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +52,7 @@ import java.util.WeakHashMap;
 
 public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInteraction, OnMapReadyCallback {
 
+    // TODO: this may need to be set somewhere else
     static final LatLng UnivWashington = new LatLng(47.655263166697765, -122.30669233862307);
 
     private GoogleMap map;
@@ -140,7 +142,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
 
     // This method displays the clusters on the map by clustering by distance
     // It takes the json data as parameter
-    public void DisplayClustersByDistance(JSONArray mJson){
+    public void DisplayClustersByDistance(Spaces spaces){
 
         // Setting up cluster manager with the CustomClusteringAlgorithm Class
         setUpClusterer();
@@ -151,27 +153,9 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         // Use to create a minimum bound based on a set of LatLng points.
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        try {
-            // Looping through JSON Data to add it to the Cluster Manager
-            for(int i = 0; i < mJson.length(); i++){
-                JSONObject curr = mJson.getJSONObject(i);
-                JSONObject info = curr.getJSONObject("extended_info");
-
-                JSONObject location = curr.getJSONObject("location");
-                double lng = Double.parseDouble(location.getString("longitude"));
-                double lat = Double.parseDouble(location.getString("latitude"));
-                int id = Integer.parseInt(curr.getString("id"));
-                String name = curr.getString("name");
-                String campus = info.getString("campus");
-
-                if(campus.equals("seattle")){
-                    LatLng currLoc = new LatLng(lat, lng);
-                    mClusterManager.addItem(new Space(id, lat, lng, name));
-                }
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+        // Looping through Spaces model to obtain each Space
+        for(int i = 0; i < spaces.size(); i++){
+            mClusterManager.addItem(spaces.get(i));
         }
     }
 

@@ -49,7 +49,9 @@ import org.json.JSONArray;
 import java.io.IOException;
 import java.util.WeakHashMap;
 
+import edu.uw.spacescout_android.model.Spaces;
 import edu.uw.spacescout_android.util.JSONParser;
+import edu.uw.spacescout_android.util.JSONProcessor;
 
 /**
  * The first Activity to run.
@@ -73,6 +75,8 @@ public class MainActivity extends FragmentActivity {
     public WeakHashMap<String, AlertDialog> alertDialogues;
     public WeakHashMap<String, Toast> toasts;
     public JSONArray mJson;
+    public Spaces spaces;
+
     public String urlAll;
 
     NavMenuListAdapter mNavMenuAdapter;
@@ -382,8 +386,9 @@ public class MainActivity extends FragmentActivity {
         switch (statusCode) {
             case 200:
                 if (json != null) {
-                    mJson = json;
-                    fragSpaceMap.DisplayClustersByDistance(mJson);
+//                    mJson = json;
+                    spaces = JSONProcessor.toModel(json);
+                    fragSpaceMap.DisplayClustersByDistance(spaces);
                 } else {
                     Toast toast = Toast.makeText(this, "Sorry, no spaces found", Toast.LENGTH_SHORT);
                     toasts.put("Sorry, no spaces found" ,toast);

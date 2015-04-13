@@ -25,4 +25,8 @@ public class Spaces {
     public Space get(int i) {
         return spaces.get(i);
     }
+
+    public int size() {
+        return spaces.size();
+    }
 }
