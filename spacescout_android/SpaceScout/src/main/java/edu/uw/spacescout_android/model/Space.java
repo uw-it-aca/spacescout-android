@@ -23,10 +23,9 @@ public class Space implements ClusterItem {
     private final LatLng mPosition;
     private double height_from_sea_level;
     private String building_name;
-    private int floor;
+    private String floor;
     private String room_number;
-    private String description;
-    private String capacity;
+    private int capacity;
     private String display_access_restrictions;
     private List<ImageInfo> images;
     private Map<String, Hours> available_hours;
@@ -47,26 +46,34 @@ public class Space implements ClusterItem {
 
     /** classed items **/
 
-    protected class ImageInfo {
-        protected int id;
-        protected String url;
-        protected String content_type;
-        protected int width;
-        protected int height;
-        protected String creation_date;
-        protected String modification_date;
-        protected String user_name;
-        protected String upload_application;
-        protected String thumbnail_root;
-        protected String description;
-        protected int display_index;
+    public static class ImageInfo {
+        final int id;
+        public String url;
+        public String content_type;
+        public int width;
+        public int height;
+        public Date creation_date;
+//        public String modification_date;
+        public String user_name;
+//        public String upload_application;
+        public String thumbnail_root;
+        public String description;
+//        public int display_index;
+
+        public ImageInfo(int id) {
+            this.id = id;
+        }
     }
 
     // You would parse through this in a for loop, calling the methods
     // for the start & end time
-    protected class Hours {
+    public static class Hours {
         // TODO: need to think of having multiple hours
         protected ArrayList<Date[]> hours;
+
+        public Hours(ArrayList<Date[]> hours) {
+            this.hours = hours;
+        }
 
         public Date getStart(int i) throws ParseException {
             if (i > hours.size())
@@ -118,7 +125,7 @@ public class Space implements ClusterItem {
         return building_name;
     }
 
-    public int getFloor() {
+    public String getFloor() {
         return floor;
     }
 
@@ -126,11 +133,7 @@ public class Space implements ClusterItem {
         return room_number;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public String getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
 
@@ -169,7 +172,7 @@ public class Space implements ClusterItem {
         this.types = types;
     }
 
-    public void setHeight_from_sea_level(double height_from_sea_level) {
+    public void setHeight_from_sea_level(Double height_from_sea_level) {
         this.height_from_sea_level = height_from_sea_level;
     }
 
@@ -177,7 +180,7 @@ public class Space implements ClusterItem {
         this.building_name = buildingName;
     }
 
-    public void setFloor(int floor) {
+    public void setFloor(String floor) {
         this.floor = floor;
     }
 
@@ -185,11 +188,8 @@ public class Space implements ClusterItem {
         this.room_number = room_number;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
-    public void setCapacity(String capacity) {
+    public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 
@@ -226,6 +226,6 @@ public class Space implements ClusterItem {
         // TODO: set isOpen
         // Should be checked the instant it's asked because time
         // is not constant.
-        return true;
+        return false;
     }
 }
