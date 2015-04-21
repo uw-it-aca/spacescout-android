@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by aazri3 on 4/1/15.
  *
- * Holds a list of spaces.
+ * Holds a list of Space(s).
  */
 
 public class Spaces {

@@ -11,9 +11,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import edu.uw.spacescout_android.model.Buildings;
 import edu.uw.spacescout_android.model.Space;
 import edu.uw.spacescout_android.model.Spaces;
 
@@ -26,7 +30,7 @@ import edu.uw.spacescout_android.model.Spaces;
 public class JSONProcessor {
     // Accepts a JSONArray
     // Returns a Spaces object (a List of Space objects)
-    public static Spaces toModel(JSONArray json) {
+    public static Spaces modelSpaces(JSONArray json) {
         Spaces spaces = new Spaces();
 
         try {
@@ -86,14 +90,37 @@ public class JSONProcessor {
                     space.setImages(images);
                 }
 
-                // TODO: Finish parsing hours and extended_info
+                // TODO: Test parsing hours and extended_info
+                Map<String, Space.Hours> availableHours = new HashMap<>();
                 String[] days = new String[]{"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
-                JSONObject jsonHours = curr.getJSONObject("available_hours");
+                JSONObject allHours = curr.getJSONObject("available_hours");
                 for (String day : days) {
-                    JSONArray hoursArr = jsonHours.getJSONArray(day);
+                    JSONArray hoursByDay = allHours.getJSONArray(day);
+                    ArrayList<Date[]> hours = new ArrayList<>();
+                    for (i = 0; i > hoursByDay.length(); i++) {
+                        Date[] window = new Date[2];
+                        JSONArray hour = hoursByDay.getJSONArray(i);
+                        DateFormat formatter = new SimpleDateFormat("HH:mm", Locale.US);
+                        try {
+                            window[0] = formatter.parse(hour.getString(0));
+                            window[1] = formatter.parse(hour.getString(1));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        hours.add(window);
+                    }
+                    availableHours.put(day, new Space.Hours(hours));
                 }
+                space.setAvailable_hours(availableHours);
+
+                Map<String, Object> extendedInfo = new HashMap<>();
                 JSONObject jsonInfo = curr.getJSONObject("extended_info");
-                String campus = jsonInfo.getString("campus");
+                Iterator<String> info = jsonInfo.keys();
+                while (info.hasNext()) {
+                    String key = info.next();
+                    extendedInfo.put(key, jsonInfo.get(key));
+                }
+                space.setExtended_info(extendedInfo);
 
                 spaces.add(space);
             }
@@ -103,4 +130,16 @@ public class JSONProcessor {
 
         return spaces;
     }
+    // TODO: model Buildings
+//    public static Buildings modelBuildings(JSONArray json) {
+//        Buildings buildings = new Buildings();
+//        for (int i = 0; i > json.length(); i++) {
+//            try {
+//                buildings.add(json.getString(i));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return buildings;
+//    }
 }

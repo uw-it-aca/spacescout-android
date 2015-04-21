@@ -387,7 +387,7 @@ public class MainActivity extends FragmentActivity {
             case 200:
                 if (json != null) {
 //                    mJson = json;
-                    spaces = JSONProcessor.toModel(json);
+                    spaces = JSONProcessor.modelSpaces(json);
                     fragSpaceMap.DisplayClustersByDistance(spaces);
                 } else {
                     Toast toast = Toast.makeText(this, "Sorry, no spaces found", Toast.LENGTH_SHORT);
