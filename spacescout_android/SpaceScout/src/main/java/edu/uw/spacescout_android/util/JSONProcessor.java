@@ -1,5 +1,7 @@
 package edu.uw.spacescout_android.util;
 
+import android.util.ArrayMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -92,11 +95,11 @@ public class JSONProcessor {
                 JSONObject allHours = curr.getJSONObject("available_hours");
                 for (String day : days) {
                     JSONArray hoursByDay = allHours.getJSONArray(day);
-                    ArrayList<Date[]> hours = new ArrayList<>();
-                    for (i = 0; i > hoursByDay.length(); i++) {
+                    List<Date[]> hours = new ArrayList<>();
+                    for (int m = 0; m < hoursByDay.length(); m++) {
                         Date[] window = new Date[2];
-                        JSONArray hour = hoursByDay.getJSONArray(i);
-                        DateFormat formatter = new SimpleDateFormat("HH:mm", Locale.US);
+                        JSONArray hour = hoursByDay.getJSONArray(m);
+                        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.US);
                         try {
                             window[0] = formatter.parse(hour.getString(0));
                             window[1] = formatter.parse(hour.getString(1));
@@ -105,9 +108,9 @@ public class JSONProcessor {
                         }
                         hours.add(window);
                     }
-                    availableHours.put(day, new Space.Hours(hours));
+                    availableHours.put(day, new Space.Hours(hours)); // map day with array of hours
                 }
-                space.setAvailable_hours(availableHours);
+                space.setAvailable_hours(availableHours); // put everything inside
 
                 Map<String, Object> extendedInfo = new HashMap<>();
                 JSONObject jsonInfo = curr.getJSONObject("extended_info");

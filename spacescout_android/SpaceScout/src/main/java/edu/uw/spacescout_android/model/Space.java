@@ -68,13 +68,14 @@ public class Space implements ClusterItem {
     // You would parse through this in a for loop, calling the methods
     // for the start & end time
     public static class Hours {
-        protected ArrayList<Date[]> hours; // A list of Date[] arrays - operating hours
+        protected List<Date[]> hours; // A list of Date[] arrays - operating hours
 
-        public Hours(ArrayList<Date[]> hours) {
+        public Hours(List<Date[]> hours) {
+//            this.hours = new ArrayList<>();
             this.hours = hours;
         }
 
-        public Date getStart(int i) throws ParseException {
+        public Date getStart(int i) {
             if (i > hours.size())
                 throw new NullPointerException("This space does not have that many hours");
 
@@ -85,7 +86,8 @@ public class Space implements ClusterItem {
 
             return hours.get(i)[0];
         }
-        public Date getEnd(int i) throws ParseException {
+
+        public Date getEnd(int i) {
             if (i > hours.size())
                 throw new NullPointerException("This space does not have that many hours");
 
@@ -94,6 +96,10 @@ public class Space implements ClusterItem {
 //            DateFormat formatter = new SimpleDateFormat("HH:mm");
 //            return formatter.parse(hour);
             return hours.get(i)[1];
+        }
+
+        public int size() {
+            return hours.size();
         }
     }
 
