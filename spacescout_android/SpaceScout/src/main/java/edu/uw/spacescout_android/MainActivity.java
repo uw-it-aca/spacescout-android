@@ -324,10 +324,6 @@ public class MainActivity extends FragmentActivity {
     }
 
     /* The REST is here */
-    public void testMethod() {
-        Log.d("test", "testMethod was run!");
-    }
-
     public void connectToServer() {
         new getJson().execute();
     }
@@ -337,7 +333,6 @@ public class MainActivity extends FragmentActivity {
     public class getJson extends AsyncTask<String, String, JSONArray> {
         private ProgressDialog pDialog;
         protected int statusCode;
-        // TODO: Implement different urls instead of default "all"
         // Grabs from String resource in values
 
         @Override
@@ -350,6 +345,7 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         protected JSONArray doInBackground(String... args){
+            // TODO: Implement different urls instead of default "all"
             // Getting JSON from URL
             JSONArray json = getJSONFromUrl(urlAll);
             statusCode = getHttpStatus();

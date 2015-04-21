@@ -54,7 +54,6 @@ public class JSONParser {
         return sb.toString();
     }
 
-    // TODO: may need to break up this method
     // Params: request url
     // Returns: JSON object
     // Connects to the server with the url. Signs the request with signpost for OAuth 1.0.

@@ -68,8 +68,7 @@ public class Space implements ClusterItem {
     // You would parse through this in a for loop, calling the methods
     // for the start & end time
     public static class Hours {
-        // TODO: need to think of having multiple hours
-        protected ArrayList<Date[]> hours;
+        protected ArrayList<Date[]> hours; // A list of Date[] arrays - operating hours
 
         public Hours(ArrayList<Date[]> hours) {
             this.hours = hours;

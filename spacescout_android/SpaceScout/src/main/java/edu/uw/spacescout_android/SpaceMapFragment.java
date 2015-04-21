@@ -1,17 +1,11 @@
 package edu.uw.spacescout_android;
 
-import android.app.AlertDialog;
 import android.graphics.Bitmap;
-import android.support.v4.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,19 +19,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.ui.IconGenerator;
-import edu.uw.spacescout_android.TouchableWrapper.UpdateMapAfterUserInteraction;
-import edu.uw.spacescout_android.model.Building;
-import edu.uw.spacescout_android.model.Space;
-import edu.uw.spacescout_android.model.Spaces;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.WeakHashMap;
+
+import edu.uw.spacescout_android.TouchableWrapper.UpdateMapAfterUserInteraction;
+import edu.uw.spacescout_android.model.Building;
+import edu.uw.spacescout_android.model.Space;
+import edu.uw.spacescout_android.model.Spaces;
 
 /**
  * Created by ajay alfred on 11/5/13.
@@ -52,7 +45,8 @@ import java.util.WeakHashMap;
 
 public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInteraction, OnMapReadyCallback {
 
-    // TODO: this may need to be set somewhere else
+    // TODO: default center may need to be set somewhere else
+    // Should maybe also change based on User's preferences
     static final LatLng UnivWashington = new LatLng(47.655263166697765, -122.30669233862307);
 
     private GoogleMap map;
@@ -84,8 +78,6 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
 
         tc = new IconGenerator(getActivity());
 
-        // this is how you access methods in parent activity
-        ((MainActivity) getActivity()).testMethod();
 //        mJson = ((MainActivity) getActivity()).mJson;
 
     }
@@ -186,7 +178,6 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             // Looping through all json data
-            // TODO: this section will use model objects instead of json
             for(int i = 0; i < mJson.length(); i++){
                 JSONObject curr = mJson.getJSONObject(i);
                 JSONObject info = curr.getJSONObject("extended_info");

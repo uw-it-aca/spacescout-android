@@ -1,7 +1,5 @@
 package edu.uw.spacescout_android.model;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 import java.util.List;
 

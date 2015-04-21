@@ -1,7 +1,5 @@
 package edu.uw.spacescout_android.util;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,11 +11,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import edu.uw.spacescout_android.model.Buildings;
 import edu.uw.spacescout_android.model.Space;
 import edu.uw.spacescout_android.model.Spaces;
 
