@@ -194,7 +194,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
                     LatLng currLoc = new LatLng(lat, lng);
 
                     // Creating Building Objects with location, building name
-                    Building buil = new Building(currLoc, building_name, 1);
+                    Building buil = new Building(building_name);
                     building_cluster.put(building_name, buil);
                     builder.include(currLoc);
                 }else if(building_cluster.containsKey(building_name)){

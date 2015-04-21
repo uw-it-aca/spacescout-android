@@ -9,14 +9,12 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public class Building {
+    private final String mName;
     private LatLng mPosition;
-    private String mName;
     private int mSpots;
 
-    public Building(LatLng position, String name, int spots){
-        mPosition = position;
+    public Building(String name){
         mName = name;
-        mSpots = spots;
     }
 
     public LatLng getPosition(){

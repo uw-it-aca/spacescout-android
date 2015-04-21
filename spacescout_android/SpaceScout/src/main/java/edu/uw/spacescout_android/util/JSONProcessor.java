@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import edu.uw.spacescout_android.model.Building;
+import edu.uw.spacescout_android.model.Buildings;
 import edu.uw.spacescout_android.model.Space;
 import edu.uw.spacescout_android.model.Spaces;
 
@@ -89,7 +91,7 @@ public class JSONProcessor {
                     space.setImages(images);
                 }
 
-                // TODO: Test parsing hours and extended_info
+                // TODO: Need to look into Date object for isOpen & filtering
                 Map<String, Space.Hours> availableHours = new HashMap<>();
                 String[] days = new String[]{"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
                 JSONObject allHours = curr.getJSONObject("available_hours");
@@ -129,16 +131,17 @@ public class JSONProcessor {
 
         return spaces;
     }
+
     // TODO: model Buildings
-//    public static Buildings modelBuildings(JSONArray json) {
-//        Buildings buildings = new Buildings();
-//        for (int i = 0; i > json.length(); i++) {
-//            try {
-//                buildings.add(json.getString(i));
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return buildings;
-//    }
+    public static Buildings modelBuildings(JSONArray json) {
+        Buildings buildings = new Buildings();
+        for (int i = 0; i > json.length(); i++) {
+            try {
+                buildings.add(new Building(json.getString(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return buildings;
+    }
 }
