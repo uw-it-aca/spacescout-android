@@ -135,7 +135,7 @@ public class JSONProcessor {
     // TODO: model Buildings
     public static Buildings modelBuildings(JSONArray json) {
         Buildings buildings = new Buildings();
-        for (int i = 0; i > json.length(); i++) {
+        for (int i = 0; i < json.length(); i++) {
             try {
                 buildings.add(new Building(json.getString(i)));
             } catch (JSONException e) {

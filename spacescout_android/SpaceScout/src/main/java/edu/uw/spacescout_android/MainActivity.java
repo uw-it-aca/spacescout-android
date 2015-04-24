@@ -49,6 +49,7 @@ import org.json.JSONArray;
 import java.io.IOException;
 import java.util.WeakHashMap;
 
+import edu.uw.spacescout_android.model.Buildings;
 import edu.uw.spacescout_android.model.Spaces;
 import edu.uw.spacescout_android.util.JSONParser;
 import edu.uw.spacescout_android.util.JSONProcessor;
@@ -69,15 +70,14 @@ public class MainActivity extends FragmentActivity {
     private FragmentManager fragmentManager;
     private Fragment fragSpaceList;
     private SpaceMapFragment fragSpaceMap;
-    private Fragment generalFrag;
     private JSONParser jParser;
 
     public WeakHashMap<String, AlertDialog> alertDialogues;
     public WeakHashMap<String, Toast> toasts;
-    public JSONArray mJson;
+    public Buildings buildings;
     public Spaces spaces;
-
-    public String urlAll;
+    public String campus;
+    public String baseUrl;
 
     NavMenuListAdapter mNavMenuAdapter;
     String[] navItemTitle;
@@ -160,9 +160,16 @@ public class MainActivity extends FragmentActivity {
         alertDialogues = new WeakHashMap<>();
         toasts = new WeakHashMap<>();
         jParser = new JSONParser(this);
-        urlAll = getResources().getString(R.string.urlAll);
 
-        connectToServer();
+        // TODO: Need to consider campus selection when settings is set up
+        campus = "seattle";
+
+        baseUrl = getResources().getString(R.string.baseUrl);
+        // Get buildings in a campus
+        connectToServer(baseUrl + "buildings?campus=" + campus, "buildings");
+
+        // Get spaces and lay it out
+        connectToServer(getResources().getString(R.string.urlAll), "spaces");
 
         fragSpaceMap = new SpaceMapFragment();
         fragSpaceList = new SpaceListFragment();
@@ -323,17 +330,25 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setCustomView(v);
     }
 
+    // TODO: May need to consider making this into a class for use in other activities
     /* The REST is here */
-    public void connectToServer() {
-        new getJson().execute();
+    public void connectToServer(String url, String item) {
+        new getJson(url, item).execute();
     }
 
     // A class to asynchronously get JSON data from API
-    // Purposely wrote "Json" in titleCase to differentiate from Android methods
+    // Requires URL to connect to & item ("buildings" or "spaces")
     public class getJson extends AsyncTask<String, String, JSONArray> {
         private ProgressDialog pDialog;
+        private String url;
+        private String item;
         protected int statusCode;
         // Grabs from String resource in values
+
+        public getJson(String url, String item) {
+            this.url = url;
+            this.item = item;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -347,7 +362,7 @@ public class MainActivity extends FragmentActivity {
         protected JSONArray doInBackground(String... args){
             // TODO: Implement different urls instead of default "all"
             // Getting JSON from URL
-            JSONArray json = getJSONFromUrl(urlAll);
+            JSONArray json = getJSONFromUrl(url);
             statusCode = getHttpStatus();
 
             return json;
@@ -358,7 +373,19 @@ public class MainActivity extends FragmentActivity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
-            handleHttpResponse(statusCode, json);
+            handleHttpResponse(statusCode, json, url, item);
+            if (json != null) {
+                switch (item) {
+                    case "spaces":
+                        spaces = JSONProcessor.modelSpaces(json);
+                        fragSpaceMap.DisplayClustersByDistance(spaces);
+                        break;
+                    case "buildings":
+                        buildings = JSONProcessor.modelBuildings(json);
+                        Log.d("MainActivity", "First building in the list: " + buildings.get(0).getName());
+                        break;
+                }
+            }
         }
     }
 
@@ -376,15 +403,13 @@ public class MainActivity extends FragmentActivity {
         return jParser.getStatusCode();
     }
 
-    public void handleHttpResponse(int statusCode, JSONArray json) {
-        // handle different status codes
-        // only continue processing json if code 200 & json is not empty
+    // handle different status codes
+    // only continue processing json if code 200 & json is not empty
+    public void handleHttpResponse(int statusCode, JSONArray json, String url, String item) {
         switch (statusCode) {
             case 200:
                 if (json != null) {
-//                    mJson = json;
-                    spaces = JSONProcessor.modelSpaces(json);
-                    fragSpaceMap.DisplayClustersByDistance(spaces);
+                    break;
                 } else {
                     Toast toast = Toast.makeText(this, "Sorry, no spaces found", Toast.LENGTH_SHORT);
                     toasts.put("Sorry, no spaces found" ,toast);
@@ -392,17 +417,19 @@ public class MainActivity extends FragmentActivity {
                 }
                 break;
             case 401:
-                showStatusDialog("Authentication Issue", "Check key & secret.");
+                showStatusDialog("Authentication Issue", "Check key & secret.", url, item);
                 break;
             default:
-                showStatusDialog("Connection Issue", "Can't connect to server. Status code: " + statusCode + ".");
+                showStatusDialog("Connection Issue", "Can't connect to server. Status code: " + statusCode + ".", url, item);
                 break;
         }
     }
 
     // creates and shows a new dialog modal
     // let's user retry connecting to the server
-    private void showStatusDialog(String title, String message) {
+    private void showStatusDialog(String title, String message, String url, String item) {
+        final String theUrl = url;
+        final String theItem = item;
         AlertDialog.Builder dialogueBuilder = new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
@@ -410,7 +437,7 @@ public class MainActivity extends FragmentActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // retry
                         Log.d("oauth", "Retrying connection.");
-                        connectToServer();
+                        connectToServer(theUrl, theItem);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
