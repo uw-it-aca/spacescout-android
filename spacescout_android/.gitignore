@@ -1,5 +1,6 @@
 # API Key File
 */values/apikey.xml
+*/values/urls.xml
 
 # Suggested files to be ignored from stackoverflow
 .gradle

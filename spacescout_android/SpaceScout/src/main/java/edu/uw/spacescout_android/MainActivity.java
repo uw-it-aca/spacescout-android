@@ -44,6 +44,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.VisibleRegion;
+
 import org.json.JSONArray;
 
 import java.io.IOException;
@@ -61,6 +64,8 @@ import edu.uw.spacescout_android.util.JSONProcessor;
  */
 
 public class MainActivity extends FragmentActivity {
+    private final String TAG = "MainActivity";
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     // TODO: Replace deprecated class
@@ -77,7 +82,6 @@ public class MainActivity extends FragmentActivity {
     public Buildings buildings;
     public Spaces spaces;
     public String campus;
-    public String baseUrl;
 
     NavMenuListAdapter mNavMenuAdapter;
     String[] navItemTitle;
@@ -100,7 +104,6 @@ public class MainActivity extends FragmentActivity {
 
         //Generate nav menu item title
         navItemTitle = new String[]{"All Spaces", "Filter Spaces", "Favorite Spaces"};
-
         navItemIcon = new int[]{R.drawable.nav_all_spaces, R.drawable.nav_search, R.drawable.nav_fav_spaces};
 
         //Locate drawer_layout and drawer ListView in layout_main.xml
@@ -115,8 +118,6 @@ public class MainActivity extends FragmentActivity {
 
         //set the NavMenuListAdapter to the ListView
         mDrawerList.setAdapter(mNavMenuAdapter);
-
-
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // ActionBarDrawerToggle ties together the the proper interactions
@@ -164,17 +165,28 @@ public class MainActivity extends FragmentActivity {
         // TODO: Need to consider campus selection when settings is set up
         campus = "seattle";
 
-        baseUrl = getResources().getString(R.string.baseUrl);
-        // Get buildings in a campus
-        connectToServer(baseUrl + "buildings?campus=" + campus, "buildings");
-
-        // Get spaces and lay it out
-        connectToServer(getResources().getString(R.string.urlAll), "spaces");
-
         fragSpaceMap = new SpaceMapFragment();
         fragSpaceList = new SpaceListFragment();
 
+        // If no saved state:
+        // get buildings in a campus,
+        // get spaces based on first position on campus & lay them,
+        // & select the first item on the nav list.
         if (savedInstanceState == null) {
+            // Default url is set in res/values/urls.xml that you should create yourself (and not add in git)
+            String baseUrl = getResources().getString(R.string.baseUrl);
+            connectToServer(baseUrl + "buildings?campus=" + campus, "buildings");
+
+            // Default position is set in res/values/config.xml
+            String centerLat = getResources().getString(R.string.default_center_latitude);
+            String centerLon = getResources().getString(R.string.default_center_longitude);
+
+            // From calculations, 220 is the (rounded-off) radiance distance
+            // of the default zoom level (17.2f)
+            String defaultUrl = baseUrl + "spot/?center_latitude=" + centerLat +
+                    "&center_longitude=" + centerLon + "&distance=220&open_now=true";
+            connectToServer(defaultUrl, "spaces");
+
             selectItem(0);
         }
     }
@@ -336,8 +348,9 @@ public class MainActivity extends FragmentActivity {
         new getJson(url, item).execute();
     }
 
-    // A class to asynchronously get JSON data from API
-    // Requires URL to connect to & item ("buildings" or "spaces")
+    // A class to asynchronously get JSON data from API.
+    // Requires URL to connect to & item ("buildings" or "spaces").
+    // Sets global variables based on item string passed.
     public class getJson extends AsyncTask<String, String, JSONArray> {
         private ProgressDialog pDialog;
         private String url;
@@ -382,7 +395,6 @@ public class MainActivity extends FragmentActivity {
                         break;
                     case "buildings":
                         buildings = JSONProcessor.modelBuildings(json);
-                        Log.d("MainActivity", "First building in the list: " + buildings.get(0).getName());
                         break;
                 }
             }

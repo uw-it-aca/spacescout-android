@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.ui.IconGenerator;
@@ -45,10 +46,11 @@ import edu.uw.spacescout_android.model.Spaces;
  */
 
 public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInteraction, OnMapReadyCallback {
+    private final String TAG = "SpaceMap";
 
     // TODO: default center may need to be set somewhere else
     // Should maybe also change based on User's preferences
-    static final LatLng UnivWashington = new LatLng(47.655263166697765, -122.30669233862307);
+    private LatLng campusCenter;
 
     private GoogleMap map;
     private SupportMapFragment mapFragment;
@@ -56,10 +58,8 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
 
     public TouchableWrapper mTouchView;
     public static boolean mMapIsTouched = false;
-    public float zoomLevel = 0;
     public IconGenerator tc;
     public ClusterManager<Space> mClusterManager;
-//    public JSONArray mJson;
 
     public SpaceMapFragment() {
         ///empty constructor required for fragment subclasses
@@ -77,20 +77,27 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         }
         mapFragment.getMapAsync(this);
 
+        campusCenter = new LatLng(Float.parseFloat(getActivity().getResources().getString(R.string.default_center_latitude)),
+                Float.parseFloat(getActivity().getResources().getString(R.string.default_center_longitude)));
+
         tc = new IconGenerator(getActivity());
-
-//        mJson = ((MainActivity) getActivity()).mJson;
-
     }
 
     @Override
-    // disables map zoom controls and rotation gesture
+    // Map zoom controls and rotation gesture disabled.
     public void onMapReady(GoogleMap map) {
         UiSettings uiSettings = map.getUiSettings();
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(UnivWashington, 17.2f));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(campusCenter, 17.2f));
+//      This is how I got the latlng bounds to calculate radius distance
+//        VisibleRegion vr = getRegion();
+//        double rightLat = vr.latLngBounds.northeast.latitude;
+//        double rightLon = vr.latLngBounds.northeast.longitude;
+//        Log.d(TAG, "Northeast lat is " + rightLat + " & lon is " + rightLon);
+
+//        ((MainActivity) getActivity()).setCenterCoords(getCameraCenter());
     }
 
     // This method is being implemented as part of the interface UpdateMapAfterUserInteraction
@@ -121,6 +128,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("SpaceMap", "onResume called");
         setUpMap();
     }
 
@@ -131,6 +139,12 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         map = mapFragment.getMap();
         if(map == null)
             return;
+    }
+
+    // TODO: save current conditions here to be reloaded
+    @Override
+    public void onSaveInstanceState (Bundle savedInstanceState) {
+
     }
 
     // This method displays the clusters on the map by clustering by distance
@@ -206,9 +220,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
             }
 
             // Iterating through the hashmap of all buildings to add to the maps
-            Iterator it = building_cluster.keySet().iterator();
-            while (it.hasNext()) {
-                String key = (String)it.next();
+            for (String key : building_cluster.keySet()) {
                 Building b = building_cluster.get(key);
                 addMarkerToMap(b.getPosition(), b.getSpots());
             }
@@ -238,6 +250,14 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
                 anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
 
         map.addMarker(markerOptions);
+    }
+
+    public LatLng getCameraCenter() {
+        return map.getCameraPosition().target;
+    }
+
+    public VisibleRegion getRegion() {
+        return map.getProjection().getVisibleRegion();
     }
 
 }
