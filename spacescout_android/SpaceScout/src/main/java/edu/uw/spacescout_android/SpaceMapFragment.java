@@ -14,6 +14,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -91,6 +92,14 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         uiSettings.setRotateGesturesEnabled(false);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(campusCenter, 17.2f));
+
+        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition position) {
+
+            }
+        });
+
 //      This is how I got the latlng bounds to calculate radius distance
 //        VisibleRegion vr = getRegion();
 //        double rightLat = vr.latLngBounds.northeast.latitude;
@@ -105,6 +114,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
     // TODO: send new request to server when the user moves around the map
     public void onUpdateMapAfterUserInteraction() {
 //        ((MainActivity) getActivity()).connectToServer();
+        Log.d(TAG, "gesture ended");
     }
 
     // This is the default method needed for Android Frafments

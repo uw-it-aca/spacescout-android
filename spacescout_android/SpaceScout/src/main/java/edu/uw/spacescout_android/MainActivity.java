@@ -366,9 +366,9 @@ public class MainActivity extends FragmentActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(MainActivity.this);
-            this.pDialog.setMessage("Filling spaces");
-            pDialog.show();
+//            pDialog = new ProgressDialog(MainActivity.this);
+//            this.pDialog.setMessage("Filling spaces");
+//            pDialog.show();
         }
 
         @Override
@@ -401,7 +401,7 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    public JSONArray getJSONFromUrl(String url) {
+    private JSONArray getJSONFromUrl(String url) {
         JSONArray json = new JSONArray();
         try {
             json = jParser.getJSONFromUrl(url);
@@ -432,7 +432,8 @@ public class MainActivity extends FragmentActivity {
                 showStatusDialog("Authentication Issue", "Check key & secret.", url, item);
                 break;
             default:
-                showStatusDialog("Connection Issue", "Can't connect to server. Status code: " + statusCode + ".", url, item);
+                showStatusDialog("Connection Issue", "Can't connect to server. Status code: " +
+                        statusCode + ".", url, item);
                 break;
         }
     }
