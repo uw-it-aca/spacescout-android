@@ -7,6 +7,14 @@
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+.idea/modules.xml
+.idea/.name
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/gradle.xml
+.idea/misc.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
 .DS_Store
 /build
 *.iml
