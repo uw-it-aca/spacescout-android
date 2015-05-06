@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -14,7 +15,7 @@ import edu.uw.spacescout_android.model.Space;
 /**
  * Created by aazri3 on 4/2/15.
  */
-public class CustomClusterRenderer extends DefaultClusterRenderer<Space> {
+public class CustomClusterRenderer extends DefaultClusterRenderer<Space> implements GoogleMap.OnCameraChangeListener {
     //TODO: drawing custom markers & clustered markers
     /**
      * Draws markers using IconGenerator.
@@ -70,5 +71,10 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> {
     protected boolean shouldRenderAsCluster(Cluster cluster) {
         // Always render clusters.
         return cluster.getSize() > 1;
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+
     }
 }

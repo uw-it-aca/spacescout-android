@@ -63,7 +63,7 @@ import edu.uw.spacescout_android.util.JSONProcessor;
  *
  */
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements TouchableWrapper.UpdateMapAfterUserInteraction {
     private final String TAG = "MainActivity";
 
     private DrawerLayout mDrawerLayout;
@@ -177,15 +177,15 @@ public class MainActivity extends FragmentActivity {
             String baseUrl = getResources().getString(R.string.baseUrl);
             connectToServer(baseUrl + "buildings?campus=" + campus, "buildings");
 
-            // Default position is set in res/values/config.xml
-            String centerLat = getResources().getString(R.string.default_center_latitude);
-            String centerLon = getResources().getString(R.string.default_center_longitude);
-
-            // From calculations, 220 is the (rounded-off) radiance distance
-            // of the default zoom level (17.2f)
-            String defaultUrl = baseUrl + "spot/?center_latitude=" + centerLat +
-                    "&center_longitude=" + centerLon + "&distance=220&open_now=true";
-            connectToServer(defaultUrl, "spaces");
+//            // Default position is set in res/values/config.xml
+//            String centerLat = getResources().getString(R.string.default_center_latitude);
+//            String centerLon = getResources().getString(R.string.default_center_longitude);
+//
+//            // From calculations, 220 is the (rounded-off) radiance distance
+//            // of the default zoom level (17.2f)
+//            String defaultUrl = baseUrl + "spot/?center_latitude=" + centerLat +
+//                    "&center_longitude=" + centerLon + "&distance=220&open_now=true";
+//            connectToServer(defaultUrl, "spaces");
 
             selectItem(0);
         }
@@ -342,9 +342,14 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setCustomView(v);
     }
 
+    public void onUpdateMapAfterUserInteraction() {
+        fragSpaceMap.updateMap();
+    }
+
     // TODO: May need to consider making this into a class for use in other activities
     /* The REST is here */
     public void connectToServer(String url, String item) {
+        // TODO: Check internet status
         new getJson(url, item).execute();
     }
 
@@ -383,8 +388,8 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         protected void onPostExecute(JSONArray json) {
-            if (pDialog.isShowing())
-                pDialog.dismiss();
+//            if (pDialog.isShowing())
+//                pDialog.dismiss();
 
             handleHttpResponse(statusCode, json, url, item);
             if (json != null) {

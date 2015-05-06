@@ -1,6 +1,7 @@
 package edu.uw.spacescout_android;
 
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
@@ -28,7 +30,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 import edu.uw.spacescout_android.TouchableWrapper.UpdateMapAfterUserInteraction;
 import edu.uw.spacescout_android.model.Building;
@@ -46,12 +47,12 @@ import edu.uw.spacescout_android.model.Spaces;
  *
  */
 
-public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInteraction, OnMapReadyCallback {
+public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
     private final String TAG = "SpaceMap";
 
-    // TODO: default center may need to be set somewhere else
-    // Should maybe also change based on User's preferences
+    // TODO: Should change based on User's preference (campus)
     private LatLng campusCenter;
+    private String baseUrl;
 
     private GoogleMap map;
     private SupportMapFragment mapFragment;
@@ -61,6 +62,8 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
     public static boolean mMapIsTouched = false;
     public IconGenerator tc;
     public ClusterManager<Space> mClusterManager;
+
+    public PolylineOptions line;
 
     public SpaceMapFragment() {
         ///empty constructor required for fragment subclasses
@@ -80,41 +83,69 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
 
         campusCenter = new LatLng(Float.parseFloat(getActivity().getResources().getString(R.string.default_center_latitude)),
                 Float.parseFloat(getActivity().getResources().getString(R.string.default_center_longitude)));
+        baseUrl = getResources().getString(R.string.baseUrl);
 
         tc = new IconGenerator(getActivity());
     }
 
     @Override
     // Map zoom controls and rotation gesture disabled.
-    public void onMapReady(GoogleMap map) {
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
         UiSettings uiSettings = map.getUiSettings();
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(campusCenter, 17.2f));
 
+        // this will only be called before overriden by new listener for clustering
         map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition position) {
+                Log.d(TAG, "gesture detected by onCameraChange");
 
+                spotSearch();
+                // Setting up cluster manager with the CustomClusteringAlgorithm Class
+                setUpClusterer();
             }
         });
+    }
 
-//      This is how I got the latlng bounds to calculate radius distance
-//        VisibleRegion vr = getRegion();
-//        double rightLat = vr.latLngBounds.northeast.latitude;
-//        double rightLon = vr.latLngBounds.northeast.longitude;
-//        Log.d(TAG, "Northeast lat is " + rightLat + " & lon is " + rightLon);
+    private void spotSearch() {
+        Log.d(TAG, "spotSearch() called");
+        // Get the latlng bounds to calculate radius distance
+        // TODO: All this code can probably be shortened
+        VisibleRegion vr = map.getProjection().getVisibleRegion();
+        double rightLat = vr.latLngBounds.northeast.latitude;
+        double rightLon = vr.latLngBounds.northeast.longitude;
+        Location topRightCorner = new Location("topRightCorner");
+        topRightCorner.setLatitude(rightLat);
+        topRightCorner.setLongitude(rightLon);
+        Location center = new Location("center");
+        center.setLatitude(map.getCameraPosition().target.latitude);
+        center.setLongitude(map.getCameraPosition().target.longitude);
+        int radius = Math.round(center.distanceTo(topRightCorner));
+        Log.d(TAG, "radius: " + radius);
 
-//        ((MainActivity) getActivity()).setCenterCoords(getCameraCenter());
+        String url = baseUrl + "spot/?center_latitude=" + center.getLatitude() +
+                "&center_longitude=" + center.getLongitude() + "&distance=" +
+                (radius - Math.round(0.045*radius)) + "&limit=0";
+        ((MainActivity) getActivity()).connectToServer(url, "spaces");
+
+        // this is how you draw a line from point to point
+//        line = new PolylineOptions().add(new LatLng(rightLat, rightLon),
+//                new LatLng(center.getLatitude(), center.getLongitude()))
+//                .width(5).color(Color.RED);
+//        googleMap.addPolyline(line);
     }
 
     // This method is being implemented as part of the interface UpdateMapAfterUserInteraction
     // This is essentially a callback for touch event on the map
     // TODO: send new request to server when the user moves around the map
-    public void onUpdateMapAfterUserInteraction() {
+    public void updateMap() {
 //        ((MainActivity) getActivity()).connectToServer();
-        Log.d(TAG, "gesture ended");
+        Log.d(TAG, "gesture detected by onUpdateMapAfterUserInteraction");
+        spotSearch();
     }
 
     // This is the default method needed for Android Frafments
@@ -138,18 +169,18 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("SpaceMap", "onResume called");
-        setUpMap();
+        Log.d(TAG, "onResume called");
+//        setUpMap();
     }
 
-    // Setting up a Map
-    private void setUpMap() {
-        if (map != null)
-            return;
-        map = mapFragment.getMap();
-        if(map == null)
-            return;
-    }
+//    // Setting up a Map
+//    private void setUpMap() {
+//        if (map != null)
+//            return;
+//        map = mapFragment.getMap();
+//        if(map == null)
+//            return;
+//    }
 
     // TODO: save current conditions here to be reloaded
     @Override
@@ -160,12 +191,9 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
     // This method displays the clusters on the map by clustering by distance
     // It takes the json data as parameter
     public void DisplayClustersByDistance(Spaces spaces){
-
-        // Setting up cluster manager with the CustomClusteringAlgorithm Class
-        setUpClusterer();
-        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<Space>()));
         //TODO: Use CustomRenderer to set minimum cluster size
-        // mClusterManager.setRenderer(new CustomeRenderer<>(this, mMap, mClusterManager));
+//        mClusterManager.setRenderer(new CustomeRenderer<>(this, mMap, mClusterManager));
+        mClusterManager.clearItems();
 
         // Use to create a minimum bound based on a set of LatLng points.
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -189,6 +217,7 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
         map.setOnCameraChangeListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
 
+        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<Space>()));
     }
 
     // This method displays the clusters on the map by clustering by Building Names
@@ -260,14 +289,6 @@ public class SpaceMapFragment extends Fragment implements UpdateMapAfterUserInte
                 anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
 
         map.addMarker(markerOptions);
-    }
-
-    public LatLng getCameraCenter() {
-        return map.getCameraPosition().target;
-    }
-
-    public VisibleRegion getRegion() {
-        return map.getProjection().getVisibleRegion();
     }
 
 }
