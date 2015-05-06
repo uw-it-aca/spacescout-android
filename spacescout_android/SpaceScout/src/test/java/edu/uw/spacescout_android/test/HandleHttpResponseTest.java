@@ -75,7 +75,7 @@ public class HandleHttpResponseTest extends ActivityInstrumentationTestCase2<Mai
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
-                mActivity.handleHttpResponse(200, null);
+                mActivity.handleHttpResponse(200, null, "", "");
                 // check that toast with given text key exists
                 assertTrue(mActivity.toasts.containsKey("Sorry, no spaces found"));
                 getActivity().finish();
@@ -110,7 +110,7 @@ public class HandleHttpResponseTest extends ActivityInstrumentationTestCase2<Mai
 
     // Asserts whether the correct dialogue is shown given the status codes
     private void checkDialog(int status, String title) {
-        mActivity.handleHttpResponse(status, null);
+        mActivity.handleHttpResponse(status, null, "", "");
         // gets the alert dialogue with given title (will error out if doesn't exist)
         AlertDialog dialog = mActivity.getUsedDialogue(title);
         assertTrue (dialog.isShowing());
