@@ -202,6 +202,7 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
         for(int i = 0; i < spaces.size(); i++){
             mClusterManager.addItem(spaces.get(i));
         }
+        mClusterManager.cluster();
     }
 
     // Setting up the ClusterManager which would contain all the clusters
