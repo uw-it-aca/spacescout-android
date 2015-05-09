@@ -1,7 +1,6 @@
 package edu.uw.spacescout_android;
 
 import android.graphics.Bitmap;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,12 +14,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.ui.IconGenerator;
@@ -31,7 +28,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import edu.uw.spacescout_android.TouchableWrapper.UpdateMapAfterUserInteraction;
 import edu.uw.spacescout_android.model.Building;
 import edu.uw.spacescout_android.model.Space;
 import edu.uw.spacescout_android.model.Spaces;
@@ -42,24 +38,21 @@ import edu.uw.spacescout_android.model.Spaces;
  *
  * This class displays spaces on a Google map and its markers/clusters.
  * Extends a fragment that is embedded onto MainActivity.
- * Implements UpdateMapAfterUserInteraction for callback ethod for Map touch or zoom change.
  * Implements OnMapReadyCallback for callback method for preparing the map.
- *
+ * Requests to server is initiated in onCameraChange within CustomClusterRenderer
  */
 
 public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
-    private final String TAG = "SpaceMap";
+    private final String TAG = "SpaceMapFragment";
 
     // TODO: Should change based on User's preference (campus)
     private LatLng campusCenter;
     private String baseUrl;
 
     private GoogleMap map;
-    private SupportMapFragment mapFragment;
     private View view;
 
     public TouchableWrapper mTouchView;
-    public static boolean mMapIsTouched = false;
     public IconGenerator tc;
     public ClusterManager<Space> mClusterManager;
 
@@ -74,7 +67,7 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if(mapFragment == null) { // azri92: not sure if this actually helps
             mapFragment = SupportMapFragment.newInstance();
             getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
@@ -96,59 +89,28 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        setUpClusterer();
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(campusCenter, 17.2f));
-
-        // this will only be called before overriden by new listener for clustering
-        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition position) {
-                Log.d(TAG, "gesture detected by onCameraChange");
-
-                spotSearch();
-                // Setting up cluster manager with the CustomClusteringAlgorithm Class
-                setUpClusterer();
-            }
-        });
     }
 
-    private void spotSearch() {
-        Log.d(TAG, "spotSearch() called");
-        // Get the latlng bounds to calculate radius distance
-        // TODO: All this code can probably be shortened
-        VisibleRegion vr = map.getProjection().getVisibleRegion();
-        double rightLat = vr.latLngBounds.northeast.latitude;
-        double rightLon = vr.latLngBounds.northeast.longitude;
-        Location topRightCorner = new Location("topRightCorner");
-        topRightCorner.setLatitude(rightLat);
-        topRightCorner.setLongitude(rightLon);
-        Location center = new Location("center");
-        center.setLatitude(map.getCameraPosition().target.latitude);
-        center.setLongitude(map.getCameraPosition().target.longitude);
-        int radius = Math.round(center.distanceTo(topRightCorner));
-        Log.d(TAG, "radius: " + radius);
+    // Setting up the ClusterManager which would contain all the clusters.
+    // Sets custom cluster renderer and algorithm.
+    public void setUpClusterer() {
 
-        String url = baseUrl + "spot/?center_latitude=" + center.getLatitude() +
-                "&center_longitude=" + center.getLongitude() + "&distance=" +
-                (radius - Math.round(0.045*radius)) + "&limit=0";
-        ((MainActivity) getActivity()).connectToServer(url, "spaces");
+        // Initialize the manager with the context and the map.
+        mClusterManager = new ClusterManager<>(getActivity(), map);
 
-        // this is how you draw a line from point to point
-//        line = new PolylineOptions().add(new LatLng(rightLat, rightLon),
-//                new LatLng(center.getLatitude(), center.getLongitude()))
-//                .width(5).color(Color.RED);
-//        googleMap.addPolyline(line);
+        // Point the map's listeners to the listeners implemented by the cluster
+        // manager.
+        map.setOnCameraChangeListener(mClusterManager);
+        map.setOnMarkerClickListener(mClusterManager);
+
+        //TODO: Use CustomRenderer to set minimum cluster size
+        mClusterManager.setRenderer(new CustomClusterRenderer(getActivity(), map, mClusterManager, mTouchView));
+        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<Space>()));
     }
 
-    // This method is being implemented as part of the interface UpdateMapAfterUserInteraction
-    // This is essentially a callback for touch event on the map
-    // TODO: send new request to server when the user moves around the map
-    public void updateMap() {
-//        ((MainActivity) getActivity()).connectToServer();
-        Log.d(TAG, "gesture detected by onUpdateMapAfterUserInteraction");
-        spotSearch();
-    }
-
-    // This is the default method needed for Android Frafments
+    // This is the default method needed for Android Fragments
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle bundle) {
@@ -191,34 +153,13 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
     // This method displays the clusters on the map by clustering by distance
     // It takes the json data as parameter
     public void DisplayClustersByDistance(Spaces spaces){
-        //TODO: Use CustomRenderer to set minimum cluster size
-//        mClusterManager.setRenderer(new CustomeRenderer<>(this, mMap, mClusterManager));
         mClusterManager.clearItems();
-
-        // Use to create a minimum bound based on a set of LatLng points.
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         // Looping through Spaces model to obtain each Space
         for(int i = 0; i < spaces.size(); i++){
             mClusterManager.addItem(spaces.get(i));
         }
         mClusterManager.cluster();
-    }
-
-    // Setting up the ClusterManager which would contain all the clusters
-    // This is only used by DisplayClustersByDistance() method
-    public void setUpClusterer() {
-
-        // Initialize the manager with the context and the map.
-        // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<>(this.getActivity(), map);
-
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
-        map.setOnCameraChangeListener(mClusterManager);
-        map.setOnMarkerClickListener(mClusterManager);
-
-        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<Space>()));
     }
 
     // This method displays the clusters on the map by clustering by Building Names

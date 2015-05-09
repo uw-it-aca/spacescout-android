@@ -19,18 +19,18 @@ package edu.uw.spacescout_android;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -43,9 +43,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.VisibleRegion;
 
 import org.json.JSONArray;
 
@@ -63,7 +60,7 @@ import edu.uw.spacescout_android.util.JSONProcessor;
  *
  */
 
-public class MainActivity extends FragmentActivity implements TouchableWrapper.UpdateMapAfterUserInteraction {
+public class MainActivity extends FragmentActivity {
     private final String TAG = "MainActivity";
 
     private DrawerLayout mDrawerLayout;
@@ -262,7 +259,7 @@ public class MainActivity extends FragmentActivity implements TouchableWrapper.U
         }
     }
 
-    /* The click listner for ListView in the navigation drawer */
+    /* The click listener for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -342,10 +339,6 @@ public class MainActivity extends FragmentActivity implements TouchableWrapper.U
         getActionBar().setCustomView(v);
     }
 
-    public void onUpdateMapAfterUserInteraction() {
-        fragSpaceMap.updateMap();
-    }
-
     // TODO: May need to consider making this into a class for use in other activities
     /* The REST is here */
     public void connectToServer(String url, String item) {
@@ -356,7 +349,7 @@ public class MainActivity extends FragmentActivity implements TouchableWrapper.U
     // A class to asynchronously get JSON data from API.
     // Requires URL to connect to & item ("buildings" or "spaces").
     // Sets global variables based on item string passed.
-    public class getJson extends AsyncTask<String, String, JSONArray> {
+    private class getJson extends AsyncTask<String, String, JSONArray> {
         private ProgressDialog pDialog;
         private String url;
         private String item;
@@ -381,7 +374,7 @@ public class MainActivity extends FragmentActivity implements TouchableWrapper.U
             // TODO: Implement different urls instead of default "all"
             // Getting JSON from URL
             JSONArray json = getJSONFromUrl(url);
-            statusCode = getHttpStatus();
+            statusCode = jParser.getStatusCode();;
 
             return json;
         }
@@ -416,13 +409,9 @@ public class MainActivity extends FragmentActivity implements TouchableWrapper.U
         return json;
     }
 
-    public int getHttpStatus() {
-        return jParser.getStatusCode();
-    }
-
     // handle different status codes
     // only continue processing json if code 200 & json is not empty
-    public void handleHttpResponse(int statusCode, JSONArray json, String url, String item) {
+    private void handleHttpResponse(int statusCode, JSONArray json, String url, String item) {
         switch (statusCode) {
             case 200:
                 if (json != null) {

@@ -68,8 +68,8 @@ public class CustomClusteringAlgorithm <T extends ClusterItem> implements Algori
         throw new UnsupportedOperationException("NonHierarchicalDistanceBasedAlgorithm.remove not implemented");
     }
 
+    // TODO: Add buildings to the mix
     // This is where the fun's at.
-
     @Override
     public Set<? extends Cluster<T>> getClusters(double zoom) {
         final int discreteZoom = (int) zoom;
