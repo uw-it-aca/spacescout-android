@@ -173,7 +173,7 @@ public class MainActivity extends FragmentActivity {
         // get spaces based on first position on campus & lay them,
         // & select the first item on the nav list.
         if (savedInstanceState == null) {
-            // Default url is set in res/values/urls.xml that you should create yourself (and not add in git)
+            // Default url is set in res > values > .xml that you should create yourself (and not add in git)
             String baseUrl = getResources().getString(R.string.baseUrl);
             connectToServer(baseUrl + "buildings?campus=" + campus, "buildings");
 
