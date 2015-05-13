@@ -44,6 +44,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import org.json.JSONArray;
 
 import java.io.IOException;
@@ -72,13 +74,14 @@ public class MainActivity extends FragmentActivity {
     private FragmentManager fragmentManager;
     private Fragment fragSpaceList;
     private SpaceMapFragment fragSpaceMap;
-    private JSONParser jParser;
 
+    public JSONParser jParser;
     public WeakHashMap<String, AlertDialog> alertDialogues;
     public WeakHashMap<String, Toast> toasts;
     public Buildings buildings;
     public Spaces spaces;
     public String campus;
+    public AsyncTask getJson;
 
     NavMenuListAdapter mNavMenuAdapter;
     String[] navItemTitle;
@@ -186,6 +189,11 @@ public class MainActivity extends FragmentActivity {
 
             selectItem(0);
         }
+    }
+
+    // returns the prepared googlemap from SpaceMapFragment
+    public GoogleMap getMap() {
+        return fragSpaceMap.getMap();
     }
 
     @Override
@@ -343,18 +351,17 @@ public class MainActivity extends FragmentActivity {
     /* The REST is here */
     public void connectToServer(String url, String item) {
         // TODO: Check internet status
-        new getJson(url, item).execute();
+        getJson = new getJson(url, item).execute();
     }
 
-    // A class to asynchronously get JSON data from API.
-    // Requires URL to connect to & item ("buildings" or "spaces").
+    // Asynchronously get JSON data from API.
+    // Requires URL for request & item ("buildings" or "spaces").
     // Sets global variables based on item string passed.
     private class getJson extends AsyncTask<String, String, JSONArray> {
         private ProgressDialog pDialog;
         private String url;
         private String item;
         protected int statusCode;
-        // Grabs from String resource in values
 
         public getJson(String url, String item) {
             this.url = url;
@@ -371,12 +378,17 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         protected JSONArray doInBackground(String... args){
-            // TODO: Implement different urls instead of default "all"
-            // Getting JSON from URL
             JSONArray json = getJSONFromUrl(url);
-            statusCode = jParser.getStatusCode();;
+            statusCode = jParser.getStatusCode();
 
             return json;
+        }
+
+        // This is run instead of onPostExecute() if cancel(true) is called from outside
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            Log.d(TAG, "AsyncTask cancelled");
         }
 
         @Override

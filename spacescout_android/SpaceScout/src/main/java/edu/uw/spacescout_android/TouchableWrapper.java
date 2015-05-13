@@ -6,6 +6,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+
 /**
  * Created by gupta37 on 5/23/14.
  *
@@ -42,10 +45,13 @@ public class TouchableWrapper extends FrameLayout {
                 motion == MotionEvent.ACTION_HOVER_ENTER ||
                 motion == MotionEvent.ACTION_POINTER_DOWN) {
             mapIsTouched = true;
-        } else if (motion == MotionEvent.ACTION_UP ||
-                motion == MotionEvent.ACTION_HOVER_EXIT ||
+        } else if (motion == MotionEvent.ACTION_UP) {
+            mapIsTouched = false;
+        } else if (motion == MotionEvent.ACTION_HOVER_EXIT ||
                 motion == MotionEvent.ACTION_POINTER_UP) {
             mapIsTouched = false;
+            ((MainActivity) mContext).getMap().moveCamera(CameraUpdateFactory.newCameraPosition(
+                    ((MainActivity) mContext).getMap().getCameraPosition()));
         }
 
         return super.dispatchTouchEvent(event);

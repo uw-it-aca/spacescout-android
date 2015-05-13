@@ -93,6 +93,10 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(campusCenter, 17.2f));
     }
 
+    public GoogleMap getMap() {
+        return map;
+    }
+
     // Setting up the ClusterManager which would contain all the clusters.
     // Sets custom cluster renderer and algorithm.
     public void setUpClusterer() {
@@ -111,6 +115,7 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     // This is the default method needed for Android Fragments
+    // Implement TouchableWrapper if you want to use gesture recognition
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle bundle) {
@@ -118,13 +123,14 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
         if(view == null)
             view = inflater.inflate(R.layout.fragment_space_map, container, false);
 
-        mTouchView = new TouchableWrapper(getActivity());
+//        mTouchView = new TouchableWrapper(getActivity());
         // TODO: need to avoid restarting fragment on backpress
         if(view.getParent() != null) {
             ((ViewGroup)view.getParent()).removeView(view);
         }
-        mTouchView.addView(view);
-        return mTouchView;
+//        mTouchView.addView(view);
+//        return mTouchView;
+        return view;
     }
 
     // This is the default method needed for Android Fragments

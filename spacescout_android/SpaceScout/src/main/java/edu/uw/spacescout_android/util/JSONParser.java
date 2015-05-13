@@ -39,6 +39,9 @@ public class JSONParser {
     static String json = "";
     private Context appContext;
     private int statusCode;
+    private HttpGet httpGet;
+    private HttpClient httpClient;
+    private boolean isCancelled = false;
 
     // constructor
     public JSONParser(Context c) {
@@ -54,8 +57,6 @@ public class JSONParser {
         return sb.toString();
     }
 
-    // Params: request url
-    // Returns: JSON object
     // Connects to the server with the url. Signs the request with signpost for OAuth 1.0.
     // Handled exceptions: HttpHostConnectException
     public JSONArray getJSONFromUrl(String url) throws IOException {
@@ -67,43 +68,41 @@ public class JSONParser {
         // Making HTTP request
         try {
             // TODO: defaultHttpClient is deprecated
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(url);
+            httpClient = new DefaultHttpClient();
+            httpGet = new HttpGet(url);
             consumer.sign(httpGet);
+            //TODO: HttpEntity gives out an internal error when request is cancelled
             HttpResponse response = httpClient.execute(httpGet);
             statusCode = response.getStatusLine().getStatusCode();
-            String errorMsg;
             switch (statusCode) {
                 case 200:
                     HttpEntity httpEntity = response.getEntity();
                     is = httpEntity.getContent();
                     break;
                 case 401:
-                    errorMsg = "Can't authenticate. Check key & secret";
-                    Log.d("oauth", errorMsg);
+                    Log.d("oauth", "Can't authenticate. Check key & secret");
                     return null;
                 default:
-                    errorMsg = "Can't connect to server. Status code " + statusCode + ".";
-                    Log.d("oauth", errorMsg);
+                    Log.d("oauth", "Can't connect to server. Status code " + statusCode + ".");
                     return null;
             }
         } catch (UnsupportedEncodingException | ClientProtocolException e) {
             e.printStackTrace();
         } catch (HttpHostConnectException e) {
-            String errorMsg = "Can't connect to server. Probably down.";
-            Log.d("oauth", errorMsg);
+            Log.d("oauth", "Can't connect to server. Probably down.");
             return null;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
+            //TODO: BufferedReader also gives out an internal error when request is cancelled
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     is, "iso-8859-1"), 8);
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
             is.close();
             json = sb.toString();
@@ -120,6 +119,16 @@ public class JSONParser {
 
         // return JSON String
         return jObj;
+    }
+
+    public void abortConnection() {
+        httpGet.abort();
+        httpClient.getConnectionManager().shutdown();
+        try {
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getStatusCode() {

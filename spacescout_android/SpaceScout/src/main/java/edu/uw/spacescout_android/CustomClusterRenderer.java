@@ -2,6 +2,7 @@ package edu.uw.spacescout_android;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -94,39 +95,43 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        Log.d(TAG, "Camera change detected");
-//        ((MainActivity) mContext).updateMap();
 
-        // TODO: All this code can probably be shortened
-        if (!mTouchView.mapIsTouched()) {
-            Log.d(TAG, "Replacing markers..");
-            // Get the latlng bounds to calculate radius distance
-            VisibleRegion vr = map.getProjection().getVisibleRegion();
-            double rightLat = vr.latLngBounds.northeast.latitude;
-            double rightLon = vr.latLngBounds.northeast.longitude;
-            // Get the top right corner of the screen
-            Location topRightCorner = new Location("topRightCorner");
-            topRightCorner.setLatitude(rightLat);
-            topRightCorner.setLongitude(rightLon);
-            // Get the center
-            Location center = new Location("center");
-            center.setLatitude(vr.latLngBounds.getCenter().latitude);
-            center.setLongitude(vr.latLngBounds.getCenter().longitude);
-            // Calculate radius
-            int radius = Math.round(center.distanceTo(topRightCorner));
-            int smallerRadius = (int) (radius - Math.round(0.045 * radius));
+        // TODO: May want to look at ThreadPoolExecutor & SynchronousQueue for a different impl
+        // Cancel any running AsyncTask before we start a new request
+        if (((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.PENDING ||
+                ((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.RUNNING) {
+            ((MainActivity) mContext).getJson.cancel(true);
+            ((MainActivity) mContext).jParser.abortConnection();
+        }
 
-            String baseUrl = mContext.getResources().getString(R.string.baseUrl);
-            String url = baseUrl + "spot/?center_latitude=" + center.getLatitude() +
-                    "&center_longitude=" + center.getLongitude() + "&distance=" +
-                    smallerRadius + "&limit=0";
-            ((MainActivity) mContext).connectToServer(url, "spaces");
+        Log.d(TAG, "Replacing markers..");
+        // Get the latlng bounds to calculate radius distance
+        VisibleRegion vr = map.getProjection().getVisibleRegion();
+        double rightLat = vr.latLngBounds.northeast.latitude;
+        double rightLon = vr.latLngBounds.northeast.longitude;
+        // Get the top right corner of the screen
+        Location topRightCorner = new Location("topRightCorner");
+        topRightCorner.setLatitude(rightLat);
+        topRightCorner.setLongitude(rightLon);
+        // Get the center
+        Location center = new Location("center");
+        center.setLatitude(vr.latLngBounds.getCenter().latitude);
+        center.setLongitude(vr.latLngBounds.getCenter().longitude);
+        // Calculate radius
+        int radius = Math.round(center.distanceTo(topRightCorner));
+        int smallerRadius = (int) (radius - Math.round(0.045 * radius));
+
+        String baseUrl = mContext.getResources().getString(R.string.baseUrl);
+        String url = baseUrl + "spot/?center_latitude=" + center.getLatitude() +
+                "&center_longitude=" + center.getLongitude() + "&distance=" +
+                smallerRadius + "&limit=0";
+        ((MainActivity) mContext).connectToServer(url, "spaces");
 
             // this is how you draw a line from point to point
 //        line = new PolylineOptions().add(new LatLng(rightLat, rightLon),
 //                new LatLng(center.getLatitude(), center.getLongitude()))
 //                .width(5).color(Color.RED);
 //        googleMap.addPolyline(line);
-        }
+//        }
     }
 }
