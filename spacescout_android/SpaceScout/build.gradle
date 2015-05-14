@@ -44,8 +44,8 @@ dependencies {
 //    androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:testing-support-lib:+'
 
-    compile 'com.android.support:support-v4:22.0.0'
-    compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'com.android.support:support-v4:22+'
+    compile 'com.google.android.gms:play-services:7+'
     compile 'com.google.maps.android:android-maps-utils:0.3+'
     compile files('libs/signpost-jetty6-1.2.1.2.jar')
     compile files('libs/signpost-core-1.2.1.2.jar')

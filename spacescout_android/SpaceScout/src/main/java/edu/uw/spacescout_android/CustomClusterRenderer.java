@@ -98,10 +98,12 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
 
         // TODO: May want to look at ThreadPoolExecutor & SynchronousQueue for a different impl
         // Cancel any running AsyncTask before we start a new request
-        if (((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.PENDING ||
-                ((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.RUNNING) {
-            ((MainActivity) mContext).getJson.cancel(true);
-            ((MainActivity) mContext).jParser.abortConnection();
+        if (((MainActivity) mContext).currItem.equals("spaces")) {
+            if (((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.PENDING ||
+                    ((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.RUNNING) {
+                ((MainActivity) mContext).getJson.cancel(true);
+                ((MainActivity) mContext).jParser.abortConnection();
+            }
         }
 
         Log.d(TAG, "Replacing markers..");

@@ -124,10 +124,12 @@ public class JSONParser {
     public void abortConnection() {
         httpGet.abort();
         httpClient.getConnectionManager().shutdown();
-        try {
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (is != null) {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

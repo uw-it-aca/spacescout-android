@@ -76,6 +76,7 @@ public class MainActivity extends FragmentActivity {
     private SpaceMapFragment fragSpaceMap;
 
     public JSONParser jParser;
+    public String currItem;
     public WeakHashMap<String, AlertDialog> alertDialogues;
     public WeakHashMap<String, Toast> toasts;
     public Buildings buildings;
@@ -351,6 +352,7 @@ public class MainActivity extends FragmentActivity {
     /* The REST is here */
     public void connectToServer(String url, String item) {
         // TODO: Check internet status
+        currItem = item;
         getJson = new getJson(url, item).execute();
     }
 
