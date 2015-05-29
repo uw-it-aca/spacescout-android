@@ -34,6 +34,8 @@ public class HandleHttpResponseTest extends ActivityInstrumentationTestCase2<Mai
         super.setUp();
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
 //        setActivityInitialTouchMode(false);
+
+        // TODO: try to override onCreate
         mActivity = getActivity();
     }
 

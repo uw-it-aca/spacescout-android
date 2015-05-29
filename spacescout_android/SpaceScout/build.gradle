@@ -41,7 +41,9 @@ android {
 }
 
 dependencies {
-//    androidTestCompile 'junit:junit:4.12'
+//    testCompile 'junit:junit:4.12'
+    testCompile 'com.android.support.test:testing-support-lib:+'
+    testCompile 'org.json:json:20141113'
     androidTestCompile 'com.android.support.test:testing-support-lib:+'
 
     compile 'com.android.support:support-v4:22+'

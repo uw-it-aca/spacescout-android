@@ -425,7 +425,7 @@ public class MainActivity extends FragmentActivity {
 
     // handle different status codes
     // only continue processing json if code 200 & json is not empty
-    private void handleHttpResponse(int statusCode, JSONArray json, String url, String item) {
+    public void handleHttpResponse(int statusCode, JSONArray json, String url, String item) {
         switch (statusCode) {
             case 200:
                 if (json != null) {

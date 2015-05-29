@@ -74,8 +74,8 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
         }
         mapFragment.getMapAsync(this);
 
-        campusCenter = new LatLng(Float.parseFloat(getActivity().getResources().getString(R.string.default_center_latitude)),
-                Float.parseFloat(getActivity().getResources().getString(R.string.default_center_longitude)));
+        campusCenter = new LatLng(Float.parseFloat(getResources().getString(R.string.default_center_latitude)),
+                Float.parseFloat(getResources().getString(R.string.default_center_longitude)));
         baseUrl = getResources().getString(R.string.baseUrl);
 
         tc = new IconGenerator(getActivity());
