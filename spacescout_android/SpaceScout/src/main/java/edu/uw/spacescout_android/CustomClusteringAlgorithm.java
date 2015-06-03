@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.uw.spacescout_android.model.Space;
+
 
 /**
  * Created by gupta37 on 5/16/14.
@@ -27,7 +29,7 @@ import java.util.Set;
  * For clustering markers on Google Maps our own way.
  */
 
-public class CustomClusteringAlgorithm <T extends ClusterItem> implements Algorithm<T> {
+public class CustomClusteringAlgorithm <T extends Space> implements Algorithm<T> {
     public static final int MAX_DISTANCE_AT_ZOOM = 40;
 
     private final Collection<QuadItem<T>> mItems = new ArrayList<>();
@@ -73,8 +75,6 @@ public class CustomClusteringAlgorithm <T extends ClusterItem> implements Algori
     @Override
     public Set<? extends Cluster<T>> getClusters(double zoom) {
         final int discreteZoom = (int) zoom;
-
-        //
         final double zoomSpecificSpan = MAX_DISTANCE_AT_ZOOM / Math.pow(2, discreteZoom) / 100 /*256*/;
 
         final Set<QuadItem<T>> visitedCandidates = new HashSet<>();
@@ -99,7 +99,7 @@ public class CustomClusteringAlgorithm <T extends ClusterItem> implements Algori
                     distanceToCluster.put(candidate, 0d);
                     continue;
                 }
-                StaticCluster<T> cluster = new StaticCluster<T>(candidate.mClusterItem.getPosition());
+                StaticCluster<T> cluster = new StaticCluster<>(candidate.mClusterItem.getPosition());
                 results.add(cluster);
 
                 for (QuadItem<T> clusterItem : clusterItems) {
@@ -110,6 +110,7 @@ public class CustomClusteringAlgorithm <T extends ClusterItem> implements Algori
                         if (existingDistance < distance) {
                             continue;
                         }
+
                         // Move item to the closer cluster.
                         itemToCluster.get(clusterItem).remove(clusterItem.mClusterItem);
                     }
@@ -147,7 +148,7 @@ public class CustomClusteringAlgorithm <T extends ClusterItem> implements Algori
                 p.y - halfSpan, p.y + halfSpan);
     }
 
-    private static class QuadItem<T extends ClusterItem> implements PointQuadTree.Item, Cluster<T> {
+    private static class QuadItem<T extends Space> implements PointQuadTree.Item, Cluster<T> {
         private final T mClusterItem;
         private final Point mPoint;
         private final LatLng mPosition;

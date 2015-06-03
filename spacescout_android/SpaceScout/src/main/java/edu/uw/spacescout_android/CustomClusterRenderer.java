@@ -27,7 +27,6 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
     private Context mContext;
     private ClusterManager<Space> mClusterManager;
     private GoogleMap map;
-    private TouchableWrapper mTouchView;
 
     //TODO: drawing custom markers & clustered markers
     /**
@@ -37,13 +36,12 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
 //    private final IconGenerator mClusterIconGenerator;
 //    private final ImageView mImageView;
 
-    public CustomClusterRenderer(Context context, GoogleMap map, ClusterManager<Space> clusterManager, TouchableWrapper mTouchView) {
+    public CustomClusterRenderer(Context context, GoogleMap map, ClusterManager<Space> clusterManager) {
         super(context, map, clusterManager);
 
         this.mContext = context;
         this.mClusterManager = clusterManager;
         this.map = map;
-        this.mTouchView = mTouchView;
 
 //        mIconGenerator = new IconGenerator(context);
 //        mClusterIconGenerator = new IconGenerator(context);
@@ -98,6 +96,7 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
 
         // TODO: May want to look at ThreadPoolExecutor & SynchronousQueue for a different impl
         // Cancel any running AsyncTask before we start a new request
+        // MainActivity.currItem tracks the current item we're requesting for - "buidlings" or "spaces"
         if (((MainActivity) mContext).currItem.equals("spaces")) {
             if (((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.PENDING ||
                     ((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.RUNNING) {

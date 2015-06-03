@@ -104,14 +104,16 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
         // Initialize the manager with the context and the map.
         mClusterManager = new ClusterManager<>(getActivity(), map);
 
-        // Point the map's listeners to the listeners implemented by the cluster
-        // manager.
-        map.setOnCameraChangeListener(mClusterManager);
+        // To enable OnMarkerClick in cluster manager
         map.setOnMarkerClickListener(mClusterManager);
 
-        //TODO: Use CustomRenderer to set minimum cluster size
-        mClusterManager.setRenderer(new CustomClusterRenderer(getActivity(), map, mClusterManager, mTouchView));
-        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<Space>()));
+        CustomClusterRenderer mClusterRenderer =  new CustomClusterRenderer(getActivity(), map, mClusterManager);
+        // To enable OnCameraChange in cluster renderer
+        map.setOnCameraChangeListener(mClusterRenderer);
+//        map.setOnCameraChangeListener(mClusterManager); // use this instead to also enable re-clustering on zoom
+
+        mClusterManager.setRenderer(mClusterRenderer);
+        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<>()));
     }
 
     // This is the default method needed for Android Fragments
