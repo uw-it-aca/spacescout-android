@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -21,11 +22,12 @@ import edu.uw.spacescout_android.model.Space;
  *      - minimum number of markers in a cluster
  *      - onCameraChange listener
  */
-public class CustomClusterRenderer extends DefaultClusterRenderer<Space> implements GoogleMap.OnCameraChangeListener {
+public class CustomClusterRenderer extends DefaultClusterRenderer<Space> implements
+        GoogleMap.OnCameraChangeListener {
+
     private static final String TAG = "CustomClusterRenderer";
 
     private Context mContext;
-    private ClusterManager<Space> mClusterManager;
     private GoogleMap map;
 
     //TODO: drawing custom markers & clustered markers
@@ -40,7 +42,6 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
         super(context, map, clusterManager);
 
         this.mContext = context;
-        this.mClusterManager = clusterManager;
         this.map = map;
 
 //        mIconGenerator = new IconGenerator(context);

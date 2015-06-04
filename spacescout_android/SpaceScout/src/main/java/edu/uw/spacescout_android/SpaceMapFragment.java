@@ -16,8 +16,10 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.ui.IconGenerator;
@@ -42,7 +44,8 @@ import edu.uw.spacescout_android.model.Spaces;
  * Requests to server is initiated in onCameraChange within CustomClusterRenderer
  */
 
-public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
+public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
+         ClusterManager.OnClusterClickListener<Space>, ClusterManager.OnClusterItemClickListener<Space> {
     private final String TAG = "SpaceMapFragment";
 
     // TODO: Should change based on User's preference (campus)
@@ -104,16 +107,36 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback {
         // Initialize the manager with the context and the map.
         mClusterManager = new ClusterManager<>(getActivity(), map);
 
-        // To enable OnMarkerClick in cluster manager
-        map.setOnMarkerClickListener(mClusterManager);
 
         CustomClusterRenderer mClusterRenderer =  new CustomClusterRenderer(getActivity(), map, mClusterManager);
         // To enable OnCameraChange in cluster renderer
         map.setOnCameraChangeListener(mClusterRenderer);
 //        map.setOnCameraChangeListener(mClusterManager); // use this instead to also enable re-clustering on zoom
 
-        mClusterManager.setRenderer(mClusterRenderer);
-        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<>()));
+        // To enable marker/cluster listeners in ClusterManager
+        map.setOnMarkerClickListener(mClusterManager);
+
+        mClusterManager.setRenderer(mClusterRenderer); // use a our custom renderer
+        mClusterManager.setOnClusterClickListener(this); // to override onClusterClick
+        mClusterManager.setOnClusterItemClickListener(this); // to override onClusterItemClick
+        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<>())); // use our custom algorithm to cluster markers
+    }
+
+    // Called when a cluster marker is clicked
+    @Override
+    public boolean onClusterClick(Cluster cluster) {
+        Log.d(TAG, "Cluster data: " + cluster.getItems().toString());
+        // TODO: Go to list view - pass the cluster items (Spaces)
+        return true;
+    }
+
+    // Called when a cluster item (one marker) is clicked
+    @Override
+    public boolean onClusterItemClick(Space space) {
+        Log.d(TAG, "Space: " + space.getName());
+        // TODO: Go to space details view
+
+        return true;
     }
 
     // This is the default method needed for Android Fragments
