@@ -40,10 +40,11 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
 
     private GoogleMap map;
     private View view;
+    private ClusterManager<Space> mClusterManager;
+    private CustomClusterRenderer mClusterRenderer;
 
     public TouchableWrapper mTouchView;
     public IconGenerator tc;
-    public ClusterManager<Space> mClusterManager;
 
     public PolylineOptions line;
 
@@ -51,7 +52,6 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
         ///empty constructor required for fragment subclasses
     }
 
-    // This is the default method needed for Android Fragments
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -93,7 +93,7 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
         if (mClusterManager == null) {
             // Initialize the manager with the context and the map.
             mClusterManager = new ClusterManager<>(getActivity(), map);
-            CustomClusterRenderer mClusterRenderer = new CustomClusterRenderer(getActivity(), map, mClusterManager);
+            mClusterRenderer = new CustomClusterRenderer(getActivity(), map, mClusterManager);
             // To enable OnCameraChange in cluster renderer
             map.setOnCameraChangeListener(mClusterRenderer);
 //            map.setOnCameraChangeListener(mClusterManager); // use this instead to also enable re-clustering on zoom
@@ -135,7 +135,10 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
         return true;
     }
 
-    // This is the default method needed for Android Fragments
+    public void sendPostCancelRequest() {
+        mClusterRenderer.buildAndSendRequest();
+    }
+
     // Implement TouchableWrapper if you want to use gesture recognition
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

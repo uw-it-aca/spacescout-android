@@ -102,15 +102,25 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
         // Cancel any running AsyncTask before we start a new request
         // MainActivity.currItem tracks the current item we're requesting for - "buidlings" or "spaces"
         if (((MainActivity) mContext).currItem != null) {
-            if (((MainActivity) mContext).currItem.equals("spaces")) {
-                if (((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.PENDING ||
-                        ((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.RUNNING) {
-                    ((MainActivity) mContext).getJson.cancel(true);
-                }
+            if (((MainActivity) mContext).currItem.equals("spaces") &&
+                    (((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.PENDING ||
+                    ((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.RUNNING)) {
+                ((MainActivity) mContext).getJson.cancel(true);
+            } else {
+                buildAndSendRequest();
             }
         }
 
-        Log.d(TAG, "Replacing markers..");
+            // this is how you draw a line from point to point
+//        line = new PolylineOptions().add(new LatLng(rightLat, rightLon),
+//                new LatLng(center.getLatitude(), center.getLongitude()))
+//                .width(5).color(Color.RED);
+//        googleMap.addPolyline(line);
+//        }
+    }
+
+    public void buildAndSendRequest() {
+        Log.d(TAG, "Build & send new request.");
         // Get the latlng bounds to calculate radius distance
         VisibleRegion vr = map.getProjection().getVisibleRegion();
         double rightLat = vr.latLngBounds.northeast.latitude;
@@ -125,20 +135,13 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
         center.setLongitude(vr.latLngBounds.getCenter().longitude);
         // Calculate radius
         int radius = Math.round(center.distanceTo(topRightCorner));
-        int smallerRadius = (int) (radius - Math.round(0.045 * radius));
+        int smallerRadius = (int) (radius - Math.round(0.065 * radius));
 
         String baseUrl = mContext.getResources().getString(R.string.baseUrl);
         String url = baseUrl + "spot/?center_latitude=" + center.getLatitude() +
                 "&center_longitude=" + center.getLongitude() + "&distance=" +
                 smallerRadius + "&limit=0";
         ((MainActivity) mContext).connectToServer(url, "spaces");
-
-            // this is how you draw a line from point to point
-//        line = new PolylineOptions().add(new LatLng(rightLat, rightLon),
-//                new LatLng(center.getLatitude(), center.getLongitude()))
-//                .width(5).color(Color.RED);
-//        googleMap.addPolyline(line);
-//        }
     }
 
     private void dismissDefaultDialog() {
@@ -149,6 +152,5 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
                 ((MainActivity) mContext).alertDialogues.clear();
             }
         }
-        // resets the alertDialogues weakHashMap
     }
 }

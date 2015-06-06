@@ -18,7 +18,6 @@ package edu.uw.spacescout_android;
 
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -364,11 +363,12 @@ public class MainActivity extends FragmentActivity {
         getJson = new getJson(url, item).execute();
     }
 
+    // TODO: Show a circular progress bar when async in progress - pDialog not a good choice
     // Asynchronously get JSON data from API.
     // Requires URL for request & item ("buildings" or "spaces").
     // Sets global variables based on item string passed.
     private class getJson extends AsyncTask<String, String, JSONArray> {
-        private ProgressDialog pDialog;
+//        private ProgressDialog pDialog;
         private String url;
         private String item;
         protected int statusCode;
@@ -398,9 +398,12 @@ public class MainActivity extends FragmentActivity {
         @Override
         protected void onCancelled() {
             jParser.abortConnection();
-            super.onCancelled();
-
+//            if (pDialog.isShowing())
+//                pDialog.dismiss();
             Log.d(TAG, "AsyncTask cancelled");
+            fragSpaceMap.sendPostCancelRequest();
+
+            super.onCancelled();
         }
 
         @Override
@@ -438,6 +441,9 @@ public class MainActivity extends FragmentActivity {
     // only continue processing json if code 200 & json is not empty
     public void handleHttpResponse(int statusCode, String url, String item) {
         switch (statusCode) {
+            case -1:
+                Log.d(TAG, "Request was cancelled");
+                break;
             case 200:
                 if (item.equals("spaces")) {
                     Toast toast = Toast.makeText(this, "Sorry, no spaces found", Toast.LENGTH_SHORT);

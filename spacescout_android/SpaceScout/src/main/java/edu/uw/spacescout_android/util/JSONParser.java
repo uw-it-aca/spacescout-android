@@ -87,11 +87,13 @@ public class JSONParser {
                         Log.d("oauth", "Can't connect to server. Status code " + statusCode + ".");
                         return null;
                 }
+            } else {
+                return null;
             }
         } catch (UnsupportedEncodingException | ClientProtocolException e) {
             Log.v(TAG, e.toString());
         } catch (HttpHostConnectException e) {
-            Log.d("oauth", "Can't connect to server. Probably down.");
+            Log.d("oauth", "Server is probably down or request was canceled.");
             return null;
         } catch (Exception e) {
             Log.v(TAG, e.toString());
@@ -131,6 +133,7 @@ public class JSONParser {
             httpClient.getConnectionManager().shutdown();
             httpClient = null;
         }
+        statusCode = -1;
     }
 
     public int getStatusCode() {
