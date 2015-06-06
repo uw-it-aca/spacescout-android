@@ -1,6 +1,5 @@
 package edu.uw.spacescout_android;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,24 +12,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.ui.IconGenerator;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
-import edu.uw.spacescout_android.model.Building;
 import edu.uw.spacescout_android.model.Space;
 import edu.uw.spacescout_android.model.Spaces;
 
@@ -91,10 +79,7 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        if (mClusterManager == null) {
-            setUpClusterer();
-        }
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(campusCenter, 17.2f));
+        setUpClustererAndCenterMap();
     }
 
     public GoogleMap getMap() {
@@ -103,24 +88,24 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
 
     // Setting up the ClusterManager which would contain all the clusters.
     // Sets custom cluster renderer and algorithm.
-    public void setUpClusterer() {
-        Log.d(TAG, "setUpClusterer fired");
-
-        // Initialize the manager with the context and the map.
-        mClusterManager = new ClusterManager<>(getActivity(), map);
-
-
-        CustomClusterRenderer mClusterRenderer =  new CustomClusterRenderer(getActivity(), map, mClusterManager);
-        // To enable OnCameraChange in cluster renderer
-        map.setOnCameraChangeListener(mClusterRenderer);
-//        map.setOnCameraChangeListener(mClusterManager); // use this instead to also enable re-clustering on zoom
-
-        // To enable marker/cluster listeners in ClusterManager
-        map.setOnMarkerClickListener(mClusterManager);
-        mClusterManager.setRenderer(mClusterRenderer); // use a our custom renderer
-        mClusterManager.setOnClusterClickListener(this); // to override onClusterClick
-        mClusterManager.setOnClusterItemClickListener(this); // to override onClusterItemClick
-        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<>())); // use our custom algorithm to cluster markers
+    public void setUpClustererAndCenterMap() {
+        Log.d(TAG, "setUpClustererAndCenterMap fired");
+        if (mClusterManager == null) {
+            // Initialize the manager with the context and the map.
+            mClusterManager = new ClusterManager<>(getActivity(), map);
+            CustomClusterRenderer mClusterRenderer = new CustomClusterRenderer(getActivity(), map, mClusterManager);
+            // To enable OnCameraChange in cluster renderer
+            map.setOnCameraChangeListener(mClusterRenderer);
+//            map.setOnCameraChangeListener(mClusterManager); // use this instead to also enable re-clustering on zoom
+            // To enable marker/cluster listeners in ClusterManager
+            map.setOnMarkerClickListener(mClusterManager);
+            mClusterManager.setRenderer(mClusterRenderer); // use a our custom renderer
+            mClusterManager.setOnClusterClickListener(this); // to override onClusterClick
+            mClusterManager.setOnClusterItemClickListener(this); // to override onClusterItemClick
+            // use our custom algorithm to cluster markers
+            mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new CustomClusteringAlgorithm<>()));
+        }
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(campusCenter, 17.2f));
     }
 
     // Called when a cluster marker is clicked
