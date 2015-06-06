@@ -34,6 +34,8 @@ import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
  */
 
 public class JSONParser {
+    private static final String TAG = "JSONParser";
+
     static JSONArray jObj = null;
     static InputStream is = null;
     static String json = "";
@@ -41,7 +43,6 @@ public class JSONParser {
     private int statusCode;
     private HttpGet httpGet;
     private HttpClient httpClient;
-    private boolean isCancelled = false;
 
     // constructor
     public JSONParser(Context c) {
@@ -67,32 +68,33 @@ public class JSONParser {
 
         // Making HTTP request
         try {
-            // TODO: defaultHttpClient is deprecated
             httpClient = new DefaultHttpClient();
             httpGet = new HttpGet(url);
             consumer.sign(httpGet);
-            //TODO: HttpEntity gives out an internal error when request is cancelled
-            HttpResponse response = httpClient.execute(httpGet);
-            statusCode = response.getStatusLine().getStatusCode();
-            switch (statusCode) {
-                case 200:
-                    HttpEntity httpEntity = response.getEntity();
-                    is = httpEntity.getContent();
-                    break;
-                case 401:
-                    Log.d("oauth", "Can't authenticate. Check key & secret");
-                    return null;
-                default:
-                    Log.d("oauth", "Can't connect to server. Status code " + statusCode + ".");
-                    return null;
+            // TODO: May want to return null if httpClient is null & think about handling false "no spaces" toast
+            if (httpClient != null) {
+                HttpResponse response = httpClient.execute(httpGet);
+                statusCode = response.getStatusLine().getStatusCode();
+                switch (statusCode) {
+                    case 200:
+                        HttpEntity httpEntity = response.getEntity();
+                        is = httpEntity.getContent();
+                        break;
+                    case 401:
+                        Log.d("oauth", "Can't authenticate. Check key & secret");
+                        return null;
+                    default:
+                        Log.d("oauth", "Can't connect to server. Status code " + statusCode + ".");
+                        return null;
+                }
             }
         } catch (UnsupportedEncodingException | ClientProtocolException e) {
-            e.printStackTrace();
+            Log.v(TAG, e.toString());
         } catch (HttpHostConnectException e) {
             Log.d("oauth", "Can't connect to server. Probably down.");
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.v(TAG, e.toString());
         }
 
         try {
@@ -107,14 +109,14 @@ public class JSONParser {
             is.close();
             json = sb.toString();
         } catch (Exception e) {
-            Log.e("Buffer Error", "Error converting result " + e.toString());
+            Log.v("Buffer Error", "Error converting result " + e.toString());
         }
 
         // try parse the string to a JSON object
         try {
             jObj = new JSONArray(json);
         } catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
+            Log.v(TAG, "Error parsing data " + e.toString());
         }
 
         // return JSON String
@@ -122,14 +124,12 @@ public class JSONParser {
     }
 
     public void abortConnection() {
-        httpGet.abort();
-        httpClient.getConnectionManager().shutdown();
-        if (is != null) {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (httpClient != null) {
+            httpGet.abort();
+        }
+        if (httpClient != null) {
+            httpClient.getConnectionManager().shutdown();
+            httpClient = null;
         }
     }
 

@@ -3,6 +3,7 @@ package edu.uw.spacescout_android.model;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,14 +14,18 @@ import java.util.Map;
 /**
  * Created by gupta37 on 5/13/14. Modified by aazri3/azri92.
  *
- * Item class for marker clustering.
+ * Contains all the details of a Space.
+ * Implements ClusterItem for marker clustering.
+ * Implements Serializable (including inner classes) for Fragment-to-Fragment
+ * transfer in a Bundle object.
  */
 
-public class Space implements ClusterItem {
+public class Space implements ClusterItem, Serializable {
     private final int id;
     private final String name;
     private ArrayList<String> types;
-    private final LatLng mPosition;
+    private double lat;
+    private double lng;
     private double height_from_sea_level;
     private String building_name;
     private String floor;
@@ -37,7 +42,8 @@ public class Space implements ClusterItem {
 
     public Space(int id, double lat, double lng, String name) {
         this.id = id;
-        mPosition = new LatLng(lat, lng);
+        this.lat = lat;
+        this.lng = lng;
         this.name = name;
         images = new ArrayList<>();
         available_hours = new HashMap<>();
@@ -46,7 +52,7 @@ public class Space implements ClusterItem {
 
     /** classed items **/
 
-    public static class ImageInfo {
+    public static class ImageInfo implements Serializable {
         final int id;
         public String url;
         public String content_type;
@@ -67,7 +73,7 @@ public class Space implements ClusterItem {
 
     // You would parse through this in a for loop, calling the methods
     // for the start & end time
-    public static class Hours {
+    public static class Hours implements Serializable {
         protected List<Date[]> hours; // A list of Date[] arrays - operating hours
 
         public Hours(List<Date[]> hours) {
@@ -119,7 +125,7 @@ public class Space implements ClusterItem {
 
     @Override
     public LatLng getPosition() {
-        return mPosition;
+        return new LatLng(lat, lng);
     }
 
     public double getHeight_from_sea_level() {

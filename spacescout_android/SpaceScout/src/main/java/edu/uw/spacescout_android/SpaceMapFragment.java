@@ -39,7 +39,6 @@ import edu.uw.spacescout_android.model.Spaces;
  * Modified by azri92.
  *
  * This class displays spaces on a Google map and its markers/clusters.
- * Extends a fragment that is embedded onto MainActivity.
  * Implements OnMapReadyCallback for callback method for preparing the map.
  * Requests to server is initiated in onCameraChange within CustomClusterRenderer
  */
@@ -50,7 +49,6 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
 
     // TODO: Should change based on User's preference (campus)
     private LatLng campusCenter;
-    private String baseUrl;
 
     private GoogleMap map;
     private View view;
@@ -70,6 +68,8 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+//        setRetainInstance(true);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if(mapFragment == null) { // azri92: not sure if this actually helps
             mapFragment = SupportMapFragment.newInstance();
@@ -79,9 +79,8 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
 
         campusCenter = new LatLng(Float.parseFloat(getResources().getString(R.string.default_center_latitude)),
                 Float.parseFloat(getResources().getString(R.string.default_center_longitude)));
-        baseUrl = getResources().getString(R.string.baseUrl);
 
-        tc = new IconGenerator(getActivity());
+//        tc = new IconGenerator(getActivity());
     }
 
     @Override
@@ -92,7 +91,9 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        setUpClusterer();
+        if (mClusterManager == null) {
+            setUpClusterer();
+        }
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(campusCenter, 17.2f));
     }
 
@@ -103,6 +104,7 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
     // Setting up the ClusterManager which would contain all the clusters.
     // Sets custom cluster renderer and algorithm.
     public void setUpClusterer() {
+        Log.d(TAG, "setUpClusterer fired");
 
         // Initialize the manager with the context and the map.
         mClusterManager = new ClusterManager<>(getActivity(), map);
@@ -115,7 +117,6 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
 
         // To enable marker/cluster listeners in ClusterManager
         map.setOnMarkerClickListener(mClusterManager);
-
         mClusterManager.setRenderer(mClusterRenderer); // use a our custom renderer
         mClusterManager.setOnClusterClickListener(this); // to override onClusterClick
         mClusterManager.setOnClusterItemClickListener(this); // to override onClusterItemClick
@@ -125,7 +126,6 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
     // Called when a cluster marker is clicked
     @Override
     public boolean onClusterClick(Cluster cluster) {
-        Log.d(TAG, "Cluster data: " + cluster.getItems().toString());
         // TODO: Go to list view - pass the cluster items (Spaces)
         return true;
     }
@@ -133,8 +133,19 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
     // Called when a cluster item (one marker) is clicked
     @Override
     public boolean onClusterItemClick(Space space) {
-        Log.d(TAG, "Space: " + space.getName());
-        // TODO: Go to space details view
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("space", space);
+
+        // TODO: Implement savedInstanceState to save last center coords before moving on to another fragment
+        SpaceDetailsFragment detailsFragment = new SpaceDetailsFragment();
+        detailsFragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, detailsFragment, "detailsFragment")
+                .addToBackStack(null).commit();
+
+        // TODO: Maybe instead of removing them, save them & avoid making a request when arriving back from another fragment
+        // clear map of all markers, etc
+        map.clear();
 
         return true;
     }
@@ -158,13 +169,12 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
         return view;
     }
 
-    // This is the default method needed for Android Fragments
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume called");
-//        setUpMap();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        Log.d(TAG, "onResume called");
+////        setUpMap();
+//    }
 
 //    // Setting up a Map
 //    private void setUpMap() {
@@ -176,10 +186,10 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
 //    }
 
     // TODO: save current conditions here to be reloaded
-    @Override
-    public void onSaveInstanceState (Bundle savedInstanceState) {
-
-    }
+//    @Override
+//    public void onSaveInstanceState (Bundle savedInstanceState) {
+//
+//    }
 
     // This method displays the clusters on the map by clustering by distance
     // It takes the json data as parameter
@@ -193,75 +203,86 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
         mClusterManager.cluster();
     }
 
-    // This method displays the clusters on the map by clustering by Building Names
-    // It takes the json data as parameter
-    public void DisplayClustersByBuilding(JSONArray mJson){
-
-        // HashMap to keep track of all buildings with their building objects
-        HashMap<String, Building> building_cluster = new HashMap<String, Building>();
-        try {
-
-            // Builder object to build bound for all clusters/markers
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-            // Looping through all json data
-            for(int i = 0; i < mJson.length(); i++){
-                JSONObject curr = mJson.getJSONObject(i);
-                JSONObject info = curr.getJSONObject("extended_info");
-
-                JSONObject location = curr.getJSONObject("location");
-                double lng = Double.parseDouble(location.getString("longitude"));
-                double lat = Double.parseDouble(location.getString("latitude"));
-                String name = curr.getString("name");
-                String building_name = location.getString("building_name");
-                String campus = info.getString("campus");
-
-                if(campus.equals("seattle") && (!building_cluster.containsKey(building_name))){
-                    LatLng currLoc = new LatLng(lat, lng);
-
-                    // Creating Building Objects with location, building name
-                    Building buil = new Building(building_name);
-                    building_cluster.put(building_name, buil);
-                    builder.include(currLoc);
-                }else if(building_cluster.containsKey(building_name)){
-
-                    // Increasing the number of spots in the current building
-                    Building temp = building_cluster.get(building_name);
-                    temp.increaseSpots();
-                }
+    public void disableMap(boolean disable) {
+        if (map != null) {
+            if (disable) {
+                map.getUiSettings().setAllGesturesEnabled(false);
+            } else {
+                map.getUiSettings().setAllGesturesEnabled(true);
             }
-
-            // Iterating through the hashmap of all buildings to add to the maps
-            for (String key : building_cluster.keySet()) {
-                Building b = building_cluster.get(key);
-                addMarkerToMap(b.getPosition(), b.getSpots());
-            }
-
-            LatLngBounds bounds = builder.build();
-            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70));
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 
-    // This adds a marker to the map with IconGenerator class
-    // The method takes the LatLng object location and text to be put on the marker/cluster as an Integer
-    protected void addMarkerToMap(LatLng loc, int text) {
-        IconGenerator iconFactory = new IconGenerator(getActivity());
-        addIcon(iconFactory, Integer.toString(text), loc);
-    }
-
-    // This is the helper method for adding a marker to the map
-    // This is invoked by addMarkerToMap
-    private void addIcon(IconGenerator iconFactory, String text, LatLng position) {
-        iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
-        Bitmap bmp = iconFactory.makeIcon(text);
-        MarkerOptions markerOptions = new MarkerOptions().
-                icon(BitmapDescriptorFactory.fromBitmap(bmp)).
-                position(position).
-                anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
-
-        map.addMarker(markerOptions);
-    }
+//    // TODO: Remove this method and integrate clustering by building in clustering
+//    // This method displays the clusters on the map by clustering by Building Names
+//    // It takes the json data as parameter
+//    public void DisplayClustersByBuilding(JSONArray mJson){
+//
+//        // HashMap to keep track of all buildings with their building objects
+//        HashMap<String, Building> building_cluster = new HashMap<String, Building>();
+//        try {
+//
+//            // Builder object to build bound for all clusters/markers
+//            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//
+//            // Looping through all json data
+//            for(int i = 0; i < mJson.length(); i++){
+//                JSONObject curr = mJson.getJSONObject(i);
+//                JSONObject info = curr.getJSONObject("extended_info");
+//
+//                JSONObject location = curr.getJSONObject("location");
+//                double lng = Double.parseDouble(location.getString("longitude"));
+//                double lat = Double.parseDouble(location.getString("latitude"));
+//                String name = curr.getString("name");
+//                String building_name = location.getString("building_name");
+//                String campus = info.getString("campus");
+//
+//                if(campus.equals("seattle") && (!building_cluster.containsKey(building_name))){
+//                    LatLng currLoc = new LatLng(lat, lng);
+//
+//                    // Creating Building Objects with location, building name
+//                    Building buil = new Building(building_name);
+//                    building_cluster.put(building_name, buil);
+//                    builder.include(currLoc);
+//                }else if(building_cluster.containsKey(building_name)){
+//
+//                    // Increasing the number of spots in the current building
+//                    Building temp = building_cluster.get(building_name);
+//                    temp.increaseSpots();
+//                }
+//            }
+//
+//            // Iterating through the hashmap of all buildings to add to the maps
+//            for (String key : building_cluster.keySet()) {
+//                Building b = building_cluster.get(key);
+//                addMarkerToMap(b.getPosition(), b.getSpots());
+//            }
+//
+//            LatLngBounds bounds = builder.build();
+//            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    // This adds a marker to the map with IconGenerator class
+//    // The method takes the LatLng object location and text to be put on the marker/cluster as an Integer
+//    protected void addMarkerToMap(LatLng loc, int text) {
+//        IconGenerator iconFactory = new IconGenerator(getActivity());
+//        addIcon(iconFactory, Integer.toString(text), loc);
+//    }
+//
+//    // This is the helper method for adding a marker to the map
+//    // This is invoked by addMarkerToMap
+//    private void addIcon(IconGenerator iconFactory, String text, LatLng position) {
+//        iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
+//        Bitmap bmp = iconFactory.makeIcon(text);
+//        MarkerOptions markerOptions = new MarkerOptions().
+//                icon(BitmapDescriptorFactory.fromBitmap(bmp)).
+//                position(position).
+//                anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
+//
+//        map.addMarker(markerOptions);
+//    }
 
 }

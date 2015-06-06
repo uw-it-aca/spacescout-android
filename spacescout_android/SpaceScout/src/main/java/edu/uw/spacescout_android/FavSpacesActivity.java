@@ -65,15 +65,15 @@ public class FavSpacesActivity extends Activity {
         SpaceListArrayAdapter spaceListArrayAdapter = new SpaceListArrayAdapter(this, spaceTitles);
         listView.setAdapter(spaceListArrayAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.i("info","Item -> "+spaceTitles[i]);
-                Intent intent = new Intent(getBaseContext(), SpaceDetailsActivity.class);
-                intent.putExtra("spaceTitle",spaceTitles[i]);
-                startActivity(intent);
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Log.i("info","Item -> "+spaceTitles[i]);
+//                Intent intent = new Intent(getBaseContext(), SpaceDetailsActivity.class);
+//                intent.putExtra("spaceTitle",spaceTitles[i]);
+//                startActivity(intent);
+//            }
+//        });
     }
 
 //    private class JSONParse extends AsyncTask<String, String, JSONObject> {

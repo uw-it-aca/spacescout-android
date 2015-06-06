@@ -348,8 +348,16 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setCustomView(v);
     }
 
-    // TODO: May need to consider making this into a class for use in other activities
-    /* The REST is here */
+    @Override
+    public void onBackPressed() {
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+        else
+            super.onBackPressed();
+    }
+
+    /*** The REST is here ***/
+
     public void connectToServer(String url, String item) {
         // TODO: Check internet status
         currItem = item;
@@ -389,7 +397,9 @@ public class MainActivity extends FragmentActivity {
         // This is run instead of onPostExecute() if cancel(true) is called from outside
         @Override
         protected void onCancelled() {
+            jParser.abortConnection();
             super.onCancelled();
+
             Log.d(TAG, "AsyncTask cancelled");
         }
 
@@ -398,8 +408,9 @@ public class MainActivity extends FragmentActivity {
 //            if (pDialog.isShowing())
 //                pDialog.dismiss();
 
-            handleHttpResponse(statusCode, json, url, item);
-            if (json != null) {
+            if (json == null) {
+                handleHttpResponse(statusCode, url, item);
+            } else {
                 switch (item) {
                     case "spaces":
                         spaces = JSONProcessor.modelSpaces(json);
@@ -425,22 +436,22 @@ public class MainActivity extends FragmentActivity {
 
     // handle different status codes
     // only continue processing json if code 200 & json is not empty
-    public void handleHttpResponse(int statusCode, JSONArray json, String url, String item) {
+    public void handleHttpResponse(int statusCode, String url, String item) {
         switch (statusCode) {
             case 200:
-                if (json != null) {
-                    break;
-                } else {
+                if (item.equals("spaces")) {
                     Toast toast = Toast.makeText(this, "Sorry, no spaces found", Toast.LENGTH_SHORT);
-                    toasts.put("Sorry, no spaces found" ,toast);
+                    toasts.put("Sorry, no spaces found", toast);
                     toast.show();
                 }
                 break;
             case 401:
-                showStatusDialog("Authentication Issue", "Check key & secret.", url, item);
+                if (item.equals("spaces"))
+                    showStatusDialog("Authentication Issue", "Check key & secret.", url, item);
                 break;
             default:
-                showStatusDialog("Connection Issue", "Can't connect to server. Status code: " +
+                if (item.equals("spaces"))
+                    showStatusDialog("Connection Issue", "Can't connect to server. Status code: " +
                         statusCode + ".", url, item);
                 break;
         }
@@ -449,8 +460,11 @@ public class MainActivity extends FragmentActivity {
     // creates and shows a new dialog modal
     // let's user retry connecting to the server
     private void showStatusDialog(String title, String message, String url, String item) {
+        fragSpaceMap.disableMap(true);
+
         final String theUrl = url;
         final String theItem = item;
+
         AlertDialog.Builder dialogueBuilder = new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
@@ -459,16 +473,19 @@ public class MainActivity extends FragmentActivity {
                         // retry
                         Log.d("oauth", "Retrying connection.");
                         connectToServer(theUrl, theItem);
+                        fragSpaceMap.disableMap(false);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // do nothing
                         dialog.dismiss();
+                        fragSpaceMap.disableMap(false);
                     }
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert);
         AlertDialog dialogue = dialogueBuilder.create();
+        dialogue.setCanceledOnTouchOutside(false);
         alertDialogues.put(title, dialogue);
         dialogue.show();
 

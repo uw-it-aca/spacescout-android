@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 public class SpaceListArrayAdapter extends ArrayAdapter {
 
-    //define varables
+    //define variables
     private final Context context;
     private final String[] values;
 

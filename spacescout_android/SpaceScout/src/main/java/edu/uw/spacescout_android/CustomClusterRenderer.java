@@ -1,5 +1,6 @@
 package edu.uw.spacescout_android;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -92,17 +93,20 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
         return cluster.getSize() > 1;
     }
 
+    // TODO: Maybe should consider not sending another request after zooming out a certain distance
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
+        dismissDefaultDialog();
 
         // TODO: May want to look at ThreadPoolExecutor & SynchronousQueue for a different impl
         // Cancel any running AsyncTask before we start a new request
         // MainActivity.currItem tracks the current item we're requesting for - "buidlings" or "spaces"
-        if (((MainActivity) mContext).currItem.equals("spaces")) {
-            if (((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.PENDING ||
-                    ((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.RUNNING) {
-                ((MainActivity) mContext).getJson.cancel(true);
-                ((MainActivity) mContext).jParser.abortConnection();
+        if (((MainActivity) mContext).currItem != null) {
+            if (((MainActivity) mContext).currItem.equals("spaces")) {
+                if (((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.PENDING ||
+                        ((MainActivity) mContext).getJson.getStatus() == AsyncTask.Status.RUNNING) {
+                    ((MainActivity) mContext).getJson.cancel(true);
+                }
             }
         }
 
@@ -135,5 +139,16 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
 //                .width(5).color(Color.RED);
 //        googleMap.addPolyline(line);
 //        }
+    }
+
+    private void dismissDefaultDialog() {
+        AlertDialog dialog = ((MainActivity) mContext).getUsedDialogue("Connection Issue");
+        if (dialog != null) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+                ((MainActivity) mContext).alertDialogues.clear();
+            }
+        }
+        // resets the alertDialogues weakHashMap
     }
 }

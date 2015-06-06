@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="8dip"
         android:paddingRight="8dip"
@@ -17,7 +17,7 @@
         android:paddingBottom="8dip" >
 
         <LinearLayout
-            android:id="@+id/spacedetail_sec1"
+            android:id="@+id/spaceDetail_sec1"
             android:layout_width="fill_parent"
             android:layout_height="360dip"
             android:orientation="vertical"
@@ -31,12 +31,14 @@
                 android:padding="0dp"
                 android:cropToPadding="true"
                 android:background="@color/SuperLightBlue"
-                android:src="@drawable/space_img_lrg"/>
+                android:src="@drawable/space_img_lrg"
+                android:contentDescription="Image of Space"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:orientation="horizontal" >
 
@@ -51,6 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:orientation="vertical" >
 
                     <TextView
@@ -63,7 +66,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/spaceDesc"
+                        android:id="@+id/spaceType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="marquee"
@@ -80,12 +83,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginRight="15dp"
-                    android:gravity="right"  >
+                    android:layout_marginEnd="15dp"
+                    android:gravity="end"  >
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/spaceCapacity"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="40"
+                        android:gravity="end"
                         android:fontFamily="sans-serif-condensed"
                         android:textColor="#6699CC"
                         android:textStyle="bold"
@@ -95,7 +101,8 @@
                         android:layout_width="17dip"
                         android:layout_height="17dip"
                         android:layout_marginTop="6dp"
-                        android:src="@drawable/seat_icon" />
+                        android:src="@drawable/seat_icon"
+                        android:id="@+id/image_capacity" />
 
                 </LinearLayout>
 
@@ -105,6 +112,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal" >
 
@@ -112,8 +120,10 @@
                     android:layout_width="16dip"
                     android:layout_height="16dip"
                     android:layout_marginRight="10dip"
+                    android:layout_marginEnd="10dip"
                     android:layout_marginTop="1dp"
                     android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"
                     android:src="@drawable/map_pin_blue" />
 
                 <LinearLayout
@@ -122,25 +132,28 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        android:id="@+id/locationDesc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="marquee"
                         android:singleLine="true"
-                        android:text="Alder Hall Commons, NE 40th St Entrance"
+                        android:text="location_description"
                         android:layout_gravity="bottom"
                         android:gravity="bottom"
                         android:textColor="#ff5d87b9"
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/mapsLink"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
                         android:text="Get directions to this space in Google Maps"
                         android:textColor="#6699CC"
-                        android:textSize="11sp" />
+                        android:textSize="12sp"
+                        android:clickable="true"/>
 
-                    </LinearLayout>
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -148,11 +161,12 @@
 
         <TextView
             android:id="@+id/txtOpenHours"
-            android:layout_below="@id/spacedetail_sec1"
+            android:layout_below="@id/spaceDetail_sec1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
             android:layout_marginBottom="2dp"
             android:text="Open Hours"
             android:textStyle="bold"
@@ -172,6 +186,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content" >
@@ -197,6 +212,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
                     android:text="7:30a - 10p"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="@color/green"
@@ -232,6 +248,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
                     android:text="7:30a - 6p"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="@color/green"
@@ -242,6 +259,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content" >
@@ -267,6 +285,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
                     android:text="1p - 5p"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="@color/green"
@@ -277,6 +296,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal"
                 android:layout_marginBottom="10dp"
@@ -303,6 +323,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
                     android:text="Closed"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="@color/Tomato"
@@ -319,6 +340,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
             android:layout_marginBottom="2dp"
             android:text="Environment"
             android:textStyle="bold"
@@ -336,8 +358,10 @@
             android:background="@drawable/custom_space_details_bg" >
 
             <LinearLayout
+                android:id="@+id/layout_resources"
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
@@ -364,6 +388,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
                     android:text="Outlets, Computer, Printing, Scanning"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="#434588"
@@ -372,8 +397,10 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_food"
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
@@ -400,6 +427,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
                     android:text="In building"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="#434588"
@@ -408,8 +436,10 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_noise"
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
@@ -436,6 +466,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
                     android:text="Silent"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="#434588"
@@ -444,8 +475,10 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_light"
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
@@ -472,6 +505,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
                     android:text="Natural Light"
                     android:fontFamily="sans-serif-condensed"
                     android:textColor="#434588"
