@@ -70,7 +70,6 @@ public class MainActivity extends FragmentActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private FragmentManager fragmentManager;
     private Fragment fragSpaceList;
     private SpaceMapFragment fragSpaceMap;
 
@@ -94,7 +93,7 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setDisplayShowCustomEnabled(true);
         getActionBar().setDisplayShowTitleEnabled(false);
 
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+//        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
         //set content to layout_main
         setContentView(R.layout.layout_main);
@@ -199,7 +198,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -229,8 +228,6 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        fragmentManager = getSupportFragmentManager();
-
         // The action bar home/up action should open or close the drawer.
         // ActionBarDrawerToggle will take care of this.
         if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -241,30 +238,26 @@ public class MainActivity extends FragmentActivity {
 
             //on click of space list action item
             case R.id.action_space_list:
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.replace(R.id.container, fragSpaceList, "SPACE_LIST");
-                ft.addToBackStack("SPACE_LIST");
-                ft.commit();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, fragSpaceList, "fragSpaceList")
+                        .addToBackStack(null).commit();
                 invalidateOptionsMenu();
-                return super.onOptionsItemSelected(item);
+                break;
 
             case R.id.action_space_map:
-                ft = fragmentManager.beginTransaction();
-                ft.replace(R.id.container, fragSpaceMap, "SPACE_MAP");
-                ft.addToBackStack("SPACE_MAP");
-                ft.commit();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, fragSpaceMap, "fragSpaceMap")
+                        .addToBackStack(null).commit();
                 invalidateOptionsMenu();
-                return super.onOptionsItemSelected(item);
+                break;
 
             case R.id.action_search:
                 Intent intent = new Intent(this, FilterSpacesActivity.class);
                 startActivity(intent);
                 mDrawerList.setItemChecked(1, true);
-                return super.onOptionsItemSelected(item);
-
-            default:
-                return super.onOptionsItemSelected(item);
+                break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     /* The click listener for ListView in the navigation drawer */
@@ -276,12 +269,11 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void selectItem(int position) {
-        fragmentManager = getSupportFragmentManager();
         Intent intent;
         // Locate Position
         switch (position) {
             case 0:
-                fragmentManager.beginTransaction().replace(R.id.container, fragSpaceMap, "SPACE_MAP").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, fragSpaceMap, "fragSpaceMap").commit();
                 invalidateOptionsMenu();
                 break;
             case 1:
@@ -331,6 +323,7 @@ public class MainActivity extends FragmentActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    // Set the custom action bar with SpaceScout title
     @Override
     public void onResume() {
         super.onResume();
@@ -409,7 +402,7 @@ public class MainActivity extends FragmentActivity {
         @Override
         protected void onPostExecute(JSONArray json) {
 //            if (pDialog.isShowing())
-//                pDialog.dismiss();
+//                pDialog.dismiss()
 
             if (json == null) {
                 handleHttpResponse(statusCode, url, item);

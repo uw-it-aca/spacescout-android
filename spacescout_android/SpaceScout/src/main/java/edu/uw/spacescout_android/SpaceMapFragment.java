@@ -1,9 +1,14 @@
 package edu.uw.spacescout_android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -118,23 +123,20 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
     // Called when a cluster item (one marker) is clicked
     @Override
     public boolean onClusterItemClick(Space space) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("space", space);
-
         // TODO: Implement savedInstanceState to save last center coords before moving on to another fragment
-        SpaceDetailsFragment detailsFragment = new SpaceDetailsFragment();
-        detailsFragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, detailsFragment, "detailsFragment")
-                .addToBackStack(null).commit();
+        Intent next = new Intent(getActivity(), SpaceDetailsActivity.class);
+        next.putExtra("space", space);
+        startActivity(next);
+        getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadein);
 
-        // TODO: Maybe instead of removing them, save them & avoid making a request when arriving back from another fragment
+        // TODO: Maybe instead of removing them, we should save them & avoid making a request when arriving back from another fragment
         // clear map of all markers, etc
-        map.clear();
+//        map.clear();
 
         return true;
     }
 
+    // for use by getJson asynctask in MainActivity
     public void sendPostCancelRequest() {
         mClusterRenderer.buildAndSendRequest();
     }
@@ -144,6 +146,7 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle bundle) {
         super.onCreate(bundle);
+
         if(view == null)
             view = inflater.inflate(R.layout.fragment_space_map, container, false);
 

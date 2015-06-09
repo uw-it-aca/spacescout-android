@@ -44,7 +44,21 @@
         <item>Cafe</item>
         <item>Production Studio</item>
         <item>Outdoor Area</item>
-        <item>Conference/classroom</item>
+        <item>Conference / Classroom</item>
+        <item>Alcove / Nook</item>
+    </string-array>
+
+    <string-array name="space_type_key">
+        <item>study_room</item>
+        <item>open</item>
+        <item>study_area</item>
+        <item>lounge</item>
+        <item>computer_lab</item>
+        <item>cafe</item>
+        <item>studio</item>
+        <item>outdoor</item>
+        <item>classroom</item>
+        <item>alcove</item>
     </string-array>
 
     <string-array name="space_loc_list">
@@ -121,8 +135,5 @@
         <item>In building</item>
         <item>In neighboring building</item>
     </string-array>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

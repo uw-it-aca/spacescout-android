@@ -97,6 +97,7 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         dismissDefaultDialog();
+        Log.d(TAG, "onCameraChange detected");
 
         // TODO: May want to look at ThreadPoolExecutor & SynchronousQueue for a different impl
         // Cancel any running AsyncTask before we start a new request
@@ -111,12 +112,6 @@ public class CustomClusterRenderer extends DefaultClusterRenderer<Space> impleme
             }
         }
 
-            // this is how you draw a line from point to point
-//        line = new PolylineOptions().add(new LatLng(rightLat, rightLon),
-//                new LatLng(center.getLatitude(), center.getLongitude()))
-//                .width(5).color(Color.RED);
-//        googleMap.addPolyline(line);
-//        }
     }
 
     public void buildAndSendRequest() {
