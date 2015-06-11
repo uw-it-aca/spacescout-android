@@ -66,7 +66,7 @@ public class CustomClusteringAlgorithm <T extends Space> implements Algorithm<T>
     // Must be implemented but is never used.
     @Override
     public void removeItem(T item) {
-        // TODO: delegate QuadItem#hashCode and QuadItem#equals to its item.
+        // TODO: delegate QuadItem#hashCode and QuadItem#equals to its item. Probably not needed though.
         throw new UnsupportedOperationException("NonHierarchicalDistanceBasedAlgorithm.remove not implemented");
     }
 
