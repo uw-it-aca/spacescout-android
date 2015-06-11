@@ -136,4 +136,20 @@
         <item>In neighboring building</item>
     </string-array>
 
+    <!-- Settings -->
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="campus_selection_settings">Campus</string>
+    <string name="campus_summary_settings">Choose your default campus</string>
+    <string-array name="campus_array_settings">
+        <item>UW Seattle</item>
+        <item>UW Tacoma</item>
+        <item>UW Bothell</item>
+    </string-array>
+    <!-- TODO: set values to center coords -->
+    <string-array name="campus_array_values_settings">
+        <item>seattle</item>
+        <item>tacoma</item>
+        <item>bothell</item>
+    </string-array>
+
 </resources>

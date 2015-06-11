@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="setting_campus"
+        android:title="@string/campus_selection_settings"
+        android:summary="@string/campus_summary_settings"
+        android:defaultValue="0"
+        android:entries="@array/campus_array_settings"
+        android:entryValues="@array/campus_array_values_settings">
+
+    </ListPreference>
+
+</PreferenceScreen>

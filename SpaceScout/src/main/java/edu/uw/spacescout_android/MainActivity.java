@@ -232,12 +232,12 @@ public class MainActivity extends FragmentActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle action buttons
-        switch(item.getItemId()) {
 
+        // Handle action buttons
+        Intent intent;
+        switch(item.getItemId()) {
             //on click of space list action item
             case R.id.action_space_list:
-
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("spaces", spaces.getAll());
 
@@ -256,8 +256,13 @@ public class MainActivity extends FragmentActivity {
                 invalidateOptionsMenu();
                 break;
 
+            case R.id.action_settings:
+                intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+
             case R.id.action_search:
-                Intent intent = new Intent(this, FilterSpacesActivity.class);
+                intent = new Intent(this, FilterSpacesActivity.class);
                 startActivity(intent);
                 mDrawerList.setItemChecked(1, true);
                 break;

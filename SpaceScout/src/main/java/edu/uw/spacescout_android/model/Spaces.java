@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 public class Spaces {
-    private List<Space> spaces;
+    private ArrayList<Space> spaces;
 
     public Spaces() {
         spaces = new ArrayList<>();
@@ -26,5 +26,9 @@ public class Spaces {
 
     public int size() {
         return spaces.size();
+    }
+
+    public ArrayList getAll() {
+        return spaces;
     }
 }
