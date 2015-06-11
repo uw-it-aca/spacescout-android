@@ -36,7 +36,7 @@ public class Space implements ClusterItem, Serializable {
     private Map<String, Hours> available_hours;
     private String organization;
     private String manager;
-    private Map<String, Object> extended_info;
+    private Map<String, Object> extended_info; // Object because it can be int, string, etc
     private String last_modified;
 //    private boolean isOpen;
 

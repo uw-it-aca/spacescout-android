@@ -59,7 +59,7 @@ public class SpaceDetailsActivity extends Activity {
 
         txtTitle.setText(space.getName());
 
-        // Change the type text to better ones.
+        // Grabbing the types and their matching text
         String[] arrayRaw = getResources().getStringArray(R.array.space_type_key);
         String[] arrayTypes = getResources().getStringArray(R.array.space_type_list);
         Map<String, String> arrayMap = new HashMap<>();
@@ -67,6 +67,8 @@ public class SpaceDetailsActivity extends Activity {
             arrayMap.put(arrayRaw[i], arrayTypes[i]);
         }
 
+        // TODO: probably wanna change this to be done in the model
+        // fencepost - set the types with their nice text if it exists in strings.xml
         ArrayList<String> types = space.getTypes();
         String type;
         if (arrayMap.containsKey(types.get(0))) {
@@ -74,7 +76,6 @@ public class SpaceDetailsActivity extends Activity {
         } else {
             type = types.get(0);
         }
-
         for (int i = 1; i < types.size(); i++) {
             String key = types.get(i);
             if (arrayMap.containsKey(key)) {

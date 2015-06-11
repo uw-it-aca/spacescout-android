@@ -58,7 +58,7 @@ public class JSONProcessor {
                 space.setBuilding(location.getString("building_name"));
                 space.setFloor(location.getString("floor"));
                 space.setRoom_number(location.getString("room_number"));
-                if (location.opt("capacity") != null && location.opt("capacity") != JSONObject.NULL)
+                if (curr.opt("capacity") != null && curr.opt("capacity") != JSONObject.NULL)
                     space.setCapacity(curr.getInt("capacity"));
                 space.setDisplay_access_restrictions(curr.getString("display_access_restrictions"));
                 space.setOrganization(curr.getString("organization"));

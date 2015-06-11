@@ -42,7 +42,7 @@
             android:paddingBottom="2dip" />
 
         <TextView
-            android:id="@+id/spaceDesc"
+            android:id="@+id/spaceType"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
