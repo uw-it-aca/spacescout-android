@@ -28,8 +28,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -48,6 +46,7 @@ import com.google.android.gms.maps.GoogleMap;
 import org.json.JSONArray;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.WeakHashMap;
 
 import edu.uw.spacescout_android.model.Buildings;
@@ -238,9 +237,15 @@ public class MainActivity extends FragmentActivity {
 
             //on click of space list action item
             case R.id.action_space_list:
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("spaces", spaces.getAll());
+
+                fragSpaceList.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, fragSpaceList, "fragSpaceList")
+                        .replace(R.id.container, fragSpaceList)
                         .addToBackStack(null).commit();
+
                 invalidateOptionsMenu();
                 break;
 
@@ -308,7 +313,6 @@ public class MainActivity extends FragmentActivity {
      * When using the ActionBarDrawerToggle, you must call it during
      * onPostCreate() and onConfigurationChanged()...
      */
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -353,20 +357,20 @@ public class MainActivity extends FragmentActivity {
     public void connectToServer(String url, String item) {
         // TODO: Check internet status
         currItem = item;
-        getJson = new getJson(url, item).execute();
+        getJson = new getBuildingsOrSpaces(url, item).execute();
     }
 
     // TODO: Show a circular progress bar when async in progress - pDialog not a good choice
     // Asynchronously get JSON data from API.
     // Requires URL for request & item ("buildings" or "spaces").
     // Sets global variables based on item string passed.
-    private class getJson extends AsyncTask<String, String, JSONArray> {
+    private class getBuildingsOrSpaces extends AsyncTask<String, String, JSONArray> {
 //        private ProgressDialog pDialog;
         private String url;
         private String item;
         protected int statusCode;
 
-        public getJson(String url, String item) {
+        public getBuildingsOrSpaces(String url, String item) {
             this.url = url;
             this.item = item;
         }

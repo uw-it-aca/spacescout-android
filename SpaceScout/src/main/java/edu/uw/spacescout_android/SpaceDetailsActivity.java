@@ -28,15 +28,13 @@ public class SpaceDetailsActivity extends Activity {
 
         setContentView(R.layout.layout_space_details);
 
+        // Set up action bar
         getActionBar().setDisplayShowCustomEnabled(true);
         getActionBar().setDisplayShowTitleEnabled(false);
-
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.custom_pagetitle_actionbar, null);
-
         TextView pageTitle = (TextView) v.findViewById(R.id.pageTitle);
         pageTitle.setText("SPACE DETAILS");
-
         getActionBar().setCustomView(v);
 
         setContentView(R.layout.layout_space_details);

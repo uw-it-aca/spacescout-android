@@ -149,7 +149,7 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
         return true;
     }
 
-    // for use by getJson asynctask in MainActivity
+    // for use by getBuildingsOrSpaces asynctask in MainActivity
     public void sendPostCancelRequest() {
         mClusterRenderer.buildAndSendRequest();
     }
