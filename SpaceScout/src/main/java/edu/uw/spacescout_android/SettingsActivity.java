@@ -23,8 +23,10 @@ public class SettingsActivity extends Activity {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.custom_pagetitle_actionbar, null);
         TextView pageTitle = (TextView) v.findViewById(R.id.pageTitle);
-        pageTitle.setText("Settings");
+        pageTitle.setText("SETTINGS");
         getActionBar().setCustomView(v);
+
+
     }
 
 }

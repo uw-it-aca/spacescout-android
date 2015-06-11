@@ -138,7 +138,8 @@
 
     <!-- Settings -->
     <string name="title_activity_settings">SettingsActivity</string>
-    <string name="campus_selection_settings">Campus</string>
+    <string name="campus_category_settings">Campus</string>
+    <string name="campus_selection_settings">Selected Campus</string>
     <string name="campus_summary_settings">Choose your default campus</string>
     <string-array name="campus_array_settings">
         <item>UW Seattle</item>
@@ -151,5 +152,9 @@
         <item>tacoma</item>
         <item>bothell</item>
     </string-array>
+    <string name="profile_category_settings">Profile</string>
+    <string name="profile_login_settings">Log In</string>
+    <string name="profile_login_summery_settings">Log in to save/view favorites</string>
+    <string name="profile_logout_settings">Log Out</string>
 
 </resources>
