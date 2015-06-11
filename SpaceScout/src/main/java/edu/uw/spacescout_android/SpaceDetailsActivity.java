@@ -86,7 +86,7 @@ public class SpaceDetailsActivity extends Activity {
         txtType.setText(type);
 
         if(space.getCapacity() > 0) {
-            txtCapacity.setText(space.getCapacity());
+            txtCapacity.setText("" + space.getCapacity());
         } else {
             txtCapacity.setVisibility(View.GONE);
             imgCapacity.setVisibility(View.GONE);
