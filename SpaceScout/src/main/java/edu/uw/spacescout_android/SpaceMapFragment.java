@@ -24,6 +24,9 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import edu.uw.spacescout_android.model.Space;
 import edu.uw.spacescout_android.model.Spaces;
 
@@ -116,7 +119,17 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
     // Called when a cluster marker is clicked
     @Override
     public boolean onClusterClick(Cluster cluster) {
-        // TODO: Go to list view - pass the cluster items (Spaces)
+        ArrayList spaces = (ArrayList) cluster.getItems();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("spaces", spaces);
+
+        SpaceListFragment spaceListFragment = new SpaceListFragment();
+        spaceListFragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, spaceListFragment, "spaceListFragment")
+                .addToBackStack(null).commit();
+
         return true;
     }
 

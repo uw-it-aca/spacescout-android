@@ -8,6 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+import edu.uw.spacescout_android.model.Space;
+
 /**
  * Created by ajay alfred on 11/6/13.
  *
@@ -18,16 +23,17 @@ public class SpaceListArrayAdapter extends ArrayAdapter {
 
     //define variables
     private final Context context;
-    private final String[] values;
+    private final ArrayList values;
 
-    public SpaceListArrayAdapter(Context context, String[] values) {
+    public SpaceListArrayAdapter(Context context, ArrayList values) {
         super(context, R.layout.custom_space_list_row, values);
         this.context = context;
         this.values = values;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int index, View convertView, ViewGroup parent) {
+        Space space = (Space) values.get(index);
 
         //get LayoutInflater to inflate space list row XML
         LayoutInflater inflater = (LayoutInflater) context
@@ -51,7 +57,7 @@ public class SpaceListArrayAdapter extends ArrayAdapter {
 
         //this is where all the changing is supposed to happen
 
-        txtSpaceTitle.setText(values[position]);
+        txtSpaceTitle.setText(space.getName());
 
         return rowView;
     }

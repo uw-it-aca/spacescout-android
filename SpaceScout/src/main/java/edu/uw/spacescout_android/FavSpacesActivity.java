@@ -62,8 +62,8 @@ public class FavSpacesActivity extends Activity {
 
         ListView listView = (ListView) findViewById(R.id.lvSpaceList);
 
-        SpaceListArrayAdapter spaceListArrayAdapter = new SpaceListArrayAdapter(this, spaceTitles);
-        listView.setAdapter(spaceListArrayAdapter);
+//        SpaceListArrayAdapter spaceListArrayAdapter = new SpaceListArrayAdapter(this, spaceTitles);
+//        listView.setAdapter(spaceListArrayAdapter);
 
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override

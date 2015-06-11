@@ -4,7 +4,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import java.util.Map;
  * Implements Serializable (including inner classes) for Fragment-to-Fragment
  * transfer in a Bundle object.
  */
+
 
 public class Space implements ClusterItem, Serializable {
     private final int id;
