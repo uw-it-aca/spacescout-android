@@ -175,7 +175,7 @@ public class MainActivity extends FragmentActivity {
             String baseUrl = getResources().getString(R.string.baseUrl);
             connectToServer(baseUrl + "buildings?campus=" + campus, "buildings");
 
-//            // Default position is set in res/values/config.xml
+//            // Default position is set in res/values/settings.xml
 //            String centerLat = getResources().getString(R.string.default_center_latitude);
 //            String centerLon = getResources().getString(R.string.default_center_longitude);
 //

@@ -1,7 +1,10 @@
 package edu.uw.spacescout_android;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -73,9 +76,19 @@ public class SpaceMapFragment extends Fragment implements OnMapReadyCallback,
         }
         mapFragment.getMapAsync(this);
 
-        campusCenter = new LatLng(Float.parseFloat(getResources().getString(R.string.default_center_latitude)),
-                Float.parseFloat(getResources().getString(R.string.default_center_longitude)));
+        SharedPreferences center_setting = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String center = center_setting.getString("setting_campus", null);
 
+        Log.d(TAG, "Got the center: " + center);
+
+        // TODO: Center comes up as null the first couple of times this method is fired... Not sure why yet.
+        if (center != null) {
+            String[] lat_long = center.split(", ");
+            campusCenter = new LatLng(Float.parseFloat(lat_long[0]), Float.parseFloat(lat_long[1]));
+        } else {
+            campusCenter = new LatLng(Float.parseFloat(getResources().getString(R.string.default_center_latitude)),
+                    Float.parseFloat(getResources().getString(R.string.default_center_longitude)));
+        }
 //        tc = new IconGenerator(getActivity());
     }
 
