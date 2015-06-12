@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Default initial center position -->
-    <string name="default_center_latitude">47.655263166697765</string>
-    <string name="default_center_longitude">-122.30669233862307</string>
-
-</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default initial center position -->
+    <string name="default_center_latitude">47.655263166697765</string>
+    <string name="default_center_longitude">-122.30669233862307</string>
+
+    <!-- The strings for this setting is in strings.xml -->
+    <string-array name="campus_array_values_settings">
+        <item name="seattle">47.655263166697765, -122.30669233862307</item>
+        <item name="tacoma">47.24473, -122.43855</item>
+        <item name="bothell">47.761168, -122.190577</item>
+    </string-array>
+
+
+</resources>
