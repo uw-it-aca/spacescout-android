@@ -146,12 +146,7 @@
         <item>UW Tacoma</item>
         <item>UW Bothell</item>
     </string-array>
-    <!-- TODO: set values to center coords -->
-    <string-array name="campus_array_values_settings">
-        <item>seattle</item>
-        <item>tacoma</item>
-        <item>bothell</item>
-    </string-array>
+        <!-- The entryValues are in values/settings.xml -->
     <string name="profile_category_settings">Profile</string>
     <string name="profile_login_settings">Log In</string>
     <string name="profile_login_summery_settings">Log in to save/view favorites</string>
