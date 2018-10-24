@@ -1,3 +1,6 @@
+This app has been superseded by https://github.com/uw-it-aca/scout-android
+
+
 spacescout-android
 ==================
 This is the Android client for SpaceScout.  It connects to services provided by https://github.com/uw-it-aca/spotseeker_server
